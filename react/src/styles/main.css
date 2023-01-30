@@ -1,0 +1,293 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "PT Sans", sans-serif;
+}
+
+.tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, nav #login-state, nav #links, nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, nav #login-state, nav #links, nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+}
+
+nav {
+  justify-content: space-between;
+  padding: 0 20px;
+  width: 100%;
+  height: 50px;
+  background: var(--secondary);
+}
+nav a {
+  text-decoration: none;
+}
+nav #logo {
+  width: 40%;
+}
+nav #logo a {
+  letter-spacing: 1px;
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--border);
+}
+nav #logo a .o-span {
+  color: var(--main);
+}
+nav #links {
+  justify-content: flex-end;
+  width: 30%;
+  gap: 20px;
+}
+nav #links a {
+  letter-spacing: 1px;
+  position: relative;
+  text-transform: capitalize;
+  transition: 0.3s;
+  color: var(--main);
+  opacity: 0.4;
+}
+nav #links a:before {
+  content: "";
+  position: absolute;
+  top: 140%;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: var(--border);
+  transition: 0.4s;
+}
+nav #links a:hover:before, nav #links a.active:before {
+  width: 100%;
+}
+nav #links a.active, nav #links a:hover {
+  transform: scale(1.05);
+}
+nav #links a:hover {
+  transform: scale(1.05);
+  opacity: 0.7;
+}
+nav #links a.active {
+  opacity: 1;
+}
+nav #login-state {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  gap: 10px;
+}
+nav #login-state #user {
+  color: var(--main);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "PT Sans", sans-serif;
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+}
+
+form {
+  width: 70%;
+  margin: 50px auto;
+  height: 40px;
+  gap: 0;
+}
+form #inp {
+  width: 80%;
+  height: 30px;
+  position: relative;
+}
+form #inp .mock-inp {
+  width: 100%;
+  height: 3px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(135deg, var(--border), var(--secondary));
+  transition: 0.3s;
+}
+form #inp #placeholder {
+  position: absolute;
+  left: 10px;
+  transition: 0.3s;
+  color: var(--secondary);
+}
+form #inp input {
+  font-size: 20px;
+  position: absolute;
+  width: 100%;
+  min-height: 100%;
+  left: 0;
+  bottom: 0;
+  outline: none;
+  border: none;
+  background: transparent;
+  color: var(--main);
+  padding: 0 5px;
+  z-index: 2;
+}
+form #inp input:valid ~ .mock-inp, form #inp input:focus ~ .mock-inp {
+  height: 40px;
+}
+form button {
+  height: 100%;
+  background: var(--border);
+  padding: 0 5px;
+}
+
+input:valid ~ #placeholder,
+input:focus ~ #placeholder {
+  position: absolute;
+  font-size: 12px;
+  color: var(--border) !important;
+  transform: translateY(-30px);
+}
+
+.tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, nav, nav #links, nav #login-state, form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "PT Sans", sans-serif;
+}
+
+.tasks-cont {
+  margin: 50px auto;
+  width: 70%;
+  background: grey;
+}
+.tasks-cont #options {
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+.tasks-cont #options #clear {
+  background-color: var(--delete);
+  padding: 4px;
+  outline: 0;
+  border: 0;
+  border-radius: 2px;
+  gap: 4px;
+  color: white;
+}
+.tasks-cont #options #task-state {
+  width: 70%;
+  justify-content: space-between;
+  gap: 20px;
+}
+.tasks-cont #options #task-state span {
+  position: relative;
+  color: var(--main);
+  cursor: pointer;
+  transition: 0.3s;
+  opacity: 0.4;
+  padding: 0 5px;
+}
+.tasks-cont #options #task-state span:before {
+  content: "";
+  transition: 1s;
+  position: absolute;
+  top: 120%;
+  height: 2px;
+  width: 0;
+  left: 0;
+  background: var(--border);
+}
+.tasks-cont #options #task-state span.active, .tasks-cont #options #task-state span:hover {
+  opacity: 1;
+  transform: scale(1.04);
+}
+.tasks-cont #options #task-state span.active:before, .tasks-cont #options #task-state span:hover:before {
+  width: 100%;
+}
+.tasks-cont #tasks {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+}
+.tasks-cont #tasks .task {
+  padding: 0 5px;
+  width: 90%;
+  height: 40px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template: "content content content btns" 25px "time time time btns" 15px;
+  background: var(--secondary);
+  color: var(--main);
+  border-left: 2px solid var(--main);
+}
+.tasks-cont #tasks #content {
+  grid-area: content;
+}
+.tasks-cont #tasks #time-cont {
+  grid-area: time;
+  font-size: 10px;
+}
+.tasks-cont #tasks #btns {
+  grid-area: btns;
+  gap: 5px;
+}
+.tasks-cont #tasks #btns button {
+  padding: 1px;
+}
+.tasks-cont #tasks #btns button:nth-child(1) {
+  background: rgb(22, 113, 22);
+  color: var(--main);
+  font-size: 18px;
+}
+.tasks-cont #tasks #btns button:nth-child(2) {
+  background: rgb(18, 18, 140);
+  color: var(--main);
+  font-size: 18px;
+}
+.tasks-cont #tasks #btns button:nth-child(3) {
+  background: var(--delete);
+  color: var(--main);
+  font-size: 18px;
+}/*# sourceMappingURL=main.css.map */
