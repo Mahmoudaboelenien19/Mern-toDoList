@@ -1,12 +1,14 @@
+import { errorMiddleware } from "./middleware/errors";
 import express from "express";
+import { PORT } from "./config";
 
 const app = express();
-const port = 4000;
 
+app.use(errorMiddleware);
 app.get("/", (_req, res) => {
   res.json("I am mahmoud");
 });
 
-app.listen(port, (): void => {
-  console.log("server runs at port " + port);
+app.listen(PORT, (): void => {
+  console.log("server runs ");
 });
