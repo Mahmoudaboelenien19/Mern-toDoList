@@ -3,14 +3,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const errors_1 = require("./middleware/errors");
+const errors_js_1 = require("./middleware/errors.js");
 const express_1 = __importDefault(require("express"));
-const config_1 = require("./config");
+const config_js_1 = require("./config.js");
+const userRoutes_js_1 = __importDefault(require("./routes/userRoutes.js"));
 const app = (0, express_1.default)();
-app.use(errors_1.errorMiddleware);
-app.get("/", (_req, res) => {
-    res.json("I am mahmoud");
-});
-app.listen(config_1.PORT, () => {
+app.use(express_1.default.json());
+app.use("/", userRoutes_js_1.default);
+app.use(errors_js_1.errorMiddleware);
+app.listen(config_js_1.PORT, () => {
     console.log("server runs ");
 });

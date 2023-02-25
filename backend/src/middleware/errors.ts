@@ -11,5 +11,5 @@ export const errorMiddleware = (
 
   const message = err?.message || "error";
 
-  res.status(status).json({ status, message });
+  res.status(status).json({ message });
 };
