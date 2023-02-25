@@ -1,26 +1,34 @@
 import { closeMongoConnection, connectToMongo } from "./../database.js";
 import bcrypt from "bcrypt";
 import { BCRYPT_PASS, SALT } from "../config.js";
+import { ObjectId } from "mongodb";
+
+export interface TodosInterface {
+  _id?: ObjectId;
+  content: string;
+  date: string;
+  time: string;
+  state: string;
+  iscompleted: boolean;
+}
 
 export interface UserInterface {
   username: string;
   password: string;
   country: string;
   email: string;
+  todos: [] | TodosInterface[];
 }
 
 class User {
   static async hashPass(pass: string) {
-    const newPass = await bcrypt.hash(pass + BCRYPT_PASS, Number(SALT));
-    console.log({ newPass });
-    return newPass;
+    return await bcrypt.hash(pass + BCRYPT_PASS, Number(SALT));
   }
 
   static async checkEmail(email: string) {
     const db = await connectToMongo();
 
-    const check = await db.collection("users").findOne({ email });
-    return check;
+    return await db.collection("users").findOne({ email });
   }
 
   async createUser(userData: UserInterface) {

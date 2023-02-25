@@ -21,6 +21,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             email: req.body.email,
             password: req.body.password,
             country: req.body.country,
+            todos: [],
         };
         const result = yield users_js_1.default.createUser(newUser);
         res.status(200).json({ result, message: "user created successfully" });

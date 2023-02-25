@@ -18,16 +18,13 @@ const config_js_1 = require("../config.js");
 class User {
     static hashPass(pass) {
         return __awaiter(this, void 0, void 0, function* () {
-            const newPass = yield bcrypt_1.default.hash(pass + config_js_1.BCRYPT_PASS, Number(config_js_1.SALT));
-            console.log({ newPass });
-            return newPass;
+            return yield bcrypt_1.default.hash(pass + config_js_1.BCRYPT_PASS, Number(config_js_1.SALT));
         });
     }
     static checkEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             const db = yield (0, database_js_1.connectToMongo)();
-            const check = yield db.collection("users").findOne({ email });
-            return check;
+            return yield db.collection("users").findOne({ email });
         });
     }
     createUser(userData) {

@@ -8,6 +8,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       email: req.body.email,
       password: req.body.password,
       country: req.body.country,
+      todos: [],
     };
     const result = await userModel.createUser(newUser);
     res.status(200).json({ result, message: "user created successfully" });
