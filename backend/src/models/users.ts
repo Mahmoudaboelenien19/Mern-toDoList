@@ -3,21 +3,16 @@ import bcrypt from "bcrypt";
 import { BCRYPT_PASS, SALT } from "../config.js";
 import { ObjectId } from "mongodb";
 
-export interface TodosInterface {
-  _id?: ObjectId;
-  content: string;
-  date: string;
-  time: string;
-  state: string;
-  iscompleted: boolean;
-}
-
 export interface UserInterface {
   username: string;
   password: string;
   country: string;
   email: string;
-  todos: [] | TodosInterface[];
+}
+
+export interface UserData {
+  email: string;
+  password: string;
 }
 
 class User {
@@ -42,12 +37,44 @@ class User {
         ...userData,
         password,
       });
+      console.log({ res });
       closeMongoConnection();
-
-      return res.insertedId;
+      return res;
     } else {
       throw new Error("user is already exist");
     }
+  }
+
+  async authenticate(user: UserData) {
+    const db = await connectToMongo();
+    const result = await db.collection("users").findOne({ email: user.email });
+    if (result) {
+      const check = await bcrypt.compare(
+        user.password + BCRYPT_PASS,
+        result.password
+      );
+      if (check) {
+        return user;
+      } else {
+        throw new Error("wrong password");
+      }
+    } else {
+      throw new Error("this user isn't registered");
+    }
+  }
+
+  async getAllToDos(userId: ObjectId) {
+    const db = await connectToMongo();
+    const collection = db.collection("todos");
+    const res = collection.find({ userId: new ObjectId(userId) }).toArray();
+    return res;
+  }
+
+  async clear(userId: ObjectId) {
+    const db = await connectToMongo();
+    const collection = db.collection("todos");
+    const res = collection.deleteMany({ userId: new ObjectId(userId) });
+    return res;
   }
 }
 

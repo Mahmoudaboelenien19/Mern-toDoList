@@ -14,19 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const todos_js_1 = __importDefault(require("../models/todos.js"));
-const mongodb_1 = require("mongodb");
 const addTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("addtodo");
         const todo = {
-            _id: new mongodb_1.ObjectId(),
             content: req.body.content,
             date: req.body.date,
             time: req.body.time,
             state: req.body.state,
             iscompleted: req.body.iscompleted,
         };
-        const result = yield todos_js_1.default.create(todo, req.params.id, next);
+        const result = yield todos_js_1.default.create(todo, req.params.id);
         if (result !== "wrong id") {
             res.status(200).json({ result, message: "todo added successfully" });
         }
@@ -47,7 +44,7 @@ const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             state: req.body.state,
             iscompleted: req.body.iscompleted,
         };
-        const result = yield todos_js_1.default.update(todo, req.params.userid, req.params.todoid, next);
+        const result = yield todos_js_1.default.update(todo, req.params.todoid);
         if (result !== "wrong id") {
             res.status(200).json({ result, message: "todo updated successfully" });
         }
@@ -59,7 +56,39 @@ const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         next(err);
     }
 });
+const deleteTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield todos_js_1.default.delete(req.params.todoid);
+        if (result !== "wrong id") {
+            res.status(200).json({ result, message: "todo deleted successfully" });
+        }
+        else {
+            res.status(404).json({ message: result });
+        }
+    }
+    catch (err) {
+        next(err);
+    }
+});
+const getTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield todos_js_1.default.getOne(req.params.todoid);
+        if (result !== "wrong id") {
+            res.status(200).json({ result });
+        }
+        else {
+            res.status(404).json({ message: result });
+        }
+    }
+    catch (err) {
+        next(err);
+    }
+});
 const todoRoutes = (0, express_1.Router)();
-todoRoutes.route("/user/:id/addtodo").patch(addTodo);
-todoRoutes.route("/user/:userid/updatetodo/:todoid").patch(updateTodo);
+todoRoutes.route("/user/:id/addtodo").post(addTodo);
+todoRoutes
+    .route("/todo/:todoid")
+    .patch(updateTodo)
+    .delete(deleteTodo)
+    .get(getTodo);
 exports.default = todoRoutes;

@@ -1,18 +1,18 @@
 import { NextFunction } from "express";
 import { ObjectId } from "mongodb";
+import { TodosInterface } from "../interfaces/todoInterface";
 import { connectToMongo, closeMongoConnection } from "./../database";
-import { TodosInterface } from "./users";
 
 class Todos {
-  async create(todo: TodosInterface, id: string, next: NextFunction) {
-    if (ObjectId.isValid(id)) {
+  async create(todo: TodosInterface, userId: ObjectId) {
+    if (ObjectId.isValid(userId)) {
       try {
         const db = await connectToMongo();
-        const collection = db.collection("users");
-        const result = await collection.updateOne(
-          { _id: new ObjectId(id) },
-          { $push: { todos: todo } }
-        );
+        const collection = db.collection("todos");
+        const result = await collection.insertOne({
+          ...todo,
+          userId: new ObjectId(userId),
+        });
 
         closeMongoConnection();
         return result;
@@ -24,25 +24,59 @@ class Todos {
     }
   }
 
-  async update(
-    todo: TodosInterface,
-    userId: string,
-    todoId: string,
-    next: NextFunction
-  ) {
-    if (ObjectId.isValid(userId) && ObjectId.isValid(todoId)) {
+  async delete(todoId: string) {
+    if (ObjectId.isValid(todoId)) {
       try {
         const db = await connectToMongo();
-        const collection = db.collection("users");
-        const result = await collection.updateOne(
-          { _id: new ObjectId(userId), "todos._id": new ObjectId(todoId) },
-          { $set: { "todos.$": { ...todo, _id: new ObjectId(todoId) } } }
+        const collection = db.collection("todos");
+        const result = await collection.deleteOne({
+          _id: new ObjectId(todoId),
+        });
+
+        closeMongoConnection();
+        return result;
+      } catch (err) {
+        throw new Error("can't create this todo");
+      }
+    } else {
+      return "wrong id";
+    }
+  }
+
+  async update(todo: TodosInterface, todoId: string) {
+    if (ObjectId.isValid(todoId)) {
+      try {
+        const db = await connectToMongo();
+        const collection = db.collection("todos");
+        const result = await collection.findOneAndUpdate(
+          { _id: new ObjectId(todoId) },
+          { $set: todo },
+          { returnDocument: "after" }
         );
 
         closeMongoConnection();
         return result;
       } catch (err) {
         throw new Error("can't update this todo");
+      }
+    } else {
+      return "wrong id";
+    }
+  }
+
+  async getOne(todoId: ObjectId) {
+    if (ObjectId.isValid(todoId)) {
+      try {
+        const db = await connectToMongo();
+        const collection = db.collection("todos");
+        const result = await collection.findOne({
+          _id: new ObjectId(todoId),
+        });
+
+        closeMongoConnection();
+        return result;
+      } catch (err) {
+        throw new Error("can't get this todo");
       }
     } else {
       return "wrong id";

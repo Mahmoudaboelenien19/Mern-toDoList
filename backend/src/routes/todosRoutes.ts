@@ -1,20 +1,21 @@
-import { TodosInterface } from "./../models/users.js";
 import { NextFunction, Request, Response, Router } from "express";
 import todoModel from "../models/todos.js";
 import { ObjectId } from "mongodb";
+import { TodosInterface } from "../interfaces/todoInterface.js";
 
 const addTodo = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("addtodo");
     const todo: TodosInterface = {
-      _id: new ObjectId(),
       content: req.body.content,
       date: req.body.date,
       time: req.body.time,
       state: req.body.state,
       iscompleted: req.body.iscompleted,
     };
-    const result = await todoModel.create(todo, req.params.id, next);
+    const result = await todoModel.create(
+      todo,
+      req.params.id as unknown as ObjectId
+    );
     if (result !== "wrong id") {
       res.status(200).json({ result, message: "todo added successfully" });
     } else {
@@ -34,12 +35,7 @@ const updateTodo = async (req: Request, res: Response, next: NextFunction) => {
       state: req.body.state,
       iscompleted: req.body.iscompleted,
     };
-    const result = await todoModel.update(
-      todo,
-      req.params.userid,
-      req.params.todoid,
-      next
-    );
+    const result = await todoModel.update(todo, req.params.todoid);
     if (result !== "wrong id") {
       res.status(200).json({ result, message: "todo updated successfully" });
     } else {
@@ -50,7 +46,39 @@ const updateTodo = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const deleteTodo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await todoModel.delete(req.params.todoid);
+    if (result !== "wrong id") {
+      res.status(200).json({ result, message: "todo deleted successfully" });
+    } else {
+      res.status(404).json({ message: result });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getTodo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await todoModel.getOne(
+      req.params.todoid as unknown as ObjectId
+    );
+    if (result !== "wrong id") {
+      res.status(200).json({ result });
+    } else {
+      res.status(404).json({ message: result });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 const todoRoutes = Router();
-todoRoutes.route("/user/:id/addtodo").patch(addTodo);
-todoRoutes.route("/user/:userid/updatetodo/:todoid").patch(updateTodo);
+todoRoutes.route("/user/:id/addtodo").post(addTodo);
+todoRoutes
+  .route("/todo/:todoid")
+  .patch(updateTodo)
+  .delete(deleteTodo)
+  .get(getTodo);
 export default todoRoutes;
