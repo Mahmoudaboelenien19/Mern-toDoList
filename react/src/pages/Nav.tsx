@@ -24,7 +24,7 @@ const Nav: React.FC = () => {
             guest
           </Link>
 
-          <Link className="btn-state" to="">
+          <Link className="btn-state" to="/login">
             log in
           </Link>
           <IoNotifications size={20} color={"gray"} />

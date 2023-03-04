@@ -64,3 +64,12 @@ input:focus ~ #placeholder {
   color: var(--border) !important;
   transform: translateY(-30px);
 }
+
+.err {
+  color: var(--delete);
+  position: absolute;
+  top: 120%;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}

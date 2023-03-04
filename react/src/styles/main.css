@@ -5,13 +5,13 @@
   font-family: "PT Sans", sans-serif;
 }
 
-.tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, nav #login-state, nav #links, nav {
+.tasks-cont #tasks #btns button, .tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, nav #login-state, nav #links, nav {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, nav #login-state, nav #links, nav {
+.tasks-cont #tasks #btns button, .tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, nav #login-state, nav #links, nav {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -173,7 +173,7 @@ input:focus ~ #placeholder {
   transform: translateY(-30px);
 }
 
-.tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, nav, nav #links, nav #login-state, form {
+.tasks-cont #tasks #btns button, .tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, nav, nav #links, nav #login-state, form {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -196,16 +196,27 @@ input:focus ~ #placeholder {
 
 .tasks-cont {
   margin: 50px auto;
-  width: 70%;
+  width: 60%;
   background: grey;
 }
 .tasks-cont #options {
+  position: relative;
   justify-content: space-between;
   padding: 10px 20px;
 }
+.tasks-cont #options::before {
+  content: "";
+  position: absolute;
+  top: 95%;
+  left: 10%;
+  width: 80%;
+  height: 1.5px;
+  background: #000;
+  opacity: 0.3;
+}
 .tasks-cont #options #clear {
   background-color: var(--delete);
-  padding: 4px;
+  padding: 6px;
   outline: 0;
   border: 0;
   border-radius: 2px;

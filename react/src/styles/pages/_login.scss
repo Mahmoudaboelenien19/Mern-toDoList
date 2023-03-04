@@ -1,0 +1,24 @@
+@import "./../globals/mixins&placeholders";
+@import "./../globals/variables";
+
+#log-in-form {
+  @extend %centered;
+  background: rgba(121, 118, 118, 0.512);
+  flex-direction: column;
+  height: max-content;
+  padding: 20px;
+  width: 400px;
+  gap: 80px;
+
+  #log-btn {
+    max-height: 30px;
+    outline: 0;
+    border: 0;
+    padding: 5px;
+  }
+}
+
+.link {
+  text-decoration: none;
+  color: var(--border);
+}

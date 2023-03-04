@@ -1,12 +1,15 @@
-import React from "react";
+// import React, { createContext } from "react";
 import Form from "../components/Form";
 import Tasks from "../components/tasks";
+import { InpContextProvider } from "./../context/inpContext";
 
 const Home: React.FC = () => {
   return (
     <div>
-      <Form />
-      <Tasks />
+      <InpContextProvider>
+        <Form />
+        <Tasks />
+      </InpContextProvider>
     </div>
   );
 };
