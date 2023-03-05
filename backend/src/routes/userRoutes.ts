@@ -70,6 +70,7 @@ const authenticate = async (
         ...result,
         refToken,
         accessToken,
+        status: 200,
       });
     }
     res.json(result);

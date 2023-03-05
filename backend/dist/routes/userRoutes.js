@@ -63,7 +63,7 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             const accessToken = jsonwebtoken_1.default.sign({ user }, config_js_1.ACCESS_TOKEN_SECRET, expiration);
             const refToken = jsonwebtoken_1.default.sign({ user }, config_js_1.REFRESH_TOKEN_SECRET);
             res.status(200).json(Object.assign(Object.assign({ message: "you logged in sucessfully" }, result), { refToken,
-                accessToken }));
+                accessToken, status: 200 }));
         }
         res.json(result);
     }
