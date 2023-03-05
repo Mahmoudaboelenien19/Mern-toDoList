@@ -3,7 +3,6 @@ import { NextFunction, Request, Response, Router } from "express";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "../config.js";
-import { Error } from "../interfaces/errorInterface.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -14,7 +13,9 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       country: req.body.country,
     };
     const result = await userModel.createUser(newUser);
-    res.status(200).json({ result, message: "user created successfully" });
+    res
+      .status(200)
+      .json({ status: 200, result, message: "user created successfully" });
   } catch (err) {
     next(err);
   }
@@ -65,7 +66,7 @@ const authenticate = async (
         REFRESH_TOKEN_SECRET as unknown as string
       );
       res.status(200).json({
-        message: "you signed in sucessfully",
+        message: "you logged in sucessfully",
         ...result,
         refToken,
         accessToken,

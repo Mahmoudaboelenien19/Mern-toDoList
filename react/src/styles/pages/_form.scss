@@ -73,3 +73,38 @@ input:focus ~ #placeholder {
   width: 100%;
   text-align: center;
 }
+.heading {
+  text-transform: uppercase;
+  position: relative;
+  width: fit-content;
+  padding: 4px;
+  letter-spacing: 1px;
+  &:before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 20%;
+    width: 60%;
+    background: var(--border);
+    height: 2px;
+  }
+}
+
+#radio {
+  align-self: start;
+  margin: -30px 20px;
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10px;
+  div.label {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+}
+input[type="radio"] {
+  accent-color: rgb(195, 195, 82);
+  width: 15px;
+  height: 15px;
+}

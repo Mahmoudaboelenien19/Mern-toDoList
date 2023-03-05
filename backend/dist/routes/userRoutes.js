@@ -25,7 +25,9 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             country: req.body.country,
         };
         const result = yield users_js_1.default.createUser(newUser);
-        res.status(200).json({ result, message: "user created successfully" });
+        res
+            .status(200)
+            .json({ status: 200, result, message: "user created successfully" });
     }
     catch (err) {
         next(err);
@@ -60,7 +62,7 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             const expiration = { expiresIn: "15s" };
             const accessToken = jsonwebtoken_1.default.sign({ user }, config_js_1.ACCESS_TOKEN_SECRET, expiration);
             const refToken = jsonwebtoken_1.default.sign({ user }, config_js_1.REFRESH_TOKEN_SECRET);
-            res.status(200).json(Object.assign(Object.assign({ message: "you signed in sucessfully" }, result), { refToken,
+            res.status(200).json(Object.assign(Object.assign({ message: "you logged in sucessfully" }, result), { refToken,
                 accessToken }));
         }
         res.json(result);
