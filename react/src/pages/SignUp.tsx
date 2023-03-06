@@ -7,6 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -70,27 +71,53 @@ const SignUp = () => {
 
   return (
     <div>
-      <form
+      <motion.form
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, type: "tween" }}
         noValidate
         action=""
         id="log-in-form"
         onSubmit={handleSubmit(OnSubmit)}
       >
-        <h4 className="heading">sign up</h4>{" "}
+        <motion.h4
+          transition={{ delay: 1.5, duration: 1 }}
+          initial={{ fontSize: "16px" }}
+          animate={{ fontSize: "20px" }}
+          className="heading"
+        >
+          sign up
+        </motion.h4>{" "}
         <div id="inp">
           <input type="text" required {...register("name")} />
           <div className="mock-inp"></div>
           <span id="placeholder">username </span>
-          {errors.name && (
-            <small className="err">{errors?.name?.message?.toString()}</small>
-          )}
+          <AnimatePresence>
+            {errors.name && (
+              <motion.small
+                exit={{ opacity: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="err"
+              >
+                {errors?.name?.message?.toString()}
+              </motion.small>
+            )}
+          </AnimatePresence>
         </div>
         <div id="inp">
           <input type="text" required {...register("email")} />
           <div className="mock-inp"></div>
           <span id="placeholder">email </span>
           {errors.email && (
-            <small className="err">{errors?.email?.message?.toString()}</small>
+            <motion.small
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+              className="err"
+            >
+              {errors?.email?.message?.toString()}
+            </motion.small>
           )}
         </div>
         <div id="inp">
@@ -98,9 +125,13 @@ const SignUp = () => {
           <div className="mock-inp"></div>
           <span id="placeholder"> password</span>
           {errors.password && (
-            <small className="err">
+            <motion.small
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+              className="err"
+            >
               {errors?.password?.message?.toString()}
-            </small>
+            </motion.small>
           )}
         </div>
         <div id="inp">
@@ -108,9 +139,13 @@ const SignUp = () => {
           <div className="mock-inp"></div>
           <span id="placeholder">confirm password</span>
           {errors.confirm && (
-            <small className="err">
+            <motion.small
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+              className="err"
+            >
               {errors?.confirm?.message?.toString()}
-            </small>
+            </motion.small>
           )}
         </div>
         <div id="radio">
@@ -151,14 +186,21 @@ const SignUp = () => {
           <div className="mock-inp"></div>
           <span id="placeholder">phone</span>
           {errors.phone && (
-            <small className="err">{errors?.phone?.message?.toString()}</small>
+            <motion.small
+              initial={{ y: 20 }}
+              animate={{ y: 0 }}
+              className="err"
+            >
+              {errors?.phone?.message?.toString()}
+            </motion.small>
           )}
         </div>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.2, boxShadow: "2px 2px 2px black " }}
+          transition={{ type: "spring", stiffness: 300 }}
           id="log-btn"
           onClick={async () => {
             const data = getValues();
-            console.log(data);
             if (isValid) {
               const { message, status } = await createUser(data);
               if (status == 200) {
@@ -171,11 +213,16 @@ const SignUp = () => {
           }}
         >
           sign up
-        </button>
+        </motion.button>
         <Link to="/login" className="link">
-          log in
+          <motion.span
+            whileHover={{ fontSize: "18px", color: "white" }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            log in
+          </motion.span>
         </Link>
-      </form>
+      </motion.form>
     </div>
   );
 };

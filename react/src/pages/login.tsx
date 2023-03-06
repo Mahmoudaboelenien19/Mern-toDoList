@@ -4,6 +4,7 @@ import axios from "axios";
 import { authenticateRoute } from "../../routes.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,8 +31,22 @@ const Login = () => {
 
   return (
     <div>
-      <form action="" id="log-in-form" onSubmit={(e) => e.preventDefault()}>
-        <h4 className="heading">log in</h4>{" "}
+      <motion.form
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.5, type: "tween" }}
+        action=""
+        id="log-in-form"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <motion.h4
+          transition={{ delay: 1.5, duration: 1 }}
+          initial={{ fontSize: "16px" }}
+          animate={{ fontSize: "20px" }}
+          className="heading"
+        >
+          log in
+        </motion.h4>{" "}
         <div id="inp">
           <input type="text" required defaultValue={email} ref={emailRef} />
           <div className="mock-inp"></div>
@@ -42,7 +57,9 @@ const Login = () => {
           <div className="mock-inp"></div>
           <span id="placeholder"> password</span>
         </div>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.2, boxShadow: "2px 2px 2px black " }}
+          transition={{ type: "spring", stiffness: 300 }}
           id="log-btn"
           onClick={async () => {
             const email = emailRef.current.value;
@@ -56,20 +73,24 @@ const Login = () => {
               const { message, status } = await authenticate(userData);
               if (status === 200) {
                 toast.success(message);
-                navigate("/");
+                navigate("/git ad");
               } else {
                 toast.error(message);
               }
-              console.log({ message });
             }
           }}
         >
           log in
-        </button>
+        </motion.button>
         <Link to="/signup" className="link">
-          create new account
+          <motion.span
+            whileHover={{ fontSize: "18px", color: "white" }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            create new account
+          </motion.span>
         </Link>
-      </form>
+      </motion.form>
     </div>
   );
 };

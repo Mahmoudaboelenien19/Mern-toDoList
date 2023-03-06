@@ -1,28 +1,24 @@
 import React from "react";
 import Options from "./Options";
-import Todo from "./Task";
-import { useSelector, useDispatch } from "react-redux/es/exports";
-import { updateTask, tasksState, Task } from "../redux/Taskslice";
+import { motion } from "framer-motion";
 
 const Tasks: React.FC = () => {
   interface tasksState {
     tasks: any;
   }
-  const { tasks } = useSelector((state) => (state as tasksState).tasks);
-  console.log(tasks);
 
   return (
-    <div>
+    <motion.div
+      initial={{ x: "100vw" }}
+      animate={{ x: 0 }}
+      transition={{ stiffness: 200, type: "spring", delay: 2 }}
+    >
       <div className="tasks-cont">
         <Options />
 
-        <div id="tasks">
-          {tasks?.map((ele: Task) => {
-            return <Todo key={ele.id} {...ele} />;
-          })}
-        </div>
+        <div id="tasks"></div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

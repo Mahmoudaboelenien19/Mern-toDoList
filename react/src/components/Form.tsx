@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { inpContext } from "../context/inpContext";
+import { motion } from "framer-motion";
 
 const Form: React.FC = () => {
   const [inp, setInp] = useState("");
@@ -21,7 +22,10 @@ const Form: React.FC = () => {
   };
   return (
     <div>
-      <form
+      <motion.form
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1, duration: 0.5 }}
         action=""
         onSubmit={(e) => {
           e.preventDefault();
@@ -32,7 +36,7 @@ const Form: React.FC = () => {
           <div className="mock-inp"></div>
           <span id="placeholder"> Add a Todo ...</span>
         </div>
-      </form>
+      </motion.form>
     </div>
   );
 };
