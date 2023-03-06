@@ -24,7 +24,7 @@ const Login = () => {
 
   const authenticate = async (user: userInerface) => {
     return await axios
-      .post(authenticateRoute, user)
+      .post(authenticateRoute, user, { withCredentials: true })
       .then(({ data }) => data)
       .catch(({ response: { data } }) => data);
   };
@@ -73,7 +73,11 @@ const Login = () => {
               const { message, status } = await authenticate(userData);
               if (status === 200) {
                 toast.success(message);
-                navigate("/git ad");
+                navigate("/");
+              }
+              if (status === 404) {
+                toast.error(message);
+                navigate(`/signup?email=${email}`);
               } else {
                 toast.error(message);
               }

@@ -1,16 +1,19 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { inpContext } from "../context/inpContext";
 import { motion } from "framer-motion";
+import { useAppDispatch } from "../customHooks/reduxTypes";
+import { addTodo } from "../redux/Taskslice";
 
 const Form: React.FC = () => {
-  const [inp, setInp] = useState("");
+  const dispatch = useAppDispatch();
 
-  const input = useRef<HTMLInputElement>(null);
+  const [inp, setInp] = useState("");
+  const input = useRef<HTMLInputElement>(null!);
   const focus = useContext(inpContext);
 
   useEffect(() => {
     if (focus.isInpFocus) {
-      input.current!.focus();
+      input.current.focus();
     }
     setTimeout(() => {
       focus.setIsInpFocus(false);
@@ -29,6 +32,7 @@ const Form: React.FC = () => {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
+          dispatch(addTodo(inp));
         }}
       >
         <div id="inp">

@@ -107,3 +107,15 @@ input[type="radio"] {
   width: 15px;
   height: 15px;
 }
+
+select {
+  outline: 0;
+  border: 0;
+  background: linear-gradient(135deg, var(--border), var(--secondary));
+  height: 40px;
+  color: var(--main);
+  padding: 5px;
+  option {
+    background: var(--secondary);
+  }
+}

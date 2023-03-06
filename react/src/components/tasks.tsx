@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Options from "./Options";
 import { motion } from "framer-motion";
+import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
+import { getAllTodos } from "../redux/Taskslice";
+import Task from "./Task";
 
 const Tasks: React.FC = () => {
-  interface tasksState {
-    tasks: any;
-  }
+  const { tasks } = useAppSelector((state) => state.tasks);
+  const disptch = useAppDispatch();
+  useEffect(() => {
+    disptch(getAllTodos());
+  }, []);
 
   return (
     <motion.div
@@ -16,7 +21,11 @@ const Tasks: React.FC = () => {
       <div className="tasks-cont">
         <Options />
 
-        <div id="tasks"></div>
+        <div id="tasks">
+          {tasks?.map((e) => {
+            return <Task key={e._id!} {...e} />;
+          })}
+        </div>
       </div>
     </motion.div>
   );

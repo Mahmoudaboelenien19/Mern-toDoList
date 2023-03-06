@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { FieldValues } from "react-hook-form/dist/types";
@@ -11,6 +11,15 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const emailInp = useRef<HTMLInputElement>(null!);
+
+  const defaultEmail = new URLSearchParams(location.search).get("email") || "";
+
+  useEffect(() => {
+    if (defaultEmail) {
+      emailInp.current.value = defaultEmail;
+    }
+  }, []);
 
   //get all countries
   const [countries, setCountries] = useState([
@@ -107,7 +116,7 @@ const SignUp = () => {
           </AnimatePresence>
         </div>
         <div id="inp">
-          <input type="text" required {...register("email")} />
+          <input type="text" required {...register("email")} ref={emailInp} />
           <div className="mock-inp"></div>
           <span id="placeholder">email </span>
           {errors.email && (
