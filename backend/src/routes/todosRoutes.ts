@@ -12,12 +12,16 @@ const addTodo = async (req: Request, res: Response, next: NextFunction) => {
       state: req.body.state,
       isCompleted: req.body.isCompleted,
     };
+
     const result = await todoModel.create(
       todo,
       req.params.id as unknown as ObjectId
     );
     if (result !== "wrong id") {
-      res.status(200).json({ result, message: "todo added successfully" });
+      res.status(200).json({
+        todo: { ...todo, _id: result.insertedId, userId: req.params.id },
+        message: "todo added successfully",
+      });
     } else {
       res.status(404).json({ message: result });
     }
@@ -37,7 +41,10 @@ const updateTodo = async (req: Request, res: Response, next: NextFunction) => {
     };
     const result = await todoModel.update(todo, req.params.todoid);
     if (result !== "wrong id") {
-      res.status(200).json({ result, message: "todo updated successfully" });
+      res.status(200).json({
+        result,
+        message: "todo updated successfully",
+      });
     } else {
       res.status(404).json({ message: result });
     }
@@ -50,7 +57,10 @@ const deleteTodo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await todoModel.delete(req.params.todoid);
     if (result !== "wrong id") {
-      res.status(200).json({ result, message: "todo deleted successfully" });
+      res.status(200).json({
+        id: req.params.todoid,
+        message: "todo deleted successfully",
+      });
     } else {
       res.status(404).json({ message: result });
     }

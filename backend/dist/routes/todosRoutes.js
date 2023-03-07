@@ -25,7 +25,10 @@ const addTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         };
         const result = yield todos_js_1.default.create(todo, req.params.id);
         if (result !== "wrong id") {
-            res.status(200).json({ result, message: "todo added successfully" });
+            res.status(200).json({
+                todo: Object.assign(Object.assign({}, todo), { _id: result.insertedId, userId: req.params.id }),
+                message: "todo added successfully",
+            });
         }
         else {
             res.status(404).json({ message: result });
@@ -46,7 +49,10 @@ const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         };
         const result = yield todos_js_1.default.update(todo, req.params.todoid);
         if (result !== "wrong id") {
-            res.status(200).json({ result, message: "todo updated successfully" });
+            res.status(200).json({
+                result,
+                message: "todo updated successfully",
+            });
         }
         else {
             res.status(404).json({ message: result });
@@ -60,7 +66,10 @@ const deleteTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     try {
         const result = yield todos_js_1.default.delete(req.params.todoid);
         if (result !== "wrong id") {
-            res.status(200).json({ result, message: "todo deleted successfully" });
+            res.status(200).json({
+                id: req.params.todoid,
+                message: "todo deleted successfully",
+            });
         }
         else {
             res.status(404).json({ message: result });

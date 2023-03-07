@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import { motion } from "framer-motion";
-import { useAppDispatch } from "../customHooks/reduxTypes";
-import { clearAllTodos } from "../redux/Taskslice";
+import { AnimatePresence, motion } from "framer-motion";
+import ClearPopUp from "./ClearPopUp";
 
 const Options: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const [showClearPopUp, setShowClearPopUp] = useState(false);
   return (
     <div id="options">
       <div id="task-state">
@@ -18,11 +17,16 @@ const Options: React.FC = () => {
         id="clear"
         whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px black " }}
         transition={{ type: "spring", stiffness: 300 }}
-        onClick={() => dispatch(clearAllTodos())}
+        onClick={() => {
+          setShowClearPopUp(true);
+        }}
       >
         <AiFillDelete style={{ color: "white" }} />
         Clear All
       </motion.button>
+      <AnimatePresence>
+        {showClearPopUp && <ClearPopUp setShowClearPopUp={setShowClearPopUp} />}
+      </AnimatePresence>
     </div>
   );
 };

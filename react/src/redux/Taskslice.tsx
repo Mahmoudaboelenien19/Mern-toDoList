@@ -50,6 +50,7 @@ interface UpdateTask {
 export const updateTodo = createAsyncThunk(
   "tasks/updateTodo",
   async ({ id, content }: UpdateTask, thunk) => {
+    console.log(`id of update -> ${id}`);
     const { rejectWithValue } = thunk;
 
     const todo = {
@@ -71,7 +72,7 @@ export const checkTodo = createAsyncThunk(
   "tasks/checkTodo",
   async ({ id, content, isChecked }: UpdateTask, thunk) => {
     const { rejectWithValue } = thunk;
-
+    console.log({ id });
     const todo = {
       content,
       time: time(),
@@ -101,12 +102,12 @@ export const clearAllTodos = createAsyncThunk(
 export const getAllTodos = createAsyncThunk(
   "tasks/getAllTodos",
   async (_, thunk) => {
-    const { rejectWithValue } = thunk;
+    // const { rejectWithValue } = thunk;
     return await axios
       .get(getAllToDosRoute(userId as string))
       .then(({ data }) => data.result)
-      .then((data) => data.reverse())
-      .catch(({ response: { data } }) => rejectWithValue(data));
+      .then((data) => data.reverse());
+    // .catch(({ response: { data } }) => rejectWithValue(data));
   }
 );
 export interface Task {
@@ -123,14 +124,12 @@ export interface tasksState {
   tasks: Task[];
   isLoading: boolean;
   msg: string;
-  isChanged: boolean;
 }
 
 const initialState: tasksState = {
   isLoading: false,
   tasks: [],
   isError: false,
-  isChanged: true,
   msg: "",
 };
 
@@ -142,7 +141,6 @@ export const taskSlice = createSlice({
   extraReducers(builder) {
     builder.addCase(addTodo.pending, (state) => {
       state.isLoading = true;
-      state.isChanged = false;
       state.msg = "";
     });
 
@@ -150,14 +148,12 @@ export const taskSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.msg = action.payload.message as unknown as string;
-
-      state.isChanged = true;
+      state.tasks = [action.payload.todo, ...state.tasks];
     });
 
     builder.addCase(addTodo.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.isChanged = true;
       state.msg = action.payload as unknown as string;
     });
 
@@ -169,7 +165,6 @@ export const taskSlice = createSlice({
       state.isLoading = false;
       state.isError = false;
       state.tasks = action.payload;
-      state.isChanged = false;
     });
 
     builder.addCase(getAllTodos.rejected, (state, action) => {
@@ -179,77 +174,72 @@ export const taskSlice = createSlice({
 
     builder.addCase(deleteTodo.pending, (state) => {
       state.isLoading = true;
-      state.isChanged = false;
     });
 
     builder.addCase(deleteTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
+      setTimeout(() => {
+        state.tasks = state.tasks.filter((e) => e._id !== action.payload.id);
+      }, 300);
       state.msg = action.payload.message as unknown as string;
-
-      state.isChanged = true;
     });
 
     builder.addCase(deleteTodo.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.isChanged = false;
     });
 
     builder.addCase(updateTodo.pending, (state) => {
       state.isLoading = true;
-      state.isChanged = false;
     });
 
     builder.addCase(updateTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
       state.msg = action.payload.message as unknown as string;
-      state.isChanged = true;
     });
 
     builder.addCase(updateTodo.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.isChanged = false;
     });
 
     builder.addCase(clearAllTodos.pending, (state) => {
       state.isLoading = true;
-      state.isChanged = false;
     });
 
     builder.addCase(clearAllTodos.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
       state.msg = action.payload.message as unknown as string;
-      state.isChanged = true;
+      state.tasks = [];
     });
 
     builder.addCase(clearAllTodos.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.isChanged = false;
     });
 
     builder.addCase(checkTodo.pending, (state) => {
       state.isLoading = true;
-      state.isChanged = false;
       state.msg = "";
     });
 
     builder.addCase(checkTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
+      state.tasks = state.tasks.map((e) =>
+        e._id === action.payload.result.value._id
+          ? action.payload.result.value
+          : e
+      );
       state.msg = action.payload.message as unknown as string;
-
-      state.isChanged = true;
     });
 
     builder.addCase(checkTodo.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.isChanged = false;
     });
   },
 });
