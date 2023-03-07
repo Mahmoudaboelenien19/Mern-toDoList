@@ -1,16 +1,19 @@
 import React, { useEffect } from "react";
 import Options from "./Options";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { getAllTodos } from "../redux/Taskslice";
+
 import Task from "./Task";
 
 const Tasks: React.FC = () => {
-  const { tasks } = useAppSelector((state) => state.tasks);
+  const { isChanged, tasks } = useAppSelector((state) => state.tasks);
+  console.log({ tasks });
   const disptch = useAppDispatch();
   useEffect(() => {
+    if (!isChanged) return;
     disptch(getAllTodos());
-  }, []);
+  }, [isChanged]);
 
   return (
     <motion.div
@@ -22,8 +25,12 @@ const Tasks: React.FC = () => {
         <Options />
 
         <div id="tasks">
-          {tasks?.map((e) => {
-            return <Task key={e._id!} {...e} />;
+          {tasks?.map((e, index) => {
+            return (
+              <AnimatePresence mode="popLayout">
+                <Task key={e._id!} {...e} index={index} />
+              </AnimatePresence>
+            );
           })}
         </div>
       </div>

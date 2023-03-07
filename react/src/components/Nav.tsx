@@ -15,6 +15,7 @@ const Nav: React.FC = () => {
         <div id="logo">
           <Link to="/">
             <svg
+              id="svg-logo"
               width="12"
               height="15"
               viewBox="0 0 12 15"

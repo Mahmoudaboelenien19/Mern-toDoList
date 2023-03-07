@@ -53,18 +53,25 @@ const authenticate = async (
       email: req.body.email,
       password: req.body.password,
     };
-    const result = await userModel.authenticate(user);
+    const result = await userModel.authenticate(user, next);
+    console.log({ result });
     if (result) {
       const expiration = { expiresIn: "15s" };
+
       const accessToken = jwt.sign(
         { user },
         ACCESS_TOKEN_SECRET as unknown as string,
         expiration
       );
+
       const refToken = jwt.sign(
         { user },
         REFRESH_TOKEN_SECRET as unknown as string
       );
+
+      res.cookie("access-token", accessToken);
+      res.cookie("refresh-token", refToken);
+      res.cookie("user-id", result.id.toString());
       res.status(200).json({
         message: "you logged in sucessfully",
         ...result,
@@ -82,6 +89,7 @@ const authenticate = async (
 const userRoutes = Router();
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
-userRoutes.route("/user/:userid/todos").get(getTodos).delete(clear);
+userRoutes.route("/user/:userid/todos").get(getTodos);
+userRoutes.route("/user/:userid/cleartodos").delete(clear);
 
 export default userRoutes;

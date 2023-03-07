@@ -3,21 +3,62 @@ import { AiOutlineArrowUp } from "react-icons/ai";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { inpContext } from "../context/inpContext";
+import { motion, useIsPresent } from "framer-motion";
+import { useAppDispatch } from "../customHooks/reduxTypes";
+import { checkTodo, deleteTodo } from "../redux/Taskslice";
 
 interface Prop {
+  _id?: string;
   content: string;
   date: string;
   time: string;
   isCompleted: boolean;
   state: string;
+  index: number;
 }
 
-const Todo: React.FC<Prop> = ({ content, date, time, state, isCompleted }) => {
+const Todo: React.FC<Prop> = ({
+  _id,
+  content,
+  date,
+  time,
+  state,
+  isCompleted,
+  index,
+}) => {
+  const taskVariants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: (index: number) => ({
+      opacity: 1,
+      transition: {
+        delay: 2 + 0.4 * index,
+      },
+    }),
+  };
+
   const focus = useContext(inpContext);
-  const { setIsInpFocus } = focus;
+  const { setIsInpFocus, setInpValue, setUpdatedTaskId, setMode } = focus;
+
+  const dispatch = useAppDispatch();
+  const isPresent = useIsPresent();
+
   return (
-    <div className="task">
-      <p id="content">{content}</p>
+    <motion.div
+      style={{ position: isPresent ? "static" : "absolute" }}
+      whileHover={{ x: 10, scale: 1.02, boxShadow: "1px 1px 1.5px grey " }}
+      // transition={{ type: "spring", stiffness: 300 }}
+      variants={taskVariants}
+      initial="hidden"
+      animate="visible"
+      custom={index}
+      // exit={{ opacity: 0 }}
+      className="task"
+    >
+      <p id="content" className={isCompleted ? "checked" : ""}>
+        {content}
+      </p>
       <div id="time-cont">
         <span>{state} in </span>
         <span>{time}</span>
@@ -25,21 +66,37 @@ const Todo: React.FC<Prop> = ({ content, date, time, state, isCompleted }) => {
         <span>{date}</span>
       </div>
       <div id="btns">
-        <button>
+        <motion.button
+          whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px black " }}
+          transition={{ type: "spring", stiffness: 300 }}
+        >
           <AiOutlineArrowUp
             onClick={() => {
               setIsInpFocus(true);
+              setInpValue(content);
+              setUpdatedTaskId(_id!);
+              setMode("update");
             }}
           />
-        </button>
-        <button>
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px black " }}
+          transition={{ type: "spring", stiffness: 300 }}
+          onClick={() =>
+            dispatch(checkTodo({ id: _id!, isChecked: !isCompleted, content }))
+          }
+        >
           <IoCheckmarkDoneOutline />
-        </button>
-        <button>
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px black " }}
+          transition={{ type: "spring", stiffness: 300 }}
+          onClick={() => dispatch(deleteTodo(_id!))}
+        >
           <MdDeleteOutline />
-        </button>
+        </motion.button>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

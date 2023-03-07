@@ -10,7 +10,7 @@ const addTodo = async (req: Request, res: Response, next: NextFunction) => {
       date: req.body.date,
       time: req.body.time,
       state: req.body.state,
-      iscompleted: req.body.iscompleted,
+      isCompleted: req.body.isCompleted,
     };
     const result = await todoModel.create(
       todo,
@@ -33,7 +33,7 @@ const updateTodo = async (req: Request, res: Response, next: NextFunction) => {
       date: req.body.date,
       time: req.body.time,
       state: req.body.state,
-      iscompleted: req.body.iscompleted,
+      isCompleted: req.body.isCompleted,
     };
     const result = await todoModel.update(todo, req.params.todoid);
     if (result !== "wrong id") {

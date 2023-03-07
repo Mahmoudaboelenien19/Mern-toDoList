@@ -9,8 +9,13 @@ const config_js_1 = require("./config.js");
 const userRoutes_js_1 = __importDefault(require("./routes/userRoutes.js"));
 const todosRoutes_js_1 = __importDefault(require("./routes/todosRoutes.js"));
 const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+app.use((0, cookie_parser_1.default)());
+app.use((0, cors_1.default)({
+    credentials: true,
+    origin: "http://localhost:5173",
+}));
 app.use(express_1.default.json());
 app.use("/", userRoutes_js_1.default);
 app.use("/", todosRoutes_js_1.default);

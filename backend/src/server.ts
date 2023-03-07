@@ -4,9 +4,16 @@ import { PORT } from "./config.js";
 import userRoutes from "./routes/userRoutes.js";
 import todoRoutes from "./routes/todosRoutes.js";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:5173",
+  })
+);
 app.use(express.json());
 
 app.use("/", userRoutes);

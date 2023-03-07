@@ -57,11 +57,15 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             email: req.body.email,
             password: req.body.password,
         };
-        const result = yield users_js_1.default.authenticate(user);
+        const result = yield users_js_1.default.authenticate(user, next);
+        console.log({ result });
         if (result) {
             const expiration = { expiresIn: "15s" };
             const accessToken = jsonwebtoken_1.default.sign({ user }, config_js_1.ACCESS_TOKEN_SECRET, expiration);
             const refToken = jsonwebtoken_1.default.sign({ user }, config_js_1.REFRESH_TOKEN_SECRET);
+            res.cookie("access-token", accessToken);
+            res.cookie("refresh-token", refToken);
+            res.cookie("user-id", result.id.toString());
             res.status(200).json(Object.assign(Object.assign({ message: "you logged in sucessfully" }, result), { refToken,
                 accessToken, status: 200 }));
         }
@@ -74,5 +78,6 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
 const userRoutes = (0, express_1.Router)();
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
-userRoutes.route("/user/:userid/todos").get(getTodos).delete(clear);
+userRoutes.route("/user/:userid/todos").get(getTodos);
+userRoutes.route("/user/:userid/cleartodos").delete(clear);
 exports.default = userRoutes;

@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { inpContext } from "../context/inpContext";
 import { motion } from "framer-motion";
-import { useAppDispatch } from "../customHooks/reduxTypes";
-import { addTodo } from "../redux/Taskslice";
+import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
+import { addTodo, updateTodo } from "../redux/Taskslice";
+import { toast } from "react-toastify";
 
 const Form: React.FC = () => {
+  const [isCreated, setIsCreated] = useState(false);
+  const { msg } = useAppSelector((state) => state.tasks);
   const dispatch = useAppDispatch();
 
   const [inp, setInp] = useState("");
@@ -14,11 +17,19 @@ const Form: React.FC = () => {
   useEffect(() => {
     if (focus.isInpFocus) {
       input.current.focus();
+      input.current.value = focus?.inpValue;
     }
     setTimeout(() => {
       focus.setIsInpFocus(false);
     }, 0);
   }, [focus.isInpFocus]);
+
+  //!fix
+  useEffect(() => {
+    if (!isCreated) return;
+    toast.success(msg);
+    setIsCreated(false);
+  }, [msg, isCreated]);
 
   const handleInp = () => {
     setInp(input.current!.value);
@@ -32,7 +43,22 @@ const Form: React.FC = () => {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(addTodo(inp));
+          if (focus.mode === "create") {
+            dispatch(addTodo(inp));
+          } else {
+            dispatch(
+              updateTodo({
+                id: focus.updatedTaskId,
+                content: input.current.value,
+              })
+            );
+            setTimeout(() => {
+              focus.setMode("create");
+            }, 500);
+          }
+          input.current.value = "";
+          input.current.blur();
+          setIsCreated(true);
         }}
       >
         <div id="inp">

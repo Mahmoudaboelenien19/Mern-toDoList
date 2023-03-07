@@ -6,6 +6,6 @@ export interface TodosInterface {
   date: string;
   time: string;
   state: string;
-  iscompleted: boolean;
+  isCompleted: boolean;
   userId?: ObjectId;
 }

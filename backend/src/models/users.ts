@@ -1,7 +1,9 @@
+import { NextFunction } from "express";
 import { closeMongoConnection, connectToMongo } from "./../database.js";
 import bcrypt from "bcrypt";
 import { BCRYPT_PASS, SALT } from "../config.js";
 import { ObjectId } from "mongodb";
+import { Error } from "../interfaces/errorInterface.js";
 
 export interface UserInterface {
   username: string;
@@ -45,21 +47,28 @@ class User {
     }
   }
 
-  async authenticate(user: UserData) {
+  async authenticate(user: UserData, next: NextFunction) {
     const db = await connectToMongo();
     const result = await db.collection("users").findOne({ email: user.email });
+    console.log({ result });
     if (result) {
       const check = await bcrypt.compare(
         user.password + BCRYPT_PASS,
         result.password
       );
+      closeMongoConnection();
       if (check) {
-        return user;
+        return { ...user, id: result._id };
       } else {
-        throw new Error("wrong password");
+        const err: Error = new Error("Wrong password");
+        err.status = 401;
+        next(err);
       }
     } else {
-      throw new Error("this user isn't registered");
+      const err: Error = new Error("this user isn't regesitered ..!");
+      err.status = 404;
+      next(err);
+      closeMongoConnection();
     }
   }
 

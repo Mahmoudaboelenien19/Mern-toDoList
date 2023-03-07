@@ -44,21 +44,28 @@ class User {
             }
         });
     }
-    authenticate(user) {
+    authenticate(user, next) {
         return __awaiter(this, void 0, void 0, function* () {
             const db = yield (0, database_js_1.connectToMongo)();
             const result = yield db.collection("users").findOne({ email: user.email });
+            console.log({ result });
             if (result) {
                 const check = yield bcrypt_1.default.compare(user.password + config_js_1.BCRYPT_PASS, result.password);
+                (0, database_js_1.closeMongoConnection)();
                 if (check) {
-                    return user;
+                    return Object.assign(Object.assign({}, user), { id: result._id });
                 }
                 else {
-                    throw new Error("wrong password");
+                    const err = new Error("Wrong password");
+                    err.status = 401;
+                    next(err);
                 }
             }
             else {
-                throw new Error("this user isn't registered");
+                const err = new Error("this user isn't regesitered ..!");
+                err.status = 404;
+                next(err);
+                (0, database_js_1.closeMongoConnection)();
             }
         });
     }

@@ -74,8 +74,7 @@ const Login = () => {
               if (status === 200) {
                 toast.success(message);
                 navigate("/");
-              }
-              if (status === 404) {
+              } else if (status === 404) {
                 toast.error(message);
                 navigate(`/signup?email=${email}`);
               } else {
