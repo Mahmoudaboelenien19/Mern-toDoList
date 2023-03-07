@@ -21,14 +21,11 @@ nav {
     width: 40%;
 
     a {
-      letter-spacing: 1px;
-      font-size: 20px;
-      font-weight: bold;
-      color: var(--border);
-
-      .o-span {
-        color: var(--main);
-      }
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1px;
     }
   }
   #links {
@@ -95,6 +92,10 @@ nav {
   }
 }
 
-#svg-logo {
-  width: 60px;
+svg.logo {
+  align-self: center;
+}
+
+svg.o {
+  margin-top: 8px;
 }

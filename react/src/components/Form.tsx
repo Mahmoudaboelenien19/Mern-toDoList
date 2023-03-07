@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 const Form: React.FC = () => {
   const [isCreated, setIsCreated] = useState(false);
   const { msg } = useAppSelector((state) => state.tasks);
+
   const dispatch = useAppDispatch();
 
   const [inp, setInp] = useState("");
@@ -26,10 +27,13 @@ const Form: React.FC = () => {
 
   //!fix
   useEffect(() => {
-    if (!isCreated) return;
+    if (!msg) return;
+    // const time = setTimeout(() => {
     toast.success(msg);
-    setIsCreated(false);
-  }, [msg, isCreated]);
+    // }, 500);
+    // return () => clearTimeout(time);
+    // setIsCreated(false);
+  }, [msg]);
 
   const handleInp = () => {
     setInp(input.current!.value);

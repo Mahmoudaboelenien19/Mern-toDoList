@@ -8,7 +8,6 @@ import Task from "./Task";
 
 const Tasks: React.FC = () => {
   const { isChanged, tasks } = useAppSelector((state) => state.tasks);
-  console.log({ tasks });
   const disptch = useAppDispatch();
   useEffect(() => {
     if (!isChanged) return;

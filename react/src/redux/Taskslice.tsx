@@ -143,6 +143,7 @@ export const taskSlice = createSlice({
     builder.addCase(addTodo.pending, (state) => {
       state.isLoading = true;
       state.isChanged = false;
+      state.msg = "";
     });
 
     builder.addCase(addTodo.fulfilled, (state, action) => {
@@ -184,6 +185,8 @@ export const taskSlice = createSlice({
     builder.addCase(deleteTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
+      state.msg = action.payload.message as unknown as string;
+
       state.isChanged = true;
     });
 
@@ -201,6 +204,7 @@ export const taskSlice = createSlice({
     builder.addCase(updateTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
+      state.msg = action.payload.message as unknown as string;
       state.isChanged = true;
     });
 
@@ -218,6 +222,7 @@ export const taskSlice = createSlice({
     builder.addCase(clearAllTodos.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
+      state.msg = action.payload.message as unknown as string;
       state.isChanged = true;
     });
 
@@ -230,11 +235,14 @@ export const taskSlice = createSlice({
     builder.addCase(checkTodo.pending, (state) => {
       state.isLoading = true;
       state.isChanged = false;
+      state.msg = "";
     });
 
     builder.addCase(checkTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
+      state.msg = action.payload.message as unknown as string;
+
       state.isChanged = true;
     });
 
