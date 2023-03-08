@@ -26,7 +26,7 @@ const Login = () => {
     return await axios
       .post(authenticateRoute, user, { withCredentials: true })
       .then(({ data }) => data)
-      .catch(({ response: { data } }) => data);
+      .catch((data) => console.log(data));
   };
 
   return (
@@ -76,7 +76,6 @@ const Login = () => {
                 navigate("/");
               } else if (status === 404) {
                 toast.error(message);
-                navigate(`/signup?email=${email}`);
               } else {
                 toast.error(message);
               }

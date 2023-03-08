@@ -1,10 +1,24 @@
 import { NavLink, Link } from "react-router-dom";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoNotifications } from "react-icons/io5";
 import NavRoutes from "../widget/routes";
 import { motion } from "framer-motion";
+import Cookies from "js-cookie";
+import axios from "axios";
+import { getUserRoute } from "../../routes";
 
 const Nav: React.FC = () => {
+  const userId = Cookies.get("user-id");
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    if (userId) {
+      axios
+        .get(getUserRoute(userId))
+        .then(({ data }) => setUserName(data.user.username));
+    }
+  }, [userName]);
+
   return (
     <div>
       <motion.nav
@@ -71,18 +85,16 @@ const Nav: React.FC = () => {
 
         <div id="links">
           <NavLink to="/">tasks</NavLink>
-          <NavLink to="/user">user</NavLink>
-          <NavLink to="/setting">setting</NavLink>
+          <NavLink to="/setting">settings</NavLink>
         </div>
 
         <div id="login-state">
-          <Link to="" id="user">
-            {" "}
-            guest
+          <Link to="/user" id="user">
+            {userName ? userName : "guest"}
           </Link>
 
           <Link className="btn-state" to="/login">
-            log in
+            {userName ? "logout" : "log in"}
           </Link>
           <IoNotifications size={20} color={"gray"} />
         </div>

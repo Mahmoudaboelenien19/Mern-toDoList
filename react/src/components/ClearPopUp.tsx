@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { clearAllTodos } from "../redux/Taskslice";
 import { useAppDispatch } from "../customHooks/reduxTypes";
+import { useContext } from "react";
+import { ClearContext } from "../App";
 
-interface ClearPopUpInterface {
-  setShowClearPopUp: React.Dispatch<React.SetStateAction<boolean>>;
-}
-const ClearPopUp = ({ setShowClearPopUp }: ClearPopUpInterface) => {
+const ClearPopUp = () => {
+  const { setShowClearPopUp } = useContext(ClearContext);
   const dispatch = useAppDispatch();
 
   return (

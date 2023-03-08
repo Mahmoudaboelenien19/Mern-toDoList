@@ -1,19 +1,24 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useContext,
+  createContext,
+} from "react";
 import { inpContext } from "../context/inpContext";
 import { motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { addTodo, updateTodo } from "../redux/Taskslice";
 import { toast } from "react-toastify";
+import { toastContext } from "../pages/Home";
 
 const Form: React.FC = () => {
-  const [isCreated, setIsCreated] = useState(false);
-  const { msg } = useAppSelector((state) => state.tasks);
-
   const dispatch = useAppDispatch();
 
   const [inp, setInp] = useState("");
   const input = useRef<HTMLInputElement>(null!);
   const focus = useContext(inpContext);
+  const { msg } = useAppSelector((state) => state.tasks);
 
   useEffect(() => {
     if (focus.isInpFocus) {
@@ -25,15 +30,15 @@ const Form: React.FC = () => {
     }, 0);
   }, [focus.isInpFocus]);
 
-  //!fix
+  const { showToast, setShowToast } = useContext(toastContext);
+
   useEffect(() => {
-    if (!msg) return;
-    // const time = setTimeout(() => {
-    toast.success(msg);
-    // }, 500);
-    // return () => clearTimeout(time);
-    // setIsCreated(false);
-  }, [msg]);
+    if (!msg || !showToast) return;
+    const timer = setTimeout(() => {
+      toast.success(msg);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [msg, showToast]);
 
   const handleInp = () => {
     setInp(input.current!.value);
@@ -47,6 +52,7 @@ const Form: React.FC = () => {
         action=""
         onSubmit={(e) => {
           e.preventDefault();
+          setShowToast(true);
           if (focus.mode === "create") {
             dispatch(addTodo(inp));
           } else {
@@ -56,13 +62,11 @@ const Form: React.FC = () => {
                 content: input.current.value,
               })
             );
-            setTimeout(() => {
-              focus.setMode("create");
-            }, 500);
+
+            focus.setMode("create");
           }
           input.current.value = "";
           input.current.blur();
-          setIsCreated(true);
         }}
       >
         <div id="inp">

@@ -1,3 +1,4 @@
+import { auth } from "./../middleware/auth.js";
 import { NextFunction, Request, Response, Router } from "express";
 import todoModel from "../models/todos.js";
 import { ObjectId } from "mongodb";
@@ -89,6 +90,6 @@ todoRoutes.route("/user/:id/addtodo").post(addTodo);
 todoRoutes
   .route("/todo/:todoid")
   .patch(updateTodo)
-  .delete(deleteTodo)
+  .delete(auth, deleteTodo)
   .get(getTodo);
 export default todoRoutes;

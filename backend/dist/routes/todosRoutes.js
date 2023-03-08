@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const auth_js_1 = require("./../middleware/auth.js");
 const express_1 = require("express");
 const todos_js_1 = __importDefault(require("../models/todos.js"));
 const addTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -98,6 +99,6 @@ todoRoutes.route("/user/:id/addtodo").post(addTodo);
 todoRoutes
     .route("/todo/:todoid")
     .patch(updateTodo)
-    .delete(deleteTodo)
+    .delete(auth_js_1.auth, deleteTodo)
     .get(getTodo);
 exports.default = todoRoutes;

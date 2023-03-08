@@ -11,6 +11,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       email: req.body.email,
       password: req.body.password,
       country: req.body.country,
+      phone: req.body.phone,
     };
     const result = await userModel.createUser(newUser);
     res
@@ -86,10 +87,51 @@ const authenticate = async (
   }
 };
 
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.params.userid as unknown as ObjectId;
+    const user = await userModel.getUser(userId, next);
+    res.status(200).json({ user, status: 200 });
+  } catch (err) {
+    next(err);
+  }
+};
+
+const getNewRefToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { refToken } = req.body;
+  console.log({ refToken });
+  if (!refToken) {
+    return res.status(400).json({ message: "unautherized" });
+  } else {
+    let user = await userModel.verfiyRefToken(refToken, next);
+    if (user) {
+      const accessTokenExpiration = { expiresIn: "15s" };
+
+      const accessToken = jwt.sign(
+        { user },
+        ACCESS_TOKEN_SECRET as unknown as string,
+        accessTokenExpiration
+      );
+      const refreshToken = jwt.sign(
+        { user },
+        REFRESH_TOKEN_SECRET as unknown as string
+      );
+      res.cookie("access-token", accessToken);
+      res.cookie("refresh-token", refToken);
+      res.status(200).json({ refreshToken, accessToken });
+    }
+  }
+};
+
 const userRoutes = Router();
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
 userRoutes.route("/user/:userid/todos").get(getTodos);
+userRoutes.route("/user/:userid").get(getUser);
+userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(clear);
-
 export default userRoutes;

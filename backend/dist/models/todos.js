@@ -40,7 +40,9 @@ class Todos {
                     const result = yield collection.deleteOne({
                         _id: new mongodb_1.ObjectId(todoId),
                     });
-                    (0, database_1.closeMongoConnection)();
+                    setTimeout(() => {
+                        (0, database_1.closeMongoConnection)();
+                    }, 1000);
                     return result;
                 }
                 catch (err) {

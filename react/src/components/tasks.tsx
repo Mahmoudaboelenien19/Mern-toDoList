@@ -12,6 +12,7 @@ const Tasks: React.FC = () => {
 
   useEffect(() => {
     disptch(getAllTodos());
+    document.title = `to do`;
   }, []);
 
   return (

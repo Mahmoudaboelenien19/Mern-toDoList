@@ -1,15 +1,30 @@
 import Nav from "./components/Nav";
 import "./styles/main.scss";
 import "react-toastify/dist/ReactToastify.css";
-
 import { BrowserRouter as Router } from "react-router-dom";
 import { Flip, ToastContainer } from "react-toastify";
+import { AnimatePresence } from "framer-motion";
+import ClearPopUp from "./components/ClearPopUp";
+import { createContext, useState } from "react";
+
+interface ClearContext {
+  showClearPopUp: boolean;
+  setShowClearPopUp: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const ClearContext = createContext({} as ClearContext);
 
 const App = () => {
+  const [showClearPopUp, setShowClearPopUp] = useState(false);
+
   return (
     <Router>
       <div className="App">
-        <Nav />
+        <ClearContext.Provider value={{ showClearPopUp, setShowClearPopUp }}>
+          <Nav />
+          <AnimatePresence>{showClearPopUp && <ClearPopUp />}</AnimatePresence>
+        </ClearContext.Provider>
+
         <ToastContainer
           position="bottom-left"
           autoClose={3000}

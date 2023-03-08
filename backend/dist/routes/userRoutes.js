@@ -23,6 +23,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             email: req.body.email,
             password: req.body.password,
             country: req.body.country,
+            phone: req.body.phone,
         };
         const result = yield users_js_1.default.createUser(newUser);
         res
@@ -75,9 +76,39 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         next(err);
     }
 });
+const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.params.userid;
+        const user = yield users_js_1.default.getUser(userId, next);
+        res.status(200).json({ user, status: 200 });
+    }
+    catch (err) {
+        next(err);
+    }
+});
+const getNewRefToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { refToken } = req.body;
+    console.log({ refToken });
+    if (!refToken) {
+        return res.status(400).json({ message: "unautherized" });
+    }
+    else {
+        let user = yield users_js_1.default.verfiyRefToken(refToken, next);
+        if (user) {
+            const accessTokenExpiration = { expiresIn: "15s" };
+            const accessToken = jsonwebtoken_1.default.sign({ user }, config_js_1.ACCESS_TOKEN_SECRET, accessTokenExpiration);
+            const refreshToken = jsonwebtoken_1.default.sign({ user }, config_js_1.REFRESH_TOKEN_SECRET);
+            res.cookie("access-token", accessToken);
+            res.cookie("refresh-token", refToken);
+            res.status(200).json({ refreshToken, accessToken });
+        }
+    }
+});
 const userRoutes = (0, express_1.Router)();
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
 userRoutes.route("/user/:userid/todos").get(getTodos);
+userRoutes.route("/user/:userid").get(getUser);
+userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(clear);
 exports.default = userRoutes;

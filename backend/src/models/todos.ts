@@ -32,8 +32,9 @@ class Todos {
         const result = await collection.deleteOne({
           _id: new ObjectId(todoId),
         });
-
-        closeMongoConnection();
+        setTimeout(() => {
+          closeMongoConnection();
+        }, 1000);
         return result;
       } catch (err) {
         throw new Error("can't create this todo");

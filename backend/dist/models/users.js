@@ -16,6 +16,7 @@ const database_js_1 = require("./../database.js");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const config_js_1 = require("../config.js");
 const mongodb_1 = require("mongodb");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class User {
     static hashPass(pass) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -35,7 +36,6 @@ class User {
                 const collection = db.collection("users");
                 const password = yield User.hashPass(userData.password);
                 const res = yield collection.insertOne(Object.assign(Object.assign({}, userData), { password }));
-                console.log({ res });
                 (0, database_js_1.closeMongoConnection)();
                 return res;
             }
@@ -73,7 +73,10 @@ class User {
         return __awaiter(this, void 0, void 0, function* () {
             const db = yield (0, database_js_1.connectToMongo)();
             const collection = db.collection("todos");
-            const res = collection.find({ userId: new mongodb_1.ObjectId(userId) }).toArray();
+            const res = yield collection
+                .find({ userId: new mongodb_1.ObjectId(userId) })
+                .toArray();
+            (0, database_js_1.closeMongoConnection)();
             return res;
         });
     }
@@ -81,8 +84,38 @@ class User {
         return __awaiter(this, void 0, void 0, function* () {
             const db = yield (0, database_js_1.connectToMongo)();
             const collection = db.collection("todos");
-            const res = collection.deleteMany({ userId: new mongodb_1.ObjectId(userId) });
+            const res = yield collection.deleteMany({ userId: new mongodb_1.ObjectId(userId) });
+            (0, database_js_1.closeMongoConnection)();
             return res;
+        });
+    }
+    getUser(userId, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const db = yield (0, database_js_1.connectToMongo)();
+                const collection = db.collection("users");
+                const res = yield collection.findOne({ _id: new mongodb_1.ObjectId(userId) });
+                (0, database_js_1.closeMongoConnection)();
+                return res;
+            }
+            catch (err) {
+                const error = new Error("this is wring id");
+                error.status = 404;
+                next(error);
+            }
+        });
+    }
+    verfiyRefToken(refToken, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const decode = jsonwebtoken_1.default.verify(refToken, config_js_1.REFRESH_TOKEN_SECRET);
+                return decode;
+            }
+            catch (err) {
+                const error = new Error("wrong ref token");
+                error.status = 404;
+                next(err);
+            }
         });
     }
 }

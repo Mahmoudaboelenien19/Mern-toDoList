@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import { AnimatePresence, motion } from "framer-motion";
-import ClearPopUp from "./ClearPopUp";
+import { motion } from "framer-motion";
+import { ClearContext } from "../App";
 
 const Options: React.FC = () => {
-  const [showClearPopUp, setShowClearPopUp] = useState(false);
+  const { setShowClearPopUp } = useContext(ClearContext);
+
   return (
     <div id="options">
       <div id="task-state">
@@ -24,9 +25,6 @@ const Options: React.FC = () => {
         <AiFillDelete style={{ color: "white" }} />
         Clear All
       </motion.button>
-      <AnimatePresence>
-        {showClearPopUp && <ClearPopUp setShowClearPopUp={setShowClearPopUp} />}
-      </AnimatePresence>
     </div>
   );
 };

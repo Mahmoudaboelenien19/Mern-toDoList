@@ -1,15 +1,17 @@
+import { Error } from "./../interfaces/errorInterface";
 import { NextFunction } from "express";
 import { closeMongoConnection, connectToMongo } from "./../database.js";
 import bcrypt from "bcrypt";
-import { BCRYPT_PASS, SALT } from "../config.js";
+import { BCRYPT_PASS, REFRESH_TOKEN_SECRET, SALT } from "../config.js";
 import { ObjectId } from "mongodb";
-import { Error } from "../interfaces/errorInterface.js";
+import jwt from "jsonwebtoken";
 
 export interface UserInterface {
   username: string;
   password: string;
   country: string;
   email: string;
+  phone: string;
 }
 
 export interface UserData {
@@ -39,7 +41,6 @@ class User {
         ...userData,
         password,
       });
-      console.log({ res });
       closeMongoConnection();
       return res;
     } else {
@@ -75,15 +76,47 @@ class User {
   async getAllToDos(userId: ObjectId) {
     const db = await connectToMongo();
     const collection = db.collection("todos");
-    const res = collection.find({ userId: new ObjectId(userId) }).toArray();
+    const res = await collection
+      .find({ userId: new ObjectId(userId) })
+      .toArray();
+    closeMongoConnection();
     return res;
   }
 
   async clear(userId: ObjectId) {
     const db = await connectToMongo();
     const collection = db.collection("todos");
-    const res = collection.deleteMany({ userId: new ObjectId(userId) });
+    const res = await collection.deleteMany({ userId: new ObjectId(userId) });
+    closeMongoConnection();
     return res;
+  }
+
+  async getUser(userId: ObjectId, next: NextFunction) {
+    try {
+      const db = await connectToMongo();
+      const collection = db.collection("users");
+      const res = await collection.findOne({ _id: new ObjectId(userId) });
+      closeMongoConnection();
+      return res;
+    } catch (err) {
+      const error: Error = new Error("this is wring id");
+      error.status = 404;
+      next(error);
+    }
+  }
+
+  async verfiyRefToken(refToken: string, next: NextFunction) {
+    try {
+      const decode = jwt.verify(
+        refToken,
+        REFRESH_TOKEN_SECRET as unknown as string
+      );
+      return decode;
+    } catch (err) {
+      const error: Error = new Error("wrong ref token");
+      error.status = 404;
+      next(err);
+    }
   }
 }
 

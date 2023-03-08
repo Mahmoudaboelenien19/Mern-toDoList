@@ -3,8 +3,10 @@ import { AiOutlineArrowUp } from "react-icons/ai";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { inpContext } from "../context/inpContext";
 import { AnimatePresence, motion } from "framer-motion";
-import { useAppDispatch } from "../customHooks/reduxTypes";
+import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { checkTodo, deleteTodo } from "../redux/Taskslice";
+import { toast } from "react-toastify";
+import { toastContext } from "../pages/Home";
 
 interface Prop {
   _id?: string;
@@ -27,6 +29,7 @@ const Task: React.FC<Prop> = ({
 }) => {
   const [isIntialRender, setIsIntialRender] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
+  const { showToast, setShowToast } = useContext(toastContext);
 
   useEffect(() => {
     setIsIntialRender(true);
@@ -107,6 +110,7 @@ const Task: React.FC<Prop> = ({
               whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px black " }}
               transition={{ type: "spring", stiffness: 300 }}
               onClick={() => {
+                setShowToast(true);
                 dispatch(deleteTodo(_id!));
                 setIsDeleted(true);
               }}

@@ -13,14 +13,6 @@ const SignUp = () => {
   const navigate = useNavigate();
   const emailInp = useRef<HTMLInputElement>(null!);
 
-  const defaultEmail = new URLSearchParams(location.search).get("email") || "";
-
-  useEffect(() => {
-    if (defaultEmail) {
-      emailInp.current.value = defaultEmail;
-    }
-  }, []);
-
   //get all countries
   const [countries, setCountries] = useState([
     {
@@ -37,8 +29,8 @@ const SignUp = () => {
   }, []);
 
   const schema = yup.object().shape({
-    name: yup.string().min(6).max(12).required(),
-    email: yup.string().email().required(),
+    username: yup.string().min(6).max(12).required(),
+    email: yup.string().email().required("insert a vaild email"),
     password: yup
       .string()
       .min(6)
@@ -98,64 +90,72 @@ const SignUp = () => {
           sign up
         </motion.h4>{" "}
         <div id="inp">
-          <input type="text" required {...register("name")} />
+          <input type="text" required {...register("username")} />
           <div className="mock-inp"></div>
           <span id="placeholder">username </span>
           <AnimatePresence>
-            {errors.name && (
+            {errors.username && (
               <motion.small
-                exit={{ opacity: 0 }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
                 className="err"
               >
-                {errors?.name?.message?.toString()}
+                {errors?.username?.message?.toString()}
               </motion.small>
             )}
           </AnimatePresence>
         </div>
         <div id="inp">
-          <input type="text" required {...register("email")} ref={emailInp} />
+          <input type="text" required {...register("email")} />
           <div className="mock-inp"></div>
           <span id="placeholder">email </span>
-          {errors.email && (
-            <motion.small
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-              className="err"
-            >
-              {errors?.email?.message?.toString()}
-            </motion.small>
-          )}
+          <AnimatePresence>
+            {errors.email && (
+              <motion.small
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                className="err"
+              >
+                {errors.email?.message?.toString()}
+              </motion.small>
+            )}
+          </AnimatePresence>
         </div>
         <div id="inp">
           <input type="text" required {...register("password")} />
           <div className="mock-inp"></div>
           <span id="placeholder"> password</span>
-          {errors.password && (
-            <motion.small
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-              className="err"
-            >
-              {errors?.password?.message?.toString()}
-            </motion.small>
-          )}
+          <AnimatePresence>
+            {errors.password && (
+              <motion.small
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                className="err"
+              >
+                {errors?.password?.message?.toString()}
+              </motion.small>
+            )}
+          </AnimatePresence>
         </div>
         <div id="inp">
           <input type="text" required {...register("confirm")} />
           <div className="mock-inp"></div>
           <span id="placeholder">confirm password</span>
-          {errors.confirm && (
-            <motion.small
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-              className="err"
-            >
-              {errors?.confirm?.message?.toString()}
-            </motion.small>
-          )}
+          <AnimatePresence>
+            {errors.confirm && (
+              <motion.small
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                className="err"
+              >
+                {errors?.confirm?.message?.toString()}
+              </motion.small>
+            )}
+          </AnimatePresence>
         </div>
         <div id="radio">
           <label htmlFor="gender">Gender</label>
@@ -194,15 +194,18 @@ const SignUp = () => {
           <input type="text" required {...register("phone")} />
           <div className="mock-inp"></div>
           <span id="placeholder">phone</span>
-          {errors.phone && (
-            <motion.small
-              initial={{ y: 20 }}
-              animate={{ y: 0 }}
-              className="err"
-            >
-              {errors?.phone?.message?.toString()}
-            </motion.small>
-          )}
+          <AnimatePresence>
+            {errors.phone && (
+              <motion.small
+                exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                initial={{ y: 20 }}
+                animate={{ y: 0 }}
+                className="err"
+              >
+                {errors?.phone?.message?.toString()}
+              </motion.small>
+            )}
+          </AnimatePresence>
         </div>
         <motion.button
           whileHover={{ scale: 1.2, boxShadow: "2px 2px 2px black " }}
