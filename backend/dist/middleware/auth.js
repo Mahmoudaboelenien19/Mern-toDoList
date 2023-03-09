@@ -9,15 +9,10 @@ const config_js_1 = require("../config.js");
 const auth = (req, res, next) => {
     try {
         const authHearders = req.headers.authorization;
-        console.log("entered ");
         if (authHearders) {
-            console.log("entered 1");
             const token = authHearders.split(" ")[1];
-            console.log(13);
-            console.log({ token });
             const decode = jsonwebtoken_1.default.verify(token, config_js_1.ACCESS_TOKEN_SECRET);
             if (decode) {
-                console.log("entered 2");
                 next();
             }
             else {

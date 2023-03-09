@@ -94,11 +94,15 @@ class User {
             try {
                 const db = yield (0, database_js_1.connectToMongo)();
                 const collection = db.collection("users");
+                console.log({ userId });
                 const res = yield collection.findOne({ _id: new mongodb_1.ObjectId(userId) });
+                console.log("get 1");
                 (0, database_js_1.closeMongoConnection)();
                 return res;
             }
             catch (err) {
+                console.log("get 2");
+                (0, database_js_1.closeMongoConnection)();
                 const error = new Error("this is wring id");
                 error.status = 404;
                 next(error);

@@ -93,7 +93,8 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
     const user = await userModel.getUser(userId, next);
     res.status(200).json({ user, status: 200 });
   } catch (err) {
-    next(err);
+    // next(err);
+    console.log(err);
   }
 };
 
@@ -103,9 +104,8 @@ const getNewRefToken = async (
   next: NextFunction
 ) => {
   const { refToken } = req.body;
-  console.log({ refToken });
   if (!refToken) {
-    return res.status(400).json({ message: "unautherized" });
+    return res.status(401).json({ message: "unautherized" });
   } else {
     let user = await userModel.verfiyRefToken(refToken, next);
     if (user) {
@@ -127,11 +127,26 @@ const getNewRefToken = async (
   }
 };
 
+const logOut = (req: Request, res: Response) => {
+  const { refToken } = req.body;
+  if (refToken) {
+    res.clearCookie("access-token");
+    res.clearCookie("user-id");
+    res.clearCookie("refresh-token");
+    res
+      .status(200)
+      .json({ status: 200, message: "you logged out successfully" });
+  } else {
+    res.status(404).json({ status: 404, message: "wrong refresh-token token" });
+  }
+};
+
 const userRoutes = Router();
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
 userRoutes.route("/user/:userid/todos").get(getTodos);
 userRoutes.route("/user/:userid").get(getUser);
+userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(clear);
 export default userRoutes;

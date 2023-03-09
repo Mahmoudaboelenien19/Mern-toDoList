@@ -95,10 +95,16 @@ class User {
     try {
       const db = await connectToMongo();
       const collection = db.collection("users");
+      console.log({ userId });
       const res = await collection.findOne({ _id: new ObjectId(userId) });
+      console.log("get 1");
       closeMongoConnection();
       return res;
     } catch (err) {
+      console.log("get 2");
+
+      closeMongoConnection();
+
       const error: Error = new Error("this is wring id");
       error.status = 404;
       next(error);

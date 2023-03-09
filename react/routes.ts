@@ -19,3 +19,5 @@ export const getUserRoute = (userId: string) =>
   `http://localhost:3000/user/${userId}`;
 
 export const getNewTokenRoute = `http://localhost:3000/user/auth/refresh`;
+
+export const logOutRoute = `http://localhost:3000/user/logout`;

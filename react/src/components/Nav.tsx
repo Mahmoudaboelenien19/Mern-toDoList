@@ -5,19 +5,32 @@ import NavRoutes from "../widget/routes";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { getUserRoute } from "../../routes";
+import { getUserRoute, logOutRoute } from "../../routes";
+import { useAppSelector } from "../customHooks/reduxTypes";
 
 const Nav: React.FC = () => {
-  const userId = Cookies.get("user-id");
   const [userName, setUserName] = useState("");
-
-  useEffect(() => {
+  const { isAuth } = useAppSelector((state) => state.auth);
+  console.log({ isAuth });
+  const getUserData = async () => {
+    const userId = Cookies.get("user-id");
     if (userId) {
-      axios
-        .get(getUserRoute(userId))
+      return await axios
+        .get(getUserRoute(userId!))
         .then(({ data }) => setUserName(data.user.username));
     }
-  }, [userName]);
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, [isAuth]);
+
+  const handleLogOut = async () =>
+    await axios.post(
+      logOutRoute,
+      { refToken: Cookies.get("refresh-token") },
+      { withCredentials: true }
+    );
 
   return (
     <div>
@@ -92,10 +105,24 @@ const Nav: React.FC = () => {
           <Link to="/user" id="user">
             {userName ? userName : "guest"}
           </Link>
-
-          <Link className="btn-state" to="/login">
-            {userName ? "logout" : "log in"}
-          </Link>
+          <span>
+            {userName ? (
+              <Link
+                className="btn-state"
+                to="/login"
+                onClick={() => {
+                  handleLogOut();
+                  setUserName("");
+                }}
+              >
+                logout
+              </Link>
+            ) : (
+              <Link className="btn-state" to="/login">
+                log in
+              </Link>
+            )}
+          </span>
           <IoNotifications size={20} color={"gray"} />
         </div>
       </motion.nav>

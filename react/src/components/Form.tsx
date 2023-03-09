@@ -1,12 +1,6 @@
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useContext,
-  createContext,
-} from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { inpContext } from "../context/inpContext";
-import { motion } from "framer-motion";
+import { easeInOut, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { addTodo, updateTodo } from "../redux/Taskslice";
 import { toast } from "react-toastify";
@@ -43,6 +37,15 @@ const Form: React.FC = () => {
   const handleInp = () => {
     setInp(input.current!.value);
   };
+
+  const [bg, setBg] = useState("--var(--border)");
+  useEffect(() => {
+    inp.length === 0
+      ? setBg("var(--border)")
+      : inp.length <= 25
+      ? setBg("var(--update)")
+      : setBg("var(--delete)");
+  });
   return (
     <div>
       <motion.form
@@ -71,7 +74,12 @@ const Form: React.FC = () => {
       >
         <div id="inp">
           <input ref={input} type="text" required onChange={handleInp} />
-          <div className="mock-inp"></div>
+          <motion.div
+            style={{
+              background: `linear-gradient(135deg,${bg},var(--secondary))`,
+            }}
+            className="mock-inp"
+          ></motion.div>
           <span id="placeholder"> Add a Todo ...</span>
         </div>
       </motion.form>

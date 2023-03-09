@@ -5,13 +5,16 @@ import { authenticateRoute } from "../../routes.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useAppDispatch } from "../customHooks/reduxTypes.js";
+import { handleAuth } from "../redux/isAuthSlice.js";
 
 const Login = () => {
   const navigate = useNavigate();
   const emailRef = useRef<HTMLInputElement>(null!);
   const passRef = useRef<HTMLInputElement>(null!);
-
   const email = new URLSearchParams(location.search).get("email") || "";
+
+  const dispatch = useAppDispatch();
 
   useLayoutEffect(() => {
     document.title = "Log In";
@@ -73,6 +76,7 @@ const Login = () => {
               const { message, status } = await authenticate(userData);
               if (status === 200) {
                 toast.success(message);
+                dispatch(handleAuth(true));
                 navigate("/");
               } else if (status === 404) {
                 toast.error(message);
