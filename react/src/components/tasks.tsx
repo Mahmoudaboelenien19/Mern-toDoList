@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Options from "./Options";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
@@ -12,9 +12,14 @@ const Tasks: React.FC = () => {
   const [dataShown, setDataShown] = useState(tasks);
   const [option, setOption] = useState("all");
 
+  const isIntialRender = useRef(true);
+
+  const optionsArr = ["completed", "pending", "updated"];
+
   useEffect(() => {
     disptch(getAllTodos());
     document.title = `to do`;
+    isIntialRender.current = false;
   }, []);
 
   useEffect(() => {
@@ -27,6 +32,7 @@ const Tasks: React.FC = () => {
     } else {
       setDataShown(tasks?.filter((e) => e.state === "updated"));
     }
+    // return () => setIsAnimated(false);
   }, [isChanged, option]);
 
   return (
@@ -46,22 +52,45 @@ const Tasks: React.FC = () => {
           }}
         >
           <>
-            <Options setOption={setOption} option={option} />
+            <Options
+              setOption={setOption}
+              option={option}
+              isIntialRender={isIntialRender}
+            />
             <motion.div id="tasks" key={"tasks"}>
               {dataShown.length === 0 ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{
-                    opacity: 1,
-                    transition: { delay: 0.2, duration: 0.4 },
-                  }}
-                  className="no-data "
-                >
-                  no {option} todos to show
-                </motion.div>
+                <>
+                  <AnimatePresence mode="wait">
+                    {optionsArr.map((opt, index) => {
+                      if (option === opt) {
+                        return (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0 }}
+                            animate={{
+                              opacity: 1,
+                              transition: { delay: 0.2, duration: 0.4 },
+                            }}
+                            className="no-data "
+                            exit={{ opacity: 0 }}
+                          >
+                            no {opt} todos to show
+                          </motion.div>
+                        );
+                      }
+                    })}
+                  </AnimatePresence>
+                </>
               ) : (
-                dataShown?.map((e, index) => {
-                  return <Task key={e._id!} {...e} index={index} />;
+                dataShown?.map((task, index) => {
+                  return (
+                    <Task
+                      key={task._id!}
+                      {...task}
+                      index={index}
+                      isIntialRender={isIntialRender}
+                    />
+                  );
                 })
               )}
             </motion.div>

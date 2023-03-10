@@ -5,9 +5,9 @@
   --link-hover: rgb(158, 158, 158);
   --delete: rgb(120, 12, 12);
   --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
   --task-cont: grey;
-  --created: "2px darkblue solid";
-  --updated: "2px var(--update) solid";
-  --checked: "2px var(--delete) solid";
-  --unchecked: "2px yellow solid";
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
 }

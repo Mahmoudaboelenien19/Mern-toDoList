@@ -1,4 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
 import { ClearContext } from "../App";
@@ -6,11 +11,13 @@ import { useAppSelector } from "../customHooks/reduxTypes";
 interface OptionsProps {
   setOption: React.Dispatch<React.SetStateAction<string>>;
   option: string;
+  isIntialRender: MutableRefObject<boolean>;
 }
-const Options = ({ option, setOption }: OptionsProps) => {
+const Options = ({ option, setOption, isIntialRender }: OptionsProps) => {
   const { setShowClearPopUp } = useContext(ClearContext);
 
   const { tasks } = useAppSelector((state) => state.tasks);
+  const [isOptionClicked, setIsOptionClicked] = useState(false);
   const optionsArr = [
     {
       newOption: "all",
@@ -34,6 +41,9 @@ const Options = ({ option, setOption }: OptionsProps) => {
     },
   ];
 
+  console.log("options ");
+  console.log({ isIntialRender });
+
   return (
     <>
       <AnimatePresence>
@@ -41,7 +51,7 @@ const Options = ({ option, setOption }: OptionsProps) => {
           <motion.div
             id="options"
             animate={{
-              height: 40,
+              height: 50,
               opacity: 1,
               transition: {
                 opacity: { delay: 2, duration: 1 },
@@ -53,7 +63,7 @@ const Options = ({ option, setOption }: OptionsProps) => {
             <motion.small
               animate={{ width: "80%" }}
               initial={{ width: 0 }}
-              transition={{ delay: 3.5, duration: 1 }}
+              transition={{ delay: 4, duration: 1 }}
               exit={{ width: 0, transition: { delay: 0.4, duration: 1 } }}
               className="hr"
             ></motion.small>
@@ -66,10 +76,16 @@ const Options = ({ option, setOption }: OptionsProps) => {
                         key={index}
                         initial={{ opacity: 0 }}
                         animate={{
-                          opacity: 1,
-                          transition: { delay: 2 + 0.4 * index },
+                          opacity: option === newOption ? 1 : 0.4,
+                          transition: {
+                            delay: !isOptionClicked ? 2 + 0.4 * index : 1.1,
+                          },
                         }}
-                        whileTap={{ scale: 2, opacity: 0.7 }}
+                        // whileHover={{
+                        //   scale: 1.1,
+                        //   opacity: 1,
+                        //   transition: { duration: 0.4 },
+                        // }}
                         className={option === newOption ? "active" : ""}
                         exit={{
                           opacity: 0,
@@ -78,7 +94,10 @@ const Options = ({ option, setOption }: OptionsProps) => {
                             duration: 0.3,
                           },
                         }}
-                        onClick={handleCLick}
+                        onClick={() => {
+                          handleCLick();
+                          setIsOptionClicked(true);
+                        }}
                       >
                         {newOption} ({handleLength()})
                       </motion.span>

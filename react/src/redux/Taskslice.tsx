@@ -145,6 +145,7 @@ export interface tasksState {
   isLoading: boolean;
   msg: string;
   isChanged: boolean;
+  isChecked: boolean;
 }
 
 const initialState: tasksState = {
@@ -153,6 +154,7 @@ const initialState: tasksState = {
   isError: false,
   msg: "",
   isChanged: false,
+  isChecked: false,
 };
 
 export const taskSlice = createSlice({
@@ -267,6 +269,7 @@ export const taskSlice = createSlice({
       state.isLoading = true;
       state.msg = "";
       state.isChanged = false;
+      state.isChecked = false;
     });
 
     builder.addCase(checkTodo.fulfilled, (state, action) => {
@@ -279,6 +282,7 @@ export const taskSlice = createSlice({
       );
       state.msg = action.payload.message as unknown as string;
       state.isChanged = true;
+      state.isChecked = true;
     });
 
     builder.addCase(checkTodo.rejected, (state, action) => {

@@ -41,12 +41,12 @@ const Form: React.FC = () => {
 
   const [bg, setBg] = useState("var(--border)");
   useEffect(() => {
-    input.current?.value.length === 0
+    input.current?.value.trim().length === 0
       ? setBg("var(--border)")
-      : input.current?.value.length <= 30
+      : input.current?.value.trim().length <= 30
       ? setBg("var(--update)")
       : setBg("var(--delete)");
-  }, [input.current?.value.length]);
+  }, [input.current?.value.trim().length]);
   return (
     <div>
       <motion.form
@@ -58,19 +58,19 @@ const Form: React.FC = () => {
         onSubmit={(e) => {
           e.preventDefault();
           setShowToast(true);
-          if (input.current.value.length === 0) {
+          if (input.current.value.trim().length === 0) {
             toast.error("insert a todo to add");
-          } else if (input.current.value.length > 30) {
+          } else if (input.current.value.trim().length > 30) {
             toast.error("you can't exceed 30 letter");
           } else {
             if (focus.mode === "create") {
-              dispatch(addTodo(inp));
+              dispatch(addTodo(inp.trim()));
               dispatch(handleIsClearedSlice(false));
             } else {
               dispatch(
                 updateTodo({
                   id: focus.updatedTaskId,
-                  content: input.current.value,
+                  content: input.current.value.trim(),
                 })
               );
               focus.setMode("create");
@@ -81,7 +81,13 @@ const Form: React.FC = () => {
         }}
       >
         <div id="inp">
-          <input ref={input} type="text" required onChange={handleInp} />
+          <input
+            ref={input}
+            type="text"
+            required
+            onChange={handleInp}
+            onBlur={() => focus.setMode("create")}
+          />
           <motion.div
             style={{
               background: `linear-gradient(135deg,${bg},var(--secondary))`,

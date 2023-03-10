@@ -1,4 +1,11 @@
-import React, { memo, useContext, useEffect, useState } from "react";
+import React, {
+  memo,
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { inpContext } from "../context/inpContext";
@@ -15,6 +22,7 @@ interface Prop {
   isCompleted: boolean;
   state: string;
   index: number;
+  isIntialRender: MutableRefObject<boolean>;
 }
 
 const Task: React.FC<Prop> = ({
@@ -25,12 +33,13 @@ const Task: React.FC<Prop> = ({
   state,
   isCompleted,
   index,
+  isIntialRender,
 }) => {
+  console.log(`${index} rerendered`);
   const { setShowToast } = useContext(toastContext);
   const [isDeleted, setIsDeleted] = useState(false);
   const { isCleared } = useAppSelector((state) => state.isCleared);
-
-  console.log(`${index} rerendered`);
+  const { isChanged } = useAppSelector((state) => state.tasks);
 
   const taskVariants = {
     hidden: {
@@ -38,12 +47,12 @@ const Task: React.FC<Prop> = ({
     },
     visible: {
       opacity: 1,
-      // borderLeft: `2px var(--update) solid`,
+      // borderLeft: [`2px rgb(0,0,0) solid`, `2px var(--${state}) solid`],
       transition: {
         // staggerChildren: 0.5,
         // delayChildren: index * 0.5,
-        delay: 2 + 0.15 * index,
-        borderLeft: { duration: 1 },
+        delay: isIntialRender.current ? 2 + 0.15 * index : 0.4,
+        borderLeft: { duration: 0.4, delay: 1 },
       },
     },
     exit: {
@@ -56,6 +65,7 @@ const Task: React.FC<Prop> = ({
     },
   };
 
+  const states = ["created", "updated", "checked", "unchecked"];
   const focus = useContext(inpContext);
   const { setIsInpFocus, setInpValue, setUpdatedTaskId, setMode } = focus;
 
@@ -77,31 +87,104 @@ const Task: React.FC<Prop> = ({
           className="task"
           exit={"exit"}
           custom={index}
-          style={{ borderLeft: `2px rgb(0,0,0) solid` }}
         >
+          <>
+            <AnimatePresence mode="wait">
+              {states.map((border, index) => {
+                if (border === state) {
+                  return (
+                    <motion.span
+                      key={index}
+                      animate={{ width: 3 }}
+                      initial={{ width: 0 }}
+                      transition={{ delay: 1, duration: 0.4 }}
+                      style={{ background: `var(--${border})` }}
+                      exit={{ width: 0 }}
+                      className="custom-border"
+                    ></motion.span>
+                  );
+                }
+              })}
+            </AnimatePresence>
+          </>
+
           <p id="content" className={isCompleted ? "checked" : ""}>
-            {Array.from(content).map((letter, i) => {
-              return (
-                <motion.span
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{
-                    delay: 2 + i * 0.1,
-                    damping: 10,
-                    stiffness: 100,
-                    type: "spring",
-                  }}
-                  style={{ margin: -1.5 }}
-                  key={i}
-                >
-                  {" "}
-                  {letter === " " ? "\u00A0" : letter}
-                </motion.span>
-              );
-            })}
+            <motion.span
+              // animate={{ opacity: isCompleted ? 0.4 : 1 }}
+              // transition={{ delay: isCompleted ? 0 : 2 }}
+              className="text"
+            >
+              {Array.from(content).map((letter, i) => {
+                return (
+                  <motion.span
+                    initial={{ opacity: 0 }}
+                    // animate={{ opacity: 1 }}
+                    animate={{ opacity: isCompleted ? 0.4 : 1 }}
+                    transition={{
+                      delay: isCompleted
+                        ? 0
+                        : state === "created"
+                        ? 0.5 + 0.02 * i
+                        : 2,
+                      damping: 10,
+                      stiffness: 300,
+                    }}
+                    // transition={{
+                    //   delay: 0.5 + 0.02 * i,
+                    //   damping: 10,
+                    //   stiffness: 300,
+                    // }}
+                    style={{ margin: -1.5 }}
+                    key={i}
+                  >
+                    {" "}
+                    {letter === " " ? "\u00A0" : letter}
+                  </motion.span>
+                );
+              })}
+              <AnimatePresence>
+                {isCompleted && (
+                  <motion.span
+                    key={_id}
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                    exit={{ width: 0 }}
+                    className="check-task"
+                  ></motion.span>
+                )}
+              </AnimatePresence>
+            </motion.span>
           </p>
           <div id="time-cont">
-            <span>{state} in </span>
+            <AnimatePresence mode="wait">
+              {states.map((st, index) => {
+                if (state === st) {
+                  return (
+                    <motion.span
+                      key={index}
+                      initial={{ opacity: 0 }}
+                      transition={{ delay: 0.8, duration: 0.2 }}
+                      animate={{
+                        opacity: 1,
+                        color: ["rgb(0,0,0)", `var(--${state})`],
+                      }}
+                      style={{
+                        fontSize: 11,
+                        fontWeight: "bold",
+                        display: "inline-block",
+                        width: 60,
+                        letterSpacing: state === "unchecked" ? 0.1 : 0.7,
+                      }}
+                      exit={{ opacity: 0 }}
+                      className="state"
+                    >
+                      {state} in{" "}
+                    </motion.span>
+                  );
+                }
+              })}
+            </AnimatePresence>
             <span>{time}</span>
             <span> && </span>
             <span>{date}</span>
