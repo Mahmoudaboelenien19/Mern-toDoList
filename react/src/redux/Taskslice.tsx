@@ -183,12 +183,14 @@ export const taskSlice = createSlice({
     builder.addCase(getAllTodos.pending, (state) => {
       state.isLoading = true;
       state.msg = "";
+      state.isChanged = false;
     });
 
     builder.addCase(getAllTodos.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
       state.tasks = action.payload;
+      state.isChanged = true;
     });
 
     builder.addCase(getAllTodos.rejected, (state, action) => {
@@ -223,12 +225,19 @@ export const taskSlice = createSlice({
     builder.addCase(updateTodo.pending, (state) => {
       state.isLoading = true;
       state.msg = "";
+      state.isChanged = false;
     });
 
     builder.addCase(updateTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
       state.msg = action.payload.message as unknown as string;
+      state.tasks = state.tasks.map((e) =>
+        e._id === action.payload.result.value._id
+          ? action.payload.result.value
+          : e
+      );
+      state.isChanged = true;
     });
 
     builder.addCase(updateTodo.rejected, (state, action) => {
@@ -257,6 +266,7 @@ export const taskSlice = createSlice({
     builder.addCase(checkTodo.pending, (state) => {
       state.isLoading = true;
       state.msg = "";
+      state.isChanged = false;
     });
 
     builder.addCase(checkTodo.fulfilled, (state, action) => {
@@ -268,6 +278,7 @@ export const taskSlice = createSlice({
           : e
       );
       state.msg = action.payload.message as unknown as string;
+      state.isChanged = true;
     });
 
     builder.addCase(checkTodo.rejected, (state, action) => {

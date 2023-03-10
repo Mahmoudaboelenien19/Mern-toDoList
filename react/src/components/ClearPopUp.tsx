@@ -3,6 +3,7 @@ import { clearAllTodos } from "../redux/Taskslice";
 import { useAppDispatch } from "../customHooks/reduxTypes";
 import { useContext } from "react";
 import { ClearContext } from "../App";
+import { handleIsClearedSlice } from "../redux/IsCleared";
 
 const ClearPopUp = () => {
   const { setShowClearPopUp } = useContext(ClearContext);
@@ -10,7 +11,6 @@ const ClearPopUp = () => {
 
   return (
     <motion.div
-      onClick={() => setShowClearPopUp(false)}
       id="overley"
       animate={{ background: " rgba(255, 166, 0, 0.38)" }}
       exit={{ opacity: 0, transition: { delay: 1 } }}
@@ -38,7 +38,11 @@ const ClearPopUp = () => {
             whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px black " }}
             transition={{ type: "spring", stiffness: 300 }}
             className="btn-clr"
-            onClick={() => dispatch(clearAllTodos())}
+            onClick={() => {
+              dispatch(clearAllTodos());
+              dispatch(handleIsClearedSlice(true));
+              setShowClearPopUp(false);
+            }}
           >
             clear
           </motion.button>

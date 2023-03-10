@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { inpContext } from "../context/inpContext";
-import { easeInOut, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { addTodo, updateTodo } from "../redux/Taskslice";
 import { toast } from "react-toastify";
 import { toastContext } from "../pages/Home";
+import { handleIsClearedSlice } from "../redux/IsCleared";
 
 const Form: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -38,14 +39,14 @@ const Form: React.FC = () => {
     setInp(input.current!.value);
   };
 
-  const [bg, setBg] = useState("--var(--border)");
+  const [bg, setBg] = useState("var(--border)");
   useEffect(() => {
-    inp.length === 0
+    input.current?.value.length === 0
       ? setBg("var(--border)")
-      : inp.length <= 25
+      : input.current?.value.length <= 30
       ? setBg("var(--update)")
       : setBg("var(--delete)");
-  });
+  }, [input.current?.value.length]);
   return (
     <div>
       <motion.form
@@ -53,23 +54,30 @@ const Form: React.FC = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 0.5 }}
         action=""
+        noValidate
         onSubmit={(e) => {
           e.preventDefault();
           setShowToast(true);
-          if (focus.mode === "create") {
-            dispatch(addTodo(inp));
+          if (input.current.value.length === 0) {
+            toast.error("insert a todo to add");
+          } else if (input.current.value.length > 30) {
+            toast.error("you can't exceed 30 letter");
           } else {
-            dispatch(
-              updateTodo({
-                id: focus.updatedTaskId,
-                content: input.current.value,
-              })
-            );
-
-            focus.setMode("create");
+            if (focus.mode === "create") {
+              dispatch(addTodo(inp));
+              dispatch(handleIsClearedSlice(false));
+            } else {
+              dispatch(
+                updateTodo({
+                  id: focus.updatedTaskId,
+                  content: input.current.value,
+                })
+              );
+              focus.setMode("create");
+            }
+            input.current.value = "";
+            input.current.blur();
           }
-          input.current.value = "";
-          input.current.blur();
         }}
       >
         <div id="inp">
@@ -78,9 +86,43 @@ const Form: React.FC = () => {
             style={{
               background: `linear-gradient(135deg,${bg},var(--secondary))`,
             }}
+            animate={{ width: "60vw" }}
+            initial={{ width: 0 }}
+            transition={{ delay: 1, duration: 1 }}
             className="mock-inp"
           ></motion.div>
-          <span id="placeholder"> Add a Todo ...</span>
+
+          <span id="placeholder">
+            <AnimatePresence mode={"wait"}>
+              {focus.mode === "create" ? (
+                <motion.span
+                  key={"add"}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={{ delay: 1, duration: 1 }}
+                  exit={{
+                    opacity: 0,
+                    transition: { delay: 0.5, duration: 0.5 },
+                  }}
+                >
+                  Add a Todo ...
+                </motion.span>
+              ) : (
+                <motion.span
+                  key={"update"}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                  exit={{
+                    opacity: 0,
+                    transition: { delay: 0.5, duration: 0.5 },
+                  }}
+                >
+                  Update Todo ...
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </span>
         </div>
       </motion.form>
     </div>

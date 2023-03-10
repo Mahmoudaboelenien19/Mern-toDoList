@@ -4,5 +4,10 @@
   --border: #587bc6c6;
   --link-hover: rgb(158, 158, 158);
   --delete: rgb(120, 12, 12);
-  --update: rgb(13, 75, 13);
+  --update: rgb(22, 113, 22);
+  --task-cont: grey;
+  --created: "2px darkblue solid";
+  --updated: "2px var(--update) solid";
+  --checked: "2px var(--delete) solid";
+  --unchecked: "2px yellow solid";
 }

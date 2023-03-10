@@ -5,7 +5,6 @@ import { inpContext } from "../context/inpContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { checkTodo, deleteTodo } from "../redux/Taskslice";
-import { toast } from "react-toastify";
 import { toastContext } from "../pages/Home";
 
 interface Prop {
@@ -27,29 +26,31 @@ const Task: React.FC<Prop> = ({
   isCompleted,
   index,
 }) => {
-  const [isIntialRender, setIsIntialRender] = useState(false);
+  const { setShowToast } = useContext(toastContext);
   const [isDeleted, setIsDeleted] = useState(false);
-  const { showToast, setShowToast } = useContext(toastContext);
-
-  useEffect(() => {
-    setIsIntialRender(true);
-  }, []);
+  const { isCleared } = useAppSelector((state) => state.isCleared);
 
   console.log(`${index} rerendered`);
+
   const taskVariants = {
     hidden: {
       opacity: 0,
     },
     visible: {
       opacity: 1,
+      // borderLeft: `2px var(--update) solid`,
       transition: {
-        delay: 1.4 + 0.4 * index,
+        // staggerChildren: 0.5,
+        // delayChildren: index * 0.5,
+        delay: 2 + 0.15 * index,
+        borderLeft: { duration: 1 },
       },
     },
     exit: {
       opacity: 0,
       transition: {
-        duration: 1,
+        duration: 0.5,
+        delay: 0.2,
         ease: "easeInOut",
       },
     },
@@ -61,19 +62,43 @@ const Task: React.FC<Prop> = ({
   const dispatch = useAppDispatch();
 
   return (
-    <AnimatePresence>
-      {!isDeleted && (
+    <AnimatePresence mode="wait">
+      {!isDeleted && !isCleared && (
         <motion.div
-          whileHover={{ x: 10, scale: 1.02, boxShadow: "1px 1px 1.5px grey " }}
+          whileHover={{
+            x: 10,
+            scale: 1.02,
+            boxShadow: "1px 1px 1.5px grey ",
+          }}
           variants={taskVariants}
           initial="hidden"
-          animate={isIntialRender ? "visible" : ""}
-          custom={index}
+          // animate={isIntialRender ? "visible" : ""}
+          animate={"visible"}
           className="task"
-          exit="exit"
+          exit={"exit"}
+          custom={index}
+          style={{ borderLeft: `2px rgb(0,0,0) solid` }}
         >
           <p id="content" className={isCompleted ? "checked" : ""}>
-            {content}
+            {Array.from(content).map((letter, i) => {
+              return (
+                <motion.span
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    delay: 2 + i * 0.1,
+                    damping: 10,
+                    stiffness: 100,
+                    type: "spring",
+                  }}
+                  style={{ margin: -1.5 }}
+                  key={i}
+                >
+                  {" "}
+                  {letter === " " ? "\u00A0" : letter}
+                </motion.span>
+              );
+            })}
           </p>
           <div id="time-cont">
             <span>{state} in </span>
@@ -85,6 +110,7 @@ const Task: React.FC<Prop> = ({
             <motion.button
               whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px black " }}
               transition={{ type: "spring", stiffness: 300 }}
+              whileFocus={{ scale: 1.5 }}
             >
               <AiOutlineArrowUp
                 onClick={() => {
@@ -108,7 +134,8 @@ const Task: React.FC<Prop> = ({
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px black " }}
-              transition={{ type: "spring", stiffness: 300 }}
+              // transition={{ type: "spring", stiffness: 300 }}
+              whileFocus={{ scale: 1.2 }}
               onClick={() => {
                 setShowToast(true);
                 dispatch(deleteTodo(_id!));

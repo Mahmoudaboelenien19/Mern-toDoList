@@ -18,7 +18,7 @@ form {
       position: absolute;
       bottom: 0;
       left: 0;
-      // background: linear-gradient(135deg, var(--inp), var(--secondary));
+      background: linear-gradient(135deg, var(--border), var(--secondary));
       transition: 0.3s;
     }
     #placeholder {
@@ -117,5 +117,11 @@ select {
   padding: 5px;
   option {
     background: var(--secondary);
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  form {
+    width: 500px;
   }
 }
