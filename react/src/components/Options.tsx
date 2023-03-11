@@ -125,9 +125,9 @@ const Options = ({ option, setOption, isIntialRender }: OptionsProps) => {
                     boxShadow: "2px 2px 1px black ",
                     transition: { type: "spring", stiffness: 300 },
                   }}
-                  whileTap={{
-                    scale: 1.5,
-                  }}
+                  // whileTap={{
+                  //   scale: 1.1,
+                  // }}
                   onClick={() => {
                     setShowClearPopUp(true);
                   }}

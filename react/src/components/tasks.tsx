@@ -18,7 +18,7 @@ const Tasks: React.FC = () => {
 
   useEffect(() => {
     disptch(getAllTodos());
-    document.title = `to do`;
+    document.title = `Listify`;
     isIntialRender.current = false;
   }, []);
 
@@ -57,7 +57,7 @@ const Tasks: React.FC = () => {
               option={option}
               isIntialRender={isIntialRender}
             />
-            <motion.div id="tasks" key={"tasks"}>
+            <motion.div key={"tasks"}>
               {dataShown.length === 0 ? (
                 <>
                   <AnimatePresence mode="wait">
@@ -82,16 +82,18 @@ const Tasks: React.FC = () => {
                   </AnimatePresence>
                 </>
               ) : (
-                dataShown?.map((task, index) => {
-                  return (
-                    <Task
-                      key={task._id!}
-                      {...task}
-                      index={index}
-                      isIntialRender={isIntialRender}
-                    />
-                  );
-                })
+                <div id="tasks">
+                  {dataShown?.map((task, index) => {
+                    return (
+                      <Task
+                        key={task._id!}
+                        {...task}
+                        index={index}
+                        isIntialRender={isIntialRender}
+                      />
+                    );
+                  })}
+                </div>
               )}
             </motion.div>
           </>

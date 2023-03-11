@@ -6,6 +6,7 @@ import { addTodo, updateTodo } from "../redux/Taskslice";
 import { toast } from "react-toastify";
 import { toastContext } from "../pages/Home";
 import { handleIsClearedSlice } from "../redux/IsCleared";
+import useInp from "../customHooks/useInp";
 
 const Form: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -26,7 +27,6 @@ const Form: React.FC = () => {
   }, [focus.isInpFocus]);
 
   const { showToast, setShowToast } = useContext(toastContext);
-
   useEffect(() => {
     if (!msg || !showToast) return;
     const timer = setTimeout(() => {

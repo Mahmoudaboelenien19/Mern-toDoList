@@ -57,7 +57,9 @@ const Task: React.FC<Prop> = ({
     },
     exit: {
       opacity: 0,
+      y: 0,
       transition: {
+        type: "tween",
         duration: 0.5,
         delay: 0.2,
         ease: "easeInOut",
@@ -83,10 +85,11 @@ const Task: React.FC<Prop> = ({
           variants={taskVariants}
           initial="hidden"
           // animate={isIntialRender ? "visible" : ""}
-          animate={"visible"}
+          animate="visible"
           className="task"
-          exit={"exit"}
-          custom={index}
+          exit="exit"
+          custom={_id}
+          key={_id}
         >
           <>
             <AnimatePresence mode="wait">

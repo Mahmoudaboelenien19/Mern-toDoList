@@ -67,7 +67,7 @@ const SignUp = () => {
   };
 
   useLayoutEffect(() => {
-    document.title = "Sign Up";
+    document.title = "Listify | Sign Up";
   }, []);
 
   return (
