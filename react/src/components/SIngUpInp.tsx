@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BsFillEyeFill } from "react-icons/bs";
 import { FaTimes } from "react-icons/fa";
 import useInp from "../customHooks/useInp";
 import usePassword from "../customHooks/usePassword";
-import useReset from "../customHooks/useResetInp";
 import {
   hidePasswordVariant,
   inputParentAnimation,
@@ -15,51 +14,46 @@ import {
   xSpanVariant,
 } from "../Variants/form";
 
+import { useFormContext } from "react-hook-form";
+
 interface InputInterface {
   isPassword: boolean;
   placeholder: string;
-  onChange: (val: string) => void;
+  err?: string;
 }
 
-const alreadyRegisteredEmail =
-  new URLSearchParams(location.search).get("email") || "";
-
-const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
-  const inpRef = useRef<HTMLInputElement>(null!);
+const SignUpInput = ({ isPassword, placeholder, err }: InputInterface) => {
   const [isInpAnimateCompleted, setIsInpAnimateCompleted] = useState(false);
   const [isXSpanAnimateCompleted, setXSpannpAnimateCompleted] = useState(false);
   const [showPass, handleShowPass] = usePassword();
   const [isFocus, handleUnfocus, handleOnFocus, handleOnBlur] = useInp();
-  const [
-    showResetPassSpan,
-    setShowResetPass,
-    handlePassReset,
-    isResetSpanCLicked,
-    handleIsResetCLicked,
-  ] = useReset();
+  const { register, resetField, watch, setFocus } = useFormContext();
 
   useEffect(() => {
     if (!isInpAnimateCompleted && isFocus) {
-      inpRef.current?.focus();
+      setFocus(placeholder);
     }
   }, [isInpAnimateCompleted]);
 
+  const [showResetPassSpan, setShowResetPassSpan] = useState(false);
+
+  const [isResetSpanCLicked, setisResetSpanCLicked] = useState(false);
+
   useEffect(() => {
-    if (alreadyRegisteredEmail.length && !isPassword) {
-      setTimeout(() => {
-        handleOnFocus();
-        setTimeout(() => {
-          inpRef.current.value = alreadyRegisteredEmail;
-          setShowResetPass(true);
-        }, 1000);
-      }, 2000);
+    if (!isResetSpanCLicked) return;
+    const timer = setTimeout(() => {
+      setisResetSpanCLicked(false);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [isResetSpanCLicked]);
+
+  const inpVal = watch(placeholder);
+  useEffect(() => {
+    if (inpVal?.length >= 1) {
+      setShowResetPassSpan(true);
+    } else {
+      setShowResetPassSpan(false);
     }
-  }, []);
-
-  const [inpVal, setInpVal] = useState(alreadyRegisteredEmail);
-
-  useEffect(() => {
-    onChange(inpVal);
   }, [inpVal]);
   return (
     <motion.div id="inp" variants={inputParentAnimation}>
@@ -68,25 +62,20 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
         custom={isFocus}
         initial="start"
         animate="end"
-        ref={inpRef}
+        onFocus={() => {
+          handleOnFocus();
+        }}
         disabled={isInpAnimateCompleted}
         type={
           !isPassword ? "text" : isPassword && showPass ? "text" : "password"
         }
-        onFocus={() => {
-          handleOnFocus();
-        }}
-        onBlur={(e) => {
-          handleOnBlur(e.target.value);
-        }}
-        onChange={(e) => {
-          setInpVal(e.target.value);
-          if (e.target.value.length >= 1) {
-            setShowResetPass(true);
-          } else {
-            setShowResetPass(false);
-          }
-        }}
+        {...register(placeholder, {
+          onBlur() {
+            handleOnBlur(inpVal);
+            setisResetSpanCLicked(false);
+            console.log("blur");
+          },
+        })}
       />
 
       <motion.div
@@ -109,10 +98,9 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
               onAnimationStart={() => setXSpannpAnimateCompleted(true)}
               onAnimationComplete={() => setXSpannpAnimateCompleted(false)}
               onClick={() => {
-                handlePassReset(inpRef);
+                setisResetSpanCLicked(true);
+                resetField(placeholder);
                 handleUnfocus();
-                setShowResetPass(false);
-                handleIsResetCLicked();
               }}
             >
               <motion.span variants={xSpanVariant}>
@@ -147,8 +135,20 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
           {placeholder}
         </motion.span>
       </motion.div>
+      <AnimatePresence>
+        {err && (
+          <motion.small
+            exit={{ opacity: 0, transition: { duration: 0.5 } }}
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
+            className="err"
+          >
+            {err}
+          </motion.small>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
 
-export default Input;
+export default SignUpInput;

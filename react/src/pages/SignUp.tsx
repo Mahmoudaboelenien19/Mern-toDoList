@@ -1,17 +1,26 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { FieldValues } from "react-hook-form/dist/types";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { routeExitVariant } from "../Variants/routes";
+import {
+  btnFormAnimation,
+  formTitle,
+  formVariants,
+  inputParentAnimation,
+  linkFormAnimation,
+} from "../Variants/form";
+import SignUpInput from "../components/SIngUpInp";
+import { btnHover, linkHover } from "../Variants/globalVariants";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const emailInp = useRef<HTMLInputElement>(null!);
 
   //get all countries
   const [countries, setCountries] = useState([
@@ -47,17 +56,16 @@ const SignUp = () => {
     phone: yup.string().min(10).required(),
   });
 
+  const methods = useForm({ resolver: yupResolver(schema) });
   const {
     register,
     handleSubmit,
     getValues,
     formState: { errors, isValid },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
-
+  } = methods;
   const OnSubmit = (data: FieldValues) => {
     console.log(data);
+    console.log({ data });
   };
 
   const createUser = async (data: FieldValues) => {
@@ -71,171 +79,114 @@ const SignUp = () => {
   }, []);
 
   return (
-    <div>
-      <motion.form
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, type: "tween" }}
-        noValidate
-        action=""
-        id="log-in-form"
-        onSubmit={handleSubmit(OnSubmit)}
-      >
-        <motion.h4
-          transition={{ delay: 1.5, duration: 1 }}
-          initial={{ fontSize: "16px" }}
-          animate={{ fontSize: "20px" }}
-          className="heading"
+    <motion.div variants={routeExitVariant} exit="exit">
+      <FormProvider {...methods}>
+        <motion.form
+          variants={formVariants}
+          animate="end"
+          initial="start"
+          action=""
+          id="log-in-form"
+          onSubmit={handleSubmit(OnSubmit)}
         >
-          sign up
-        </motion.h4>{" "}
-        <div id="inp">
-          <input type="text" required {...register("username")} />
-          <div className="mock-inp"></div>
-          <span id="placeholder">username </span>
-          <AnimatePresence>
-            {errors.username && (
-              <motion.small
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
-                initial={{ y: 20 }}
-                animate={{ y: 0 }}
-                className="err"
-              >
-                {errors?.username?.message?.toString()}
-              </motion.small>
-            )}
-          </AnimatePresence>
-        </div>
-        <div id="inp">
-          <input type="text" required {...register("email")} />
-          <div className="mock-inp"></div>
-          <span id="placeholder">email </span>
-          <AnimatePresence>
-            {errors.email && (
-              <motion.small
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
-                initial={{ y: 20 }}
-                animate={{ y: 0 }}
-                className="err"
-              >
-                {errors.email?.message?.toString()}
-              </motion.small>
-            )}
-          </AnimatePresence>
-        </div>
-        <div id="inp">
-          <input type="text" required {...register("password")} />
-          <div className="mock-inp"></div>
-          <span id="placeholder"> password</span>
-          <AnimatePresence>
-            {errors.password && (
-              <motion.small
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
-                initial={{ y: 20 }}
-                animate={{ y: 0 }}
-                className="err"
-              >
-                {errors?.password?.message?.toString()}
-              </motion.small>
-            )}
-          </AnimatePresence>
-        </div>
-        <div id="inp">
-          <input type="text" required {...register("confirm")} />
-          <div className="mock-inp"></div>
-          <span id="placeholder">confirm password</span>
-          <AnimatePresence>
-            {errors.confirm && (
-              <motion.small
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
-                initial={{ y: 20 }}
-                animate={{ y: 0 }}
-                className="err"
-              >
-                {errors?.confirm?.message?.toString()}
-              </motion.small>
-            )}
-          </AnimatePresence>
-        </div>
-        <div id="radio">
-          <label htmlFor="gender">Gender</label>
-          <div className="radios">
-            <div className="label">
-              <input
-                type="radio"
-                {...register("gender")}
-                id="male"
-                value={"male"}
-                checked
-              />
-              <label htmlFor="male">Male</label>
+          <motion.h4 variants={formTitle} className="heading">
+            {" "}
+            sign up
+          </motion.h4>
+
+          <SignUpInput
+            isPassword={false}
+            placeholder="username"
+            err={errors.username?.message?.toString()}
+          />
+
+          <SignUpInput
+            isPassword={false}
+            placeholder="email"
+            err={errors.email?.message?.toString()}
+          />
+          <SignUpInput
+            isPassword={true}
+            placeholder="password"
+            err={errors.password?.message?.toString()}
+          />
+          <SignUpInput
+            isPassword={true}
+            placeholder="confirm"
+            err={errors.confirm?.message?.toString()}
+          />
+
+          {/* gender */}
+          <motion.div id="radio" variants={inputParentAnimation}>
+            <label htmlFor="gender">Gender</label>
+            <div className="radios">
+              <div className="label">
+                <input
+                  type="radio"
+                  {...register("gender")}
+                  id="male"
+                  value={"male"}
+                  checked
+                />
+                <label htmlFor="male">Male</label>
+              </div>
+              <div className="label">
+                <input
+                  type="radio"
+                  {...register("gender")}
+                  id="female"
+                  value={"female"}
+                />
+                <label htmlFor="female">Female</label>
+              </div>
             </div>
-            <div className="label">
-              <input
-                type="radio"
-                {...register("gender")}
-                id="female"
-                value={"female"}
-              />
-              <label htmlFor="female">Female</label>
-            </div>
-          </div>
-        </div>
-        <select {...register("country")}>
-          {countries.map((e, i) => {
-            return (
-              <option key={Math.random()} value={e.name.common}>
-                {e.name.common}
-              </option>
-            );
-          })}
-        </select>
-        <div id="inp">
-          <input type="text" required {...register("phone")} />
-          <div className="mock-inp"></div>
-          <span id="placeholder">phone</span>
-          <AnimatePresence>
-            {errors.phone && (
-              <motion.small
-                exit={{ opacity: 0, transition: { duration: 0.5 } }}
-                initial={{ y: 20 }}
-                animate={{ y: 0 }}
-                className="err"
-              >
-                {errors?.phone?.message?.toString()}
-              </motion.small>
-            )}
-          </AnimatePresence>
-        </div>
-        <motion.button
-          whileHover={{ scale: 1.2, boxShadow: "2px 2px 2px black " }}
-          transition={{ type: "spring", stiffness: 300 }}
-          id="log-btn"
-          onClick={async () => {
-            const data = getValues();
-            if (isValid) {
-              const { message, status } = await createUser(data);
-              if (status == 200) {
-                toast.success(message);
-              } else {
-                toast.warning(message);
+          </motion.div>
+
+          <motion.div variants={inputParentAnimation} className="inp">
+            <motion.select {...register("country")}>
+              {countries.map((e, i) => {
+                return (
+                  <option key={Math.random()} value={e.name.common}>
+                    {e.name.common}
+                  </option>
+                );
+              })}
+            </motion.select>
+          </motion.div>
+
+          <SignUpInput
+            isPassword={false}
+            placeholder="phone"
+            err={errors.phone?.message?.toString()}
+          />
+
+          <motion.button
+            variants={btnFormAnimation}
+            whileHover={btnHover}
+            id="log-btn"
+            onClick={async () => {
+              const data = getValues();
+              if (isValid) {
+                const { message, status } = await createUser(data);
+                if (status == 200) {
+                  toast.success(message);
+                } else {
+                  toast.warning(message);
+                }
+                navigate(`/login?email=${data.email}`);
               }
-              navigate(`/login?email=${data.email}`);
-            }
-          }}
-        >
-          sign up
-        </motion.button>
-        <Link to="/login" className="link">
-          <motion.span
-            whileHover={{ fontSize: "18px", color: "white" }}
-            transition={{ type: "spring", stiffness: 300 }}
+            }}
           >
-            log in
-          </motion.span>
-        </Link>
-      </motion.form>
-    </div>
+            sign up
+          </motion.button>
+          <Link to="/login" className="link">
+            <motion.span variants={linkFormAnimation} whileHover={linkHover}>
+              log in
+            </motion.span>
+          </Link>
+        </motion.form>
+      </FormProvider>
+    </motion.div>
   );
 };
 
