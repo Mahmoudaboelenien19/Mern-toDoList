@@ -35,6 +35,7 @@ export const linkFormAnimation = {
 interface inpVariantInterface {
   isFocus: boolean;
   isResetSpanCLicked: boolean;
+  isXSpanAnimateCompleted: boolean;
 }
 
 export const inpVariant = {
@@ -42,13 +43,17 @@ export const inpVariant = {
     height: isFocus ? 3 : 40,
     initial: false,
   }),
-  end: ({ isFocus, isResetSpanCLicked }: inpVariantInterface) => ({
+  end: ({
+    isFocus,
+    isResetSpanCLicked,
+    isXSpanAnimateCompleted,
+  }: inpVariantInterface) => ({
     height: isFocus ? 40 : 3,
     transition: {
       duration: 0.4,
-      delay: isResetSpanCLicked ? 1.5 : 0.4,
-      ease: "easeInOut",
+      delay: isResetSpanCLicked || isXSpanAnimateCompleted ? 2 : 0.4,
       when: "beforeChildren",
+      ease: "easeInOut",
     },
   }),
 };
@@ -76,7 +81,7 @@ export const xSpanVariant = {
   end: { opacity: 1, transition: { delay: 0.2, duration: 0.2 } },
   exit: {
     opacity: 0,
-    transition: { delay: 0.4, duration: 0.4 },
+    transition: { delay: 0.6, duration: 0.4 },
   },
 };
 
@@ -96,5 +101,17 @@ export const placeholderVariant = {
 export const hidePasswordVariant = {
   start: { opacity: 0 },
   end: { opacity: 1, transition: { delay: 0.2, duration: 0.2 } },
-  exit: { opacity: 0, transition: { delay: 0.2, duration: 0.4 } },
+  exit: { opacity: 0, transition: { delay: 0.2, duration: 0.2 } },
+};
+
+export const inputVariant = {
+  start: (bool: boolean) => ({
+    opacity: bool ? 0 : 1,
+  }),
+  end: (bool: boolean) => ({
+    opacity: bool ? 1 : 0,
+    transition: {
+      opacity: { delay: 0, duration: 0.2 },
+    },
+  }),
 };

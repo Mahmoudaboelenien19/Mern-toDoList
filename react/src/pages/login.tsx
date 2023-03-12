@@ -1,57 +1,39 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { authenticateRoute } from "../../routes.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { AnimatePresence, motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { useAppDispatch } from "../customHooks/reduxTypes.js";
 import { handleAuth } from "../redux/isAuthSlice.js";
-import { BsFillEyeFill } from "react-icons/bs";
-import usePassword from "../customHooks/usePassword.js";
-import useInp from "../customHooks/useInp.js";
-import useReset from "../customHooks/useResetInp.js";
 import {
   btnFormAnimation,
   formTitle,
   formVariants,
-  hidePasswordVariant,
-  inputParentAnimation,
-  inpVariant,
   linkFormAnimation,
-  placeholderVariant,
-  ResetSpanVariant,
-  xSpanVariant,
 } from "../Variants/form.js";
 import { btnHover, linkHover } from "../Variants/globalVariants.js";
+import Input from "../components/Input.js";
+import { routeExitVariant } from "../Variants/routes.js";
 
 const Login = () => {
   const navigate = useNavigate();
-  const emailRef = useRef<HTMLInputElement>(null!);
-  const passRef = useRef<HTMLInputElement>(null!);
-  const email = new URLSearchParams(location.search).get("email") || "";
-  const [isFocus, handleUnfocus, handleOnFocus, handleOnBlur] = useInp();
-  const [
-    showResetPassSpan,
-    setShowResetPass,
-    handlePassReset,
-    isResetSpanCLicked,
-    handleIsResetCLicked,
-  ] = useReset();
+
   const dispatch = useAppDispatch();
 
   useLayoutEffect(() => {
     document.title = "Listify | Log In";
   }, []);
-
-  const [showPass, handleShowPass] = usePassword();
-
   interface userInerface {
     email: string;
     password: string;
   }
+  const [passInp, setPassInp] = useState("");
+  const [emailInp, setEmailInp] = useState("");
 
-  console.log({ isFocus });
+  const handleEmailInp = (val: string) => setEmailInp(val);
+  const handlePassInp = (val: string) => setPassInp(val);
   const authenticate = async (user: userInerface) => {
     return await axios
       .post(authenticateRoute, user, { withCredentials: true })
@@ -60,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <motion.div exit={{ opacity: 0, x: -100, transition: { duration: 0.4 } }}>
+    <motion.div variants={routeExitVariant} exit="exit">
       <motion.form
         variants={formVariants}
         initial="start"
@@ -71,82 +53,23 @@ const Login = () => {
         <motion.h4 variants={formTitle} className="heading">
           log in
         </motion.h4>{" "}
-        <motion.div id="inp" variants={inputParentAnimation}>
-          <input type="text" required defaultValue={email} ref={emailRef} />
-          <div className="mock-inp"></div>
-          <span id="placeholder"> email </span>
-        </motion.div>
-        <motion.div id="inp" variants={inputParentAnimation}>
-          <motion.input
-            type={showPass ? "password" : "text"}
-            required
-            ref={passRef}
-            onFocus={() => {
-              handleOnFocus();
-            }}
-            onBlur={(e) => {
-              handleOnBlur(e.target.value);
-            }}
-            onChange={(e) => {
-              if (e.target.value.length >= 1) {
-                setShowResetPass(true);
-              } else {
-                setShowResetPass(false);
-              }
-            }}
-          />
-
-          <motion.div
-            className="mock-inp"
-            custom={{ isFocus, isResetSpanCLicked }}
-            variants={inpVariant}
-            animate="end"
-            initial="start"
-          >
-            <AnimatePresence>
-              {showResetPassSpan && (
-                <motion.span
-                  className="reset"
-                  variants={ResetSpanVariant}
-                  animate="end"
-                  initial="start"
-                  exit="exit"
-                  onClick={() => {
-                    handlePassReset(passRef);
-                    handleUnfocus();
-                    setShowResetPass(false);
-                    handleIsResetCLicked();
-                  }}
-                >
-                  <motion.span variants={xSpanVariant}>X</motion.span>
-                </motion.span>
-              )}
-            </AnimatePresence>
-
-            <AnimatePresence>
-              {showResetPassSpan && (
-                <motion.span className="eye" variants={hidePasswordVariant}>
-                  <BsFillEyeFill onClick={handleShowPass} />
-                </motion.span>
-              )}
-            </AnimatePresence>
-            <motion.span
-              variants={placeholderVariant}
-              custom={isFocus}
-              id="placeholder"
-            >
-              {" "}
-              password
-            </motion.span>
-          </motion.div>
-        </motion.div>
+        <Input
+          isPassword={false}
+          placeholder="email"
+          onChange={handleEmailInp}
+        />
+        <Input
+          isPassword={true}
+          placeholder="password"
+          onChange={handlePassInp}
+        />
         <motion.button
           variants={btnFormAnimation}
           whileHover={btnHover}
           id="log-btn"
           onClick={async () => {
-            const email = emailRef.current.value;
-            const password = passRef.current.value;
+            const email = emailInp;
+            const password = passInp;
 
             const userData = {
               email,
