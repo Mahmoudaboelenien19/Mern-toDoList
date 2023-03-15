@@ -49,10 +49,11 @@ const Nav: React.FC = () => {
               xmlns="http://www.w3.org/2000/svg"
             >
               <motion.path
-                initial={{ pathLength: 0, fillOpacity: "0" }}
+                initial={{ pathLength: 0, fillOpacity: "0", pathOffset: 1 }}
                 animate={{
                   pathLength: 1,
                   fillOpacity: 1,
+                  pathOffset: 0,
                   transition: {
                     pathLength: { delay: 0.5, duration: 0.5, ease: "easeOut" },
                     fillOpacity: {

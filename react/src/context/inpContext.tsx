@@ -13,6 +13,8 @@ interface inpContextInterface {
   setUpdatedTaskId: React.Dispatch<React.SetStateAction<string>>;
   mode: string;
   setMode: React.Dispatch<React.SetStateAction<string>>;
+  isUpdated: boolean;
+  setIsUpdated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export const inpContext = createContext({} as inpContextInterface);
 
@@ -21,6 +23,7 @@ export const InpContextProvider = ({ children }: inpContextProviderProps) => {
   const [inpValue, setInpValue] = useState("");
   const [updatedTaskId, setUpdatedTaskId] = useState("");
   const [mode, setMode] = useState("create");
+  const [isUpdated, setIsUpdated] = useState(false);
 
   return (
     <inpContext.Provider
@@ -33,6 +36,8 @@ export const InpContextProvider = ({ children }: inpContextProviderProps) => {
         setUpdatedTaskId,
         mode,
         setMode,
+        isUpdated,
+        setIsUpdated,
       }}
     >
       {children}

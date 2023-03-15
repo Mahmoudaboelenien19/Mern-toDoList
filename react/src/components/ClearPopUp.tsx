@@ -35,7 +35,7 @@ const ClearPopUp = () => {
 
         <div className="btn-container">
           <motion.button
-            whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px black " }}
+            whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px rgb(0,0,0) " }}
             transition={{ type: "spring", stiffness: 300 }}
             className="btn-clr"
             onClick={() => {
@@ -47,7 +47,7 @@ const ClearPopUp = () => {
             clear
           </motion.button>
           <motion.button
-            whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px black " }}
+            whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px rgb(0,0,0) " }}
             transition={{ type: "spring", stiffness: 300 }}
             className="btn-cancel"
             onClick={() => setShowClearPopUp(false)}

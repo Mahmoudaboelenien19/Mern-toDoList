@@ -27,7 +27,7 @@ const getTodos = async (req: Request, res: Response, next: NextFunction) => {
     const result = await userModel.getAllToDos(
       req.params.userid as unknown as ObjectId
     );
-    res.status(200).json({ message: "get data sucessfull", result });
+    res.status(200).json({ message: "get data sucessfully", result });
   } catch (err) {
     next(err);
   }
@@ -81,7 +81,7 @@ const authenticate = async (
         status: 200,
       });
     }
-    res.json(result);
+    // res.json(result);
   } catch (err) {
     next(err);
   }
@@ -94,7 +94,8 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ user, status: 200 });
   } catch (err) {
     // next(err);
-    console.log(err);
+    // console.log(err);
+    next(err);
   }
 };
 

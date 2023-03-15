@@ -160,7 +160,11 @@ const initialState: tasksState = {
 export const taskSlice = createSlice({
   name: "tasks",
   initialState,
-  reducers: {},
+  reducers: {
+    handleIsChecked(state, action) {
+      state.isChecked = action.payload;
+    },
+  },
   extraReducers(builder) {
     builder.addCase(addTodo.pending, (state) => {
       state.isLoading = true;
@@ -292,4 +296,5 @@ export const taskSlice = createSlice({
   },
 });
 
+export const { handleIsChecked } = taskSlice.actions;
 export default taskSlice.reducer;

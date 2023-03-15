@@ -13,9 +13,9 @@
 
   #options {
     @extend %centered;
-
     position: relative;
     padding: 10px 20px;
+    height: 50px;
     small.hr {
       position: absolute;
       top: 100%;
@@ -51,6 +51,13 @@
         transition: 0.3s;
         opacity: 0.4;
         padding: 0 5px;
+        transition: 0.3;
+        &.active {
+          opacity: 1;
+        }
+        &:hover {
+          opacity: 0.7 !important;
+        }
 
         &:before {
           content: "";
@@ -91,8 +98,8 @@
   }
 
   #tasks {
-    width: 100%;
-    height: 100%;
+    // width: 100%;
+    // height: 100%;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -179,5 +186,31 @@
   }
   .no-data {
     width: 600px;
+  }
+}
+
+.update-loading {
+  position: absolute;
+  right: 4px;
+
+  span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin: 0 1.5px;
+    background: var(--main);
+    opacity: 0.6;
+    animation: update-loading 0.4s infinite ease-in;
+  }
+  @for $i from 1 to 3 {
+    span:nth-child(#{$i}) {
+      animation-delay: calc(#{$i} * 0.15s);
+    }
+    @keyframes update-loading {
+      50% {
+        transform: translate(0, 8px);
+      }
+    }
   }
 }

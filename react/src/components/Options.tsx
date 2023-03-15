@@ -1,21 +1,23 @@
-import React, {
-  MutableRefObject,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { useContext, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
 import { ClearContext } from "../App";
 import { useAppSelector } from "../customHooks/reduxTypes";
+import {
+  clearBtn,
+  hrVariant,
+  opacityVariant,
+  optionsParentVariant,
+  optionVariant,
+} from "../Variants/options";
+import { btnHover } from "../Variants/globalVariants";
 interface OptionsProps {
   setOption: React.Dispatch<React.SetStateAction<string>>;
   option: string;
-  isIntialRender: MutableRefObject<boolean>;
 }
-const Options = ({ option, setOption, isIntialRender }: OptionsProps) => {
+const Options = ({ option, setOption }: OptionsProps) => {
   const { setShowClearPopUp } = useContext(ClearContext);
-
+  const [isAnimateFInished, setIsAnimateFInished] = useState(false);
   const { tasks } = useAppSelector((state) => state.tasks);
   const [isOptionClicked, setIsOptionClicked] = useState(false);
   const optionsArr = [
@@ -41,106 +43,62 @@ const Options = ({ option, setOption, isIntialRender }: OptionsProps) => {
     },
   ];
 
-  console.log("options ");
-  console.log({ isIntialRender });
-
   return (
-    <>
-      <AnimatePresence>
-        {tasks.length >= 1 && (
-          <motion.div
-            id="options"
-            animate={{
-              height: 50,
-              opacity: 1,
-              transition: {
-                opacity: { delay: 2, duration: 1 },
-                height: { delay: 1, duration: 1 },
-              },
-            }}
-            initial={{ height: 0, opacity: 0 }}
-          >
-            <motion.small
-              animate={{ width: "80%" }}
-              initial={{ width: 0 }}
-              transition={{ delay: 4, duration: 1 }}
-              exit={{ width: 0, transition: { delay: 0.4, duration: 1 } }}
-              className="hr"
-            ></motion.small>
-            <div id="task-state">
-              {tasks.length > 0 &&
-                optionsArr?.map(
-                  ({ newOption, handleCLick, handleLength }, index) => {
-                    return (
-                      <motion.span
-                        key={index}
-                        initial={{ opacity: 0 }}
-                        animate={{
-                          opacity: option === newOption ? 1 : 0.4,
-                          transition: {
-                            delay: !isOptionClicked ? 2 + 0.4 * index : 1.1,
-                          },
-                        }}
-                        // whileHover={{
-                        //   scale: 1.1,
-                        //   opacity: 1,
-                        //   transition: { duration: 0.4 },
-                        // }}
-                        className={option === newOption ? "active" : ""}
-                        exit={{
-                          opacity: 0,
-                          transition: {
-                            delay: 1.5 + index * 0.2,
-                            duration: 0.3,
-                          },
-                        }}
-                        onClick={() => {
-                          handleCLick();
-                          setIsOptionClicked(true);
-                        }}
-                      >
-                        {newOption} ({handleLength()})
-                      </motion.span>
-                    );
-                  }
-                )}
-            </div>
+    <motion.div id="options" variants={optionsParentVariant}>
+      {/* hr */}
 
-            <AnimatePresence>
-              {tasks.length >= 2 && option === "all" ? (
-                <motion.button
-                  animate={{
-                    opacity: 1,
-                    background: "var(--delete)",
-                    transition: {
-                      delay: 3.5,
-                      duration: 1,
-                    },
-                  }}
-                  initial={{ opacity: 0, background: "black" }}
-                  exit={{ opacity: 0, transition: { duration: 1 } }}
-                  id="clear"
-                  whileHover={{
-                    scale: 1.2,
-                    boxShadow: "2px 2px 1px black ",
-                    transition: { type: "spring", stiffness: 300 },
-                  }}
-                  // whileTap={{
-                  //   scale: 1.1,
-                  // }}
-                  onClick={() => {
-                    setShowClearPopUp(true);
-                  }}
-                >
-                  <AiFillDelete style={{ color: "white" }} />
-                  Clear All ({tasks.length})
-                </motion.button>
-              ) : null}
-            </AnimatePresence>
-          </motion.div>
+      {/* <motion.div id="task-state" > */}
+
+      {/* {tasks.length > 0 && */}
+      {optionsArr?.map(({ newOption, handleCLick, handleLength }, index) => {
+        return (
+          <motion.span
+            className={option === newOption ? "active" : ""}
+            key={index}
+            transition={{ duration: 0.2 }}
+            custom={{ index, option, newOption, isOptionClicked }}
+            variants={optionVariant}
+            onClick={() => {
+              handleCLick();
+              setIsOptionClicked(true);
+            }}
+          >
+            {newOption} ({handleLength()})
+          </motion.span>
+        );
+      })}
+
+      <motion.small
+        transition={{ duration: 1 }}
+        variants={hrVariant}
+        className="hr"
+      ></motion.small>
+
+      <AnimatePresence mode="wait">
+        {tasks.length >= 2 && option === "all" && (
+          <motion.span
+            variants={opacityVariant}
+            transition={{ duration: 0.4 }}
+            onAnimationComplete={() => setIsAnimateFInished(true)}
+          >
+            <motion.button
+              initial="start"
+              animate="end"
+              exit="exit"
+              variants={clearBtn}
+              id="clear"
+              whileHover={isAnimateFInished ? btnHover : {}}
+              onClick={() => {
+                setShowClearPopUp(true);
+              }}
+            >
+              <AiFillDelete style={{ color: "white" }} />
+              Clear All ({tasks.length})
+            </motion.button>
+          </motion.span>
         )}
       </AnimatePresence>
-    </>
+    </motion.div>
   );
 };
 

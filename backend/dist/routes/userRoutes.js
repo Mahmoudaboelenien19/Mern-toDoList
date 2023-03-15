@@ -37,7 +37,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
 const getTodos = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const result = yield users_js_1.default.getAllToDos(req.params.userid);
-        res.status(200).json({ message: "get data sucessfull", result });
+        res.status(200).json({ message: "get data sucessfully", result });
     }
     catch (err) {
         next(err);
@@ -70,7 +70,7 @@ const authenticate = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             res.status(200).json(Object.assign(Object.assign({ message: "you logged in sucessfully" }, result), { refToken,
                 accessToken, status: 200 }));
         }
-        res.json(result);
+        // res.json(result);
     }
     catch (err) {
         next(err);
@@ -84,7 +84,8 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (err) {
         // next(err);
-        console.log(err);
+        // console.log(err);
+        next(err);
     }
 });
 const getNewRefToken = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

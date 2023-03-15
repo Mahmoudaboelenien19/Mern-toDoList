@@ -57,19 +57,22 @@ class User {
         user.password + BCRYPT_PASS,
         result.password
       );
-      closeMongoConnection();
       if (check) {
+        closeMongoConnection();
         return { ...user, id: result._id };
       } else {
+        closeMongoConnection();
+
         const err: Error = new Error("Wrong password");
         err.status = 401;
-        next(err);
+        throw err;
       }
     } else {
+      closeMongoConnection();
+
       const err: Error = new Error("this user isn't regesitered ..!");
       err.status = 404;
-      next(err);
-      closeMongoConnection();
+      throw err;
     }
   }
 
@@ -104,10 +107,9 @@ class User {
       console.log("get 2");
 
       closeMongoConnection();
-
       const error: Error = new Error("this is wring id");
       error.status = 404;
-      next(error);
+      throw error;
     }
   }
 
@@ -121,7 +123,7 @@ class User {
     } catch (err) {
       const error: Error = new Error("wrong ref token");
       error.status = 404;
-      next(err);
+      throw error;
     }
   }
 }

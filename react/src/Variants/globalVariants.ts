@@ -1,9 +1,10 @@
 export const btnHover = {
-  scale: 1.2,
-  boxShadow: "2px 2px 2px black ",
+  boxShadow: "2px 2px 2px rgb(0,0,0) ",
   transition: {
     type: "spring",
     stiffness: 300,
+    damping: 5,
+    mass: 2,
   },
 };
 

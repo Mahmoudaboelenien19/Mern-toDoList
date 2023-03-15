@@ -6,7 +6,6 @@ import { addTodo, updateTodo } from "../redux/Taskslice";
 import { toast } from "react-toastify";
 import { toastContext } from "../pages/Home";
 import { handleIsClearedSlice } from "../redux/IsCleared";
-import useInp from "../customHooks/useInp";
 
 const Form: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -14,17 +13,27 @@ const Form: React.FC = () => {
   const [inp, setInp] = useState("");
   const input = useRef<HTMLInputElement>(null!);
   const focus = useContext(inpContext);
+  const {
+    isInpFocus,
+    setIsInpFocus,
+    setIsUpdated,
+    updatedTaskId,
+    setMode,
+    mode,
+    inpValue,
+  } = focus;
   const { msg } = useAppSelector((state) => state.tasks);
 
   useEffect(() => {
-    if (focus.isInpFocus) {
+    if (isInpFocus) {
       input.current.focus();
-      input.current.value = focus?.inpValue;
+      input.current.value = inpValue;
     }
-    setTimeout(() => {
-      focus.setIsInpFocus(false);
-    }, 0);
-  }, [focus.isInpFocus]);
+    const timer = setTimeout(() => {
+      setIsInpFocus(false);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [isInpFocus]);
 
   const { showToast, setShowToast } = useContext(toastContext);
   useEffect(() => {
@@ -63,20 +72,22 @@ const Form: React.FC = () => {
           } else if (input.current.value.trim().length > 30) {
             toast.error("you can't exceed 30 letter");
           } else {
-            if (focus.mode === "create") {
+            if (mode === "create") {
               dispatch(addTodo(inp.trim()));
               dispatch(handleIsClearedSlice(false));
             } else {
               dispatch(
                 updateTodo({
-                  id: focus.updatedTaskId,
+                  id: updatedTaskId,
                   content: input.current.value.trim(),
                 })
               );
-              focus.setMode("create");
+              setTimeout(() => {
+                setMode("create");
+              }, 1000);
+              setIsUpdated(true);
             }
             input.current.value = "";
-            input.current.blur();
           }
         }}
       >
@@ -86,7 +97,11 @@ const Form: React.FC = () => {
             type="text"
             required
             onChange={handleInp}
-            onBlur={() => focus.setMode("create")}
+            onBlur={() => {
+              if (input.current.value === "") {
+                setMode("create");
+              }
+            }}
           />
           <motion.div
             style={{
@@ -100,7 +115,7 @@ const Form: React.FC = () => {
 
           <span id="placeholder">
             <AnimatePresence mode={"wait"}>
-              {focus.mode === "create" ? (
+              {mode === "create" ? (
                 <motion.span
                   key={"add"}
                   animate={{ opacity: 1 }}
