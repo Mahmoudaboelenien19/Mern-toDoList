@@ -47,26 +47,26 @@ const Options = ({ option, setOption }: OptionsProps) => {
     <motion.div id="options" variants={optionsParentVariant}>
       {/* hr */}
 
-      {/* <motion.div id="task-state" > */}
-
-      {/* {tasks.length > 0 && */}
-      {optionsArr?.map(({ newOption, handleCLick, handleLength }, index) => {
-        return (
-          <motion.span
-            className={option === newOption ? "active" : ""}
-            key={index}
-            transition={{ duration: 0.2 }}
-            custom={{ index, option, newOption, isOptionClicked }}
-            variants={optionVariant}
-            onClick={() => {
-              handleCLick();
-              setIsOptionClicked(true);
-            }}
-          >
-            {newOption} ({handleLength()})
-          </motion.span>
-        );
-      })}
+      <div id="task-state">
+        {/* {tasks.length > 0 && */}
+        {optionsArr?.map(({ newOption, handleCLick, handleLength }, index) => {
+          return (
+            <motion.span
+              className={option === newOption ? "active" : ""}
+              key={index}
+              transition={{ duration: 0.2 }}
+              custom={{ index, option, newOption, isOptionClicked }}
+              variants={optionVariant}
+              onClick={() => {
+                handleCLick();
+                setIsOptionClicked(true);
+              }}
+            >
+              {newOption} ({handleLength()})
+            </motion.span>
+          );
+        })}
+      </div>
 
       <motion.small
         transition={{ duration: 1 }}
@@ -74,30 +74,30 @@ const Options = ({ option, setOption }: OptionsProps) => {
         className="hr"
       ></motion.small>
 
-      <AnimatePresence mode="wait">
-        {tasks.length >= 2 && option === "all" && (
-          <motion.span
-            variants={opacityVariant}
-            transition={{ duration: 0.4 }}
-            onAnimationComplete={() => setIsAnimateFInished(true)}
+      {/* <AnimatePresence mode="wait"> */}
+      {tasks.length >= 2 && option === "all" && (
+        <motion.span
+          variants={opacityVariant}
+          transition={{ duration: 0.4 }}
+          onAnimationComplete={() => setIsAnimateFInished(true)}
+        >
+          <motion.button
+            initial="start"
+            animate="end"
+            exit="exit"
+            variants={clearBtn}
+            id="clear"
+            whileHover={isAnimateFInished ? btnHover : {}}
+            onClick={() => {
+              setShowClearPopUp(true);
+            }}
           >
-            <motion.button
-              initial="start"
-              animate="end"
-              exit="exit"
-              variants={clearBtn}
-              id="clear"
-              whileHover={isAnimateFInished ? btnHover : {}}
-              onClick={() => {
-                setShowClearPopUp(true);
-              }}
-            >
-              <AiFillDelete style={{ color: "white" }} />
-              Clear All ({tasks.length})
-            </motion.button>
-          </motion.span>
-        )}
-      </AnimatePresence>
+            <AiFillDelete style={{ color: "white" }} />
+            Clear All ({tasks.length})
+          </motion.button>
+        </motion.span>
+      )}
+      {/* </AnimatePresence> */}
     </motion.div>
   );
 };

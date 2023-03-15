@@ -74,7 +74,7 @@ const Form: React.FC = () => {
           } else {
             if (mode === "create") {
               dispatch(addTodo(inp.trim()));
-              dispatch(handleIsClearedSlice(false));
+              // dispatch(handleIsClearedSlice(false));
             } else {
               dispatch(
                 updateTodo({

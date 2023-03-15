@@ -37,10 +37,11 @@ const Tasks = () => {
       setDataShown(tasks?.filter((e) => e.state === "updated"));
     }
   }, [isChanged, option]);
-
+  // }, [tasks]);
+  //
   return (
     <AnimatePresence mode="wait">
-      {tasks.length > 0 && !isCleared ? (
+      {tasks.length > 0 ? (
         <motion.div
           key="task-container"
           className="tasks-cont"
@@ -78,8 +79,12 @@ const Tasks = () => {
             <motion.div id="tasks" variants={ParentVariant} key="tasks-id">
               {dataShown?.map((task, index) => {
                 return (
-                  <motion.div key={task._id} variants={opacityVariant}>
-                    <Task key={task._id!} {...task} index={index} />
+                  <motion.div
+                    key={task._id}
+                    variants={opacityVariant}
+                    // exit="exit"
+                  >
+                    <Task key={task._id} {...task} index={index} />
                   </motion.div>
                 );
               })}

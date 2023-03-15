@@ -21,6 +21,7 @@ export const tasksParentVariant = {
       when: "afterChildren",
       staggerDirection: -1,
       staggerChildren: 1,
+      // delayChildren: 1,
     },
   },
 };
@@ -38,9 +39,10 @@ export const singletaskVariants = {
   },
   exit: {
     opacity: 0,
+    x: 20,
     transition: {
       duration: 0.5,
-      delay: 0.2,
+      delay: 0.4,
     },
   },
 };

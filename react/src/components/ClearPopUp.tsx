@@ -40,7 +40,7 @@ const ClearPopUp = () => {
             className="btn-clr"
             onClick={() => {
               dispatch(clearAllTodos());
-              dispatch(handleIsClearedSlice(true));
+              // dispatch(handleIsClearedSlice(true));
               setShowClearPopUp(false);
             }}
           >

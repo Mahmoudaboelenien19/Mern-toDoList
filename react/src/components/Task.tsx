@@ -75,24 +75,25 @@ when i update
   }, [isChecked]);
 
   const controls = useAnimation();
+  // <AnimatePresence mode="wait">
+
   return (
-    <AnimatePresence mode="wait">
+    <>
       {!isDeleted && (
         <motion.div
           className="task"
           key={_id}
-          // key={Math.random()}
           whileHover={{
             x: 10,
             scale: 1.02,
             boxShadow: "1px 1px 1.5px grey ",
           }}
           variants={singletaskVariants}
-          custom={index}
+          // custom={index}
           initial="start"
           animate="end"
+          // exit="exit"
           // animate={controls}
-          exit="exit"
         >
           <AnimatePresence mode="wait">
             {states.map((border, index) => {
@@ -162,7 +163,7 @@ when i update
                   </motion.span>
                 );
               })}
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {/* line */}
                 {isCompleted && (
                   <motion.span
@@ -261,15 +262,13 @@ when i update
               onClick={() => {
                 setShowToast(true);
                 dispatch(deleteTodo(_id!));
-                controls.set({ opacity: 1 });
-                controls.start({
-                  opacity: 0,
-                  x: 100,
-                  transition: { duration: 0.4 },
-                });
-                setTimeout(() => {
-                  setIsDeleted(true);
-                }, 400);
+                // controls.set({ opacity: 1 });
+                // controls.start({
+                //   opacity: 0,
+                //   x: 100,
+                //   transition: { duration: 0.4 },
+                // });
+                setIsDeleted(true);
               }}
             >
               <svg
@@ -297,8 +296,8 @@ when i update
             )}
           </div>
         </motion.div>
-      )}{" "}
-    </AnimatePresence>
+      )}
+    </>
   );
 };
 

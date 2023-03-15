@@ -208,6 +208,7 @@ export const taskSlice = createSlice({
     builder.addCase(deleteTodo.pending, (state) => {
       state.isLoading = true;
       state.msg = "";
+      // state.isChanged = false;
     });
 
     builder.addCase(deleteTodo.fulfilled, (state, action) => {
@@ -221,6 +222,7 @@ export const taskSlice = createSlice({
       // }, 300);
       state.tasks = state.tasks.filter((e) => e._id !== action.payload.id);
       state.msg = action.payload.message as unknown as string;
+      // state.isChanged = true;
     });
 
     builder.addCase(deleteTodo.rejected, (state, action) => {
@@ -255,13 +257,16 @@ export const taskSlice = createSlice({
     builder.addCase(clearAllTodos.pending, (state) => {
       state.isLoading = true;
       state.msg = "";
+      state.isChanged = false;
     });
 
     builder.addCase(clearAllTodos.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
       state.msg = action.payload.message as unknown as string;
-      state.tasks = [];
+      state.tasks.splice(0);
+
+      state.isChanged = true;
     });
 
     builder.addCase(clearAllTodos.rejected, (state, action) => {
