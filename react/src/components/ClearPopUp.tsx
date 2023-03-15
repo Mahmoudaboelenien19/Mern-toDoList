@@ -3,7 +3,6 @@ import { clearAllTodos } from "../redux/Taskslice";
 import { useAppDispatch } from "../customHooks/reduxTypes";
 import { useContext } from "react";
 import { ClearContext } from "../App";
-import { handleIsClearedSlice } from "../redux/IsCleared";
 
 const ClearPopUp = () => {
   const { setShowClearPopUp } = useContext(ClearContext);
@@ -40,7 +39,6 @@ const ClearPopUp = () => {
             className="btn-clr"
             onClick={() => {
               dispatch(clearAllTodos());
-              // dispatch(handleIsClearedSlice(true));
               setShowClearPopUp(false);
             }}
           >

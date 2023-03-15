@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Options from "./Options";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
@@ -13,8 +13,6 @@ import {
 import { opacityVariant } from "../Variants/options";
 
 const Tasks = () => {
-  const { isCleared } = useAppSelector((state) => state.isCleared);
-
   const { tasks, isChanged } = useAppSelector((state) => state.tasks);
   const disptch = useAppDispatch();
   const [dataShown, setDataShown] = useState(tasks);
@@ -37,12 +35,22 @@ const Tasks = () => {
       setDataShown(tasks?.filter((e) => e.state === "updated"));
     }
   }, [isChanged, option]);
-  // }, [tasks]);
-  //
+
+  const taskCont = useRef<HTMLDivElement>(null!);
+  const [taskContHeight, setTaskContHeight] = useState(
+    taskCont.current?.offsetHeight
+  );
+
+  //todo ==>  why height not update
+  useEffect(() => {
+    setTaskContHeight(taskCont.current?.offsetHeight);
+  }, [isChanged]);
+  console.log({ taskContHeight });
   return (
     <AnimatePresence mode="wait">
       {tasks.length > 0 ? (
         <motion.div
+          ref={taskCont}
           key="task-container"
           className="tasks-cont"
           variants={tasksParentVariant}
@@ -59,7 +67,7 @@ const Tasks = () => {
                   return (
                     <motion.div
                       key={index}
-                      initial={{ opacity: 0 }}
+                      initial={{ opacity: 0, height: taskContHeight }}
                       animate={{
                         opacity: 1,
                         transition: { delay: 0.2, duration: 0.4 },
@@ -74,34 +82,21 @@ const Tasks = () => {
               })}
             </AnimatePresence>
           ) : (
-            // <AnimatePresence mode="wait">
-            // {!isCleared && (
             <motion.div id="tasks" variants={ParentVariant} key="tasks-id">
               {dataShown?.map((task, index) => {
                 return (
-                  <motion.div
-                    key={task._id}
-                    variants={opacityVariant}
-                    // exit="exit"
-                  >
+                  <motion.div key={task._id} variants={opacityVariant}>
                     <Task key={task._id} {...task} index={index} />
                   </motion.div>
                 );
               })}
             </motion.div>
-            // )}
-            // </AnimatePresence>
           )}
         </motion.div>
       ) : (
+        /* noData */
         <motion.div
           key={"no-data"}
-          // initial={{ opacity: 0 }}
-          // animate={{
-          //   opacity: 1,
-          // }}
-          // transition={{ delay: 2, duration: 1 }}
-          // exit={{ height: 0, transition: { delay: 0.5, duration: 1 } }}
           variants={noDataContVariant}
           initial="start"
           animate="end"
@@ -109,24 +104,10 @@ const Tasks = () => {
           className="no-data"
         >
           <motion.span
-            initial={{ opacity: 0, scale: 1 }}
-            animate={{
-              opacity: 1,
-              scale: 1.2,
-              transition: {
-                delay: 2.5,
-                duration: 1,
-              },
-            }}
-            exit={{
-              opacity: 0,
-              scale: 1,
-              transition: {
-                duration: 0.5,
-              },
-            }}
+            variants={opacityVariant}
+            transition={{ delay: 0.2, duration: 0.3 }}
           >
-            No todos to show
+            no Todos to show
           </motion.span>
         </motion.div>
       )}

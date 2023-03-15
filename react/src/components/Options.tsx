@@ -1,12 +1,11 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { ClearContext } from "../App";
 import { useAppSelector } from "../customHooks/reduxTypes";
 import {
   clearBtn,
   hrVariant,
-  opacityVariant,
   optionsParentVariant,
   optionVariant,
 } from "../Variants/options";
@@ -18,7 +17,7 @@ interface OptionsProps {
 const Options = ({ option, setOption }: OptionsProps) => {
   const { setShowClearPopUp } = useContext(ClearContext);
   const [isAnimateFInished, setIsAnimateFInished] = useState(false);
-  const { tasks } = useAppSelector((state) => state.tasks);
+  const { tasks, isChanged } = useAppSelector((state) => state.tasks);
   const [isOptionClicked, setIsOptionClicked] = useState(false);
   const optionsArr = [
     {
@@ -43,12 +42,27 @@ const Options = ({ option, setOption }: OptionsProps) => {
     },
   ];
 
+  const btnControls = useAnimation();
+
+  useEffect(() => {
+    if (tasks.length >= 2 && isAnimateFInished) {
+      {
+        btnControls.start("end");
+      }
+    }
+  }, [isChanged]);
   return (
-    <motion.div id="options" variants={optionsParentVariant}>
+    <motion.div
+      id="options"
+      variants={optionsParentVariant}
+      onAnimationComplete={() => {
+        btnControls.start("end");
+        setIsAnimateFInished(true);
+      }}
+    >
       {/* hr */}
 
       <div id="task-state">
-        {/* {tasks.length > 0 && */}
         {optionsArr?.map(({ newOption, handleCLick, handleLength }, index) => {
           return (
             <motion.span
@@ -74,17 +88,13 @@ const Options = ({ option, setOption }: OptionsProps) => {
         className="hr"
       ></motion.small>
 
-      {/* <AnimatePresence mode="wait"> */}
-      {tasks.length >= 2 && option === "all" && (
-        <motion.span
-          variants={opacityVariant}
-          transition={{ duration: 0.4 }}
-          onAnimationComplete={() => setIsAnimateFInished(true)}
-        >
+      {/* CLEAR ALL */}
+      <AnimatePresence mode="wait">
+        {tasks.length >= 2 && option === "all" && (
           <motion.button
             initial="start"
-            animate="end"
             exit="exit"
+            animate={btnControls}
             variants={clearBtn}
             id="clear"
             whileHover={isAnimateFInished ? btnHover : {}}
@@ -95,9 +105,8 @@ const Options = ({ option, setOption }: OptionsProps) => {
             <AiFillDelete style={{ color: "white" }} />
             Clear All ({tasks.length})
           </motion.button>
-        </motion.span>
-      )}
-      {/* </AnimatePresence> */}
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

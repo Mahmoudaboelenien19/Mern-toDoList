@@ -30,8 +30,6 @@ const Task: React.FC<Prop> = ({
   console.log(`${index} rerendered`);
   const { setShowToast } = useContext(toastContext);
 
-  const { isCleared } = useAppSelector((state) => state.isCleared);
-
   const [isDeleted, setIsDeleted] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [lineWidth, setLineWidth] = useState(0);
@@ -74,9 +72,12 @@ when i update
     return () => clearTimeout(timer);
   }, [isChecked]);
 
+  //controll animation
   const controls = useAnimation();
-  // <AnimatePresence mode="wait">
-
+  useEffect(() => {
+    controls.set("start");
+    controls.start("end");
+  }, []);
   return (
     <>
       {!isDeleted && (
@@ -89,11 +90,7 @@ when i update
             boxShadow: "1px 1px 1.5px grey ",
           }}
           variants={singletaskVariants}
-          // custom={index}
-          initial="start"
-          animate="end"
-          // exit="exit"
-          // animate={controls}
+          animate={controls}
         >
           <AnimatePresence mode="wait">
             {states.map((border, index) => {
@@ -133,11 +130,6 @@ when i update
                     // animate={{ opacity: 1 }}
                     animate={{ opacity: isCompleted ? 0.4 : 1 }}
                     transition={{
-                      // delay: isCompleted
-                      //   ? 0
-                      //   : state === "created"
-                      //   ? 0.5 + 0.02 * i
-                      //   : 2,
                       delay: isCompleted
                         ? 1.2
                         : isUpdated
@@ -150,11 +142,6 @@ when i update
                       damping: 10,
                       stiffness: 300,
                     }}
-                    // transition={{
-                    //   delay: 0.5 + 0.02 * i,
-                    //   damping: 10,
-                    //   stiffness: 300,
-                    // }}
                     style={{ margin: -1.5 }}
                     key={i}
                   >
@@ -250,6 +237,7 @@ when i update
                 dispatch(
                   checkTodo({ id: _id!, isChecked: !isCompleted, content })
                 );
+
                 setIsChecked(true);
               }}
             >
@@ -262,13 +250,15 @@ when i update
               onClick={() => {
                 setShowToast(true);
                 dispatch(deleteTodo(_id!));
-                // controls.set({ opacity: 1 });
-                // controls.start({
-                //   opacity: 0,
-                //   x: 100,
-                //   transition: { duration: 0.4 },
-                // });
-                setIsDeleted(true);
+                setTimeout(() => {
+                  setIsDeleted(true);
+                }, 400);
+                controls.set({ opacity: 1 });
+                controls.start({
+                  opacity: 0,
+
+                  transition: { duration: 0.5 },
+                });
               }}
             >
               <svg
@@ -287,7 +277,6 @@ when i update
             </motion.button>
             {((mode === "update" && isUpdated && showUpdateLoading) ||
               isChecked) && (
-              //  ||              (isChecked
               <div className="update-loading">
                 <span></span>
                 <span></span>

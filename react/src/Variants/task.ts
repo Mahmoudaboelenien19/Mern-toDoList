@@ -15,13 +15,13 @@ export const tasksParentVariant = {
   },
   exit: {
     overflow: "hidden",
-    opacity: 1,
+    opacity: 0,
     transition: {
+      delay: 0.1,
       overflow: { delay: 0 },
       when: "afterChildren",
       staggerDirection: -1,
       staggerChildren: 1,
-      // delayChildren: 1,
     },
   },
 };
@@ -37,14 +37,14 @@ export const singletaskVariants = {
       duration: 0.5,
     },
   },
-  exit: {
-    opacity: 0,
-    x: 20,
-    transition: {
-      duration: 0.5,
-      delay: 0.4,
-    },
-  },
+  // exit: {
+  //   opacity: 0,
+  //   x: 20,
+  //   transition: {
+  //     duration: 0.5,
+  //     delay: 0.4,
+  //   },
+  // },
 };
 
 export const ParentVariant = {
@@ -59,7 +59,6 @@ export const ParentVariant = {
     },
   },
   exit: {
-    opacity: 0,
     transition: {
       staggerDirection: -1,
       staggerChildren: 0.15,
@@ -71,8 +70,12 @@ export const ParentVariant = {
 
 export const noDataContVariant = {
   start: { height: 0 },
-  end: { height: 100, transition: { delay: 0.2, duration: 0.4 } },
-  exit: { height: 0, transition: { delay: 0.2, duration: 0.4 } },
+  end: {
+    height: 100,
+    transition: { delay: 0.2, duration: 0.4, when: "beforeChildren" },
+  },
+  exit: {
+    height: 0,
+    transition: { delay: 0.2, duration: 0.4, when: "afterChildren" },
+  },
 };
-
-export const noDataSpanVariant = {};

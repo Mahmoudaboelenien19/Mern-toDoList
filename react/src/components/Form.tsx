@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { addTodo, updateTodo } from "../redux/Taskslice";
 import { toast } from "react-toastify";
 import { toastContext } from "../pages/Home";
-import { handleIsClearedSlice } from "../redux/IsCleared";
 
 const Form: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -57,96 +56,92 @@ const Form: React.FC = () => {
       : setBg("var(--delete)");
   }, [input.current?.value.trim().length]);
   return (
-    <div>
-      <motion.form
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1, duration: 0.5 }}
-        action=""
-        noValidate
-        onSubmit={(e) => {
-          e.preventDefault();
-          setShowToast(true);
-          if (input.current.value.trim().length === 0) {
-            toast.error("insert a todo to add");
-          } else if (input.current.value.trim().length > 30) {
-            toast.error("you can't exceed 30 letter");
+    <motion.form
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1, duration: 0.5 }}
+      action=""
+      noValidate
+      onSubmit={(e) => {
+        e.preventDefault();
+        setShowToast(true);
+        if (input.current.value.trim().length === 0) {
+          toast.error("insert a todo to add");
+        } else if (input.current.value.trim().length > 30) {
+          toast.error("you can't exceed 30 letter");
+        } else {
+          if (mode === "create") {
+            dispatch(addTodo(inp.trim()));
           } else {
-            if (mode === "create") {
-              dispatch(addTodo(inp.trim()));
-              // dispatch(handleIsClearedSlice(false));
-            } else {
-              dispatch(
-                updateTodo({
-                  id: updatedTaskId,
-                  content: input.current.value.trim(),
-                })
-              );
-              setTimeout(() => {
-                setMode("create");
-              }, 1000);
-              setIsUpdated(true);
-            }
-            input.current.value = "";
+            dispatch(
+              updateTodo({
+                id: updatedTaskId,
+                content: input.current.value.trim(),
+              })
+            );
+            setTimeout(() => {
+              setMode("create");
+            }, 1000);
+            setIsUpdated(true);
           }
-        }}
-      >
-        <div id="inp">
-          <input
-            ref={input}
-            type="text"
-            required
-            onChange={handleInp}
-            onBlur={() => {
-              if (input.current.value === "") {
-                setMode("create");
-              }
-            }}
-          />
-          <motion.div
-            style={{
-              background: `linear-gradient(135deg,${bg},var(--secondary))`,
-            }}
-            animate={{ width: "60vw" }}
-            initial={{ width: 0 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="mock-inp"
-          ></motion.div>
+          input.current.value = "";
+        }
+      }}
+    >
+      <div id="inp">
+        <input
+          ref={input}
+          type="text"
+          onChange={handleInp}
+          onBlur={() => {
+            if (input.current.value === "") {
+              setMode("create");
+            }
+          }}
+        />
+        <motion.div
+          style={{
+            background: `linear-gradient(135deg,${bg},var(--secondary))`,
+          }}
+          animate={{ width: "60vw" }}
+          initial={{ width: 0 }}
+          transition={{ delay: 1, duration: 1 }}
+          className="mock-inp"
+        ></motion.div>
 
-          <span id="placeholder">
-            <AnimatePresence mode={"wait"}>
-              {mode === "create" ? (
-                <motion.span
-                  key={"add"}
-                  animate={{ opacity: 1 }}
-                  initial={{ opacity: 0 }}
-                  transition={{ delay: 1, duration: 1 }}
-                  exit={{
-                    opacity: 0,
-                    transition: { delay: 0.5, duration: 0.5 },
-                  }}
-                >
-                  Add a Todo ...
-                </motion.span>
-              ) : (
-                <motion.span
-                  key={"update"}
-                  animate={{ opacity: 1 }}
-                  initial={{ opacity: 0 }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
-                  exit={{
-                    opacity: 0,
-                    transition: { delay: 0.5, duration: 0.5 },
-                  }}
-                >
-                  Update Todo ...
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </span>
-        </div>
-      </motion.form>
-    </div>
+        <span id="placeholder">
+          <AnimatePresence mode={"wait"}>
+            {mode === "create" ? (
+              <motion.span
+                key={"add"}
+                animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                transition={{ delay: 1, duration: 1 }}
+                exit={{
+                  opacity: 0,
+                  transition: { delay: 0.5, duration: 0.5 },
+                }}
+              >
+                Add a Todo ...
+              </motion.span>
+            ) : (
+              <motion.span
+                key={"update"}
+                animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                exit={{
+                  opacity: 0,
+                  transition: { delay: 0.5, duration: 0.5 },
+                }}
+              >
+                Update Todo ...
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </span>
+      </div>
+    </motion.form>
   );
 };
 
