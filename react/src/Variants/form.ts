@@ -11,11 +11,6 @@ export const formTitle = {
   end: { opacity: 1, transition: { delay: 0.2, duration: 0.2 } },
 };
 
-export const inputParentAnimation = {
-  start: { opacity: 0 },
-  end: { opacity: 1, transition: { delay: 0.5, duration: 0.2 } },
-};
-
 export const btnFormAnimation = {
   start: { x: 400 },
   end: {
@@ -31,11 +26,11 @@ export const linkFormAnimation = {
     transition: { delay: 1.5, duration: 0.4, type: "tween" },
   },
 };
-
 interface inpVariantInterface {
   isFocus: boolean;
-  isResetSpanCLicked: boolean;
-  isXSpanAnimateCompleted: boolean;
+  isResetSpanCLicked?: boolean;
+  isXSpanAnimateCompleted?: boolean;
+  bg: string;
 }
 
 export const inpVariant = {
@@ -47,6 +42,7 @@ export const inpVariant = {
     isFocus,
     isResetSpanCLicked,
     isXSpanAnimateCompleted,
+    bg,
   }: inpVariantInterface) => ({
     height: isFocus ? 40 : 3,
     transition: {
@@ -85,6 +81,12 @@ export const xSpanVariant = {
   },
 };
 
+export const hidePasswordVariant = {
+  start: { opacity: 0 },
+  end: { opacity: 1, transition: { delay: 0.2, duration: 0.2 } },
+  exit: { opacity: 0, transition: { delay: 0.2, duration: 0.2 } },
+};
+
 export const placeholderVariant = {
   start: (bool: boolean) => ({
     scale: bool ? 1 : 0.8,
@@ -93,25 +95,38 @@ export const placeholderVariant = {
   end: (bool: boolean) => ({
     scale: bool ? 0.8 : 1,
     color: bool ? "var(--border)" : "rgb(0,0,0)",
-    transition: { delay: 0.2, duration: 0.1 },
+    transition: { delay: 0.2, duration: 0.4 },
     originX: 0,
   }),
+  // exit: { opacity: 0, transition: { delay: 0.4, duration: 0.2 } },
 };
 
-export const hidePasswordVariant = {
-  start: { opacity: 0 },
-  end: { opacity: 1, transition: { delay: 0.2, duration: 0.2 } },
-  exit: { opacity: 0, transition: { delay: 0.2, duration: 0.2 } },
-};
-
-export const inputVariant = {
+export const formPlaceholderVariant = {
+  ...placeholderVariant,
   start: (bool: boolean) => ({
-    opacity: bool ? 0 : 1,
+    scale: 0.8,
+    color: bool ? "rgb(0,0,0)" : "var(--border)",
   }),
   end: (bool: boolean) => ({
-    opacity: bool ? 1 : 0,
-    transition: {
-      opacity: { delay: 0, duration: 0.2 },
-    },
+    scale: bool ? 0.8 : 1,
+    color: bool ? "var(--border)" : "rgb(0,0,0)",
+    originX: 0,
+    transition: { duration: 0.4, delay: 1, when: "beforeChildren" },
   }),
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.2, delay: 0, when: "afterChildren" },
+  },
+};
+
+export const dotsParent = {
+  start: {},
+  end: { transition: { staggerChildren: 0.1, delayChildren: 1 } },
+  exit: {
+    transition: {
+      staggerChildren: 0.1,
+      staggerDirection: -1,
+      when: "afterChildren",
+    },
+  },
 };

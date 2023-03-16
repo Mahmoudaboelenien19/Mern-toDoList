@@ -8,7 +8,6 @@ import { toastContext } from "../pages/Home";
 
 const Form: React.FC = () => {
   const dispatch = useAppDispatch();
-
   const [inp, setInp] = useState("");
   const input = useRef<HTMLInputElement>(null!);
   const focus = useContext(inpContext);
@@ -55,6 +54,9 @@ const Form: React.FC = () => {
       ? setBg("var(--update)")
       : setBg("var(--delete)");
   }, [input.current?.value.trim().length]);
+
+  const [isInpAnimateCompleted, setIsInpAnimateCompleted] = useState(false);
+
   return (
     <motion.form
       initial={{ opacity: 0 }}
@@ -88,10 +90,11 @@ const Form: React.FC = () => {
         }
       }}
     >
-      <div id="inp">
+      <motion.div id="inp">
         <input
           ref={input}
           type="text"
+          required
           onChange={handleInp}
           onBlur={() => {
             if (input.current.value === "") {
@@ -107,40 +110,40 @@ const Form: React.FC = () => {
           initial={{ width: 0 }}
           transition={{ delay: 1, duration: 1 }}
           className="mock-inp"
-        ></motion.div>
-
-        <span id="placeholder">
-          <AnimatePresence mode={"wait"}>
-            {mode === "create" ? (
-              <motion.span
-                key={"add"}
-                animate={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
-                transition={{ delay: 1, duration: 1 }}
-                exit={{
-                  opacity: 0,
-                  transition: { delay: 0.5, duration: 0.5 },
-                }}
-              >
-                Add a Todo ...
-              </motion.span>
-            ) : (
-              <motion.span
-                key={"update"}
-                animate={{ opacity: 1 }}
-                initial={{ opacity: 0 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                exit={{
-                  opacity: 0,
-                  transition: { delay: 0.5, duration: 0.5 },
-                }}
-              >
-                Update Todo ...
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </span>
-      </div>
+        >
+          <span id="placeholder">
+            <AnimatePresence mode={"wait"}>
+              {mode === "create" ? (
+                <motion.span
+                  key={"add"}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={{ delay: 1, duration: 1 }}
+                  exit={{
+                    opacity: 0,
+                    transition: { delay: 0.5, duration: 0.5 },
+                  }}
+                >
+                  Add a Todo ...
+                </motion.span>
+              ) : (
+                <motion.span
+                  key={"update"}
+                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0 }}
+                  transition={{ delay: 0.5, duration: 0.5 }}
+                  exit={{
+                    opacity: 0,
+                    transition: { delay: 0.5, duration: 0.5 },
+                  }}
+                >
+                  Update Todo ...
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </span>
+        </motion.div>
+      </motion.div>
     </motion.form>
   );
 };

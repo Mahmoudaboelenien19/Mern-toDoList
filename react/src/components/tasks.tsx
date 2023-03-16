@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Options from "./Options";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
@@ -25,14 +25,14 @@ const Tasks = () => {
   }, []);
 
   useEffect(() => {
-    if (option === "all") {
-      setDataShown(tasks);
+    if (option === "updated") {
+      setDataShown(tasks?.filter((e) => e.state === "updated"));
     } else if (option === "pending") {
       setDataShown(tasks?.filter((e) => e.isCompleted === false));
     } else if (option === "completed") {
       setDataShown(tasks?.filter((e) => e.isCompleted === true));
     } else {
-      setDataShown(tasks?.filter((e) => e.state === "updated"));
+      setDataShown(tasks);
     }
   }, [isChanged, option]);
 
@@ -41,11 +41,13 @@ const Tasks = () => {
     taskCont.current?.offsetHeight
   );
 
-  //todo ==>  why height not update
+  //todo why height not update
+
   useEffect(() => {
     setTaskContHeight(taskCont.current?.offsetHeight);
   }, [isChanged]);
-  console.log({ taskContHeight });
+  // console.log({ taskContHeight });
+
   return (
     <AnimatePresence mode="wait">
       {tasks.length > 0 ? (
@@ -94,7 +96,6 @@ const Tasks = () => {
           )}
         </motion.div>
       ) : (
-        /* noData */
         <motion.div
           key={"no-data"}
           variants={noDataContVariant}
@@ -107,6 +108,7 @@ const Tasks = () => {
             variants={opacityVariant}
             transition={{ delay: 0.2, duration: 0.3 }}
           >
+            {" "}
             no Todos to show
           </motion.span>
         </motion.div>

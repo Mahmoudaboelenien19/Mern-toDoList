@@ -48,6 +48,7 @@ const Login = () => {
         initial="start"
         animate="end"
         id="log-in-form"
+        style={{ overflow: "hidden" }}
         onSubmit={(e) => e.preventDefault()}
       >
         <motion.h4 variants={formTitle} className="heading">

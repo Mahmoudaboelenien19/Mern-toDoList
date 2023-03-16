@@ -43,7 +43,7 @@ when i update
   const focus = useContext(inpContext);
   const {
     setIsInpFocus,
-    setInpValue,
+    setUpdatedValue,
     setUpdatedTaskId,
     setMode,
     mode,
@@ -223,7 +223,7 @@ when i update
               <AiOutlineArrowUp
                 onClick={() => {
                   setIsInpFocus(true);
-                  setInpValue(content);
+                  setUpdatedValue(content);
                   setUpdatedTaskId(_id!);
                   setMode("update");
                   setShowUpdateLoading(true);

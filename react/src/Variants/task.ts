@@ -72,10 +72,10 @@ export const noDataContVariant = {
   start: { height: 0 },
   end: {
     height: 100,
-    transition: { delay: 0.2, duration: 0.4, when: "beforeChildren" },
+    transition: { delay: 0.5, duration: 0.4, when: "beforeChildren" },
   },
   exit: {
     height: 0,
-    transition: { delay: 0.2, duration: 0.4, when: "afterChildren" },
+    transition: { delay: 0.5, duration: 0.4, when: "afterChildren" },
   },
 };

@@ -6,8 +6,6 @@ import useInp from "../customHooks/useInp";
 import usePassword from "../customHooks/usePassword";
 import {
   hidePasswordVariant,
-  inputParentAnimation,
-  inputVariant,
   inpVariant,
   placeholderVariant,
   ResetSpanVariant,
@@ -15,6 +13,7 @@ import {
 } from "../Variants/form";
 
 import { useFormContext } from "react-hook-form";
+import { opacityVariant } from "../Variants/options";
 
 interface InputInterface {
   isPassword: boolean;
@@ -56,12 +55,12 @@ const SignUpInput = ({ isPassword, placeholder, err }: InputInterface) => {
     }
   }, [inpVal]);
   return (
-    <motion.div id="inp" variants={inputParentAnimation}>
-      <motion.input
-        variants={inputVariant}
-        custom={isFocus}
-        initial="start"
-        animate="end"
+    <motion.div
+      id="inp"
+      variants={opacityVariant}
+      transition={{ delay: 0.5, duration: 0.2 }}
+    >
+      <input
         onFocus={() => {
           handleOnFocus();
         }}
@@ -129,7 +128,7 @@ const SignUpInput = ({ isPassword, placeholder, err }: InputInterface) => {
         <motion.span
           variants={placeholderVariant}
           custom={isFocus}
-          id="placeholder"
+          className="placeholder"
         >
           {" "}
           {placeholder}

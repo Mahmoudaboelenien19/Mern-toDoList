@@ -7,8 +7,8 @@ interface inpContextProviderProps {
 interface inpContextInterface {
   isInpFocus: boolean;
   setIsInpFocus: React.Dispatch<React.SetStateAction<boolean>>;
-  inpValue: string;
-  setInpValue: React.Dispatch<React.SetStateAction<string>>;
+  updatedValue: string;
+  setUpdatedValue: React.Dispatch<React.SetStateAction<string>>;
   updatedTaskId: string;
   setUpdatedTaskId: React.Dispatch<React.SetStateAction<string>>;
   mode: string;
@@ -20,7 +20,7 @@ export const inpContext = createContext({} as inpContextInterface);
 
 export const InpContextProvider = ({ children }: inpContextProviderProps) => {
   const [isInpFocus, setIsInpFocus] = useState(false);
-  const [inpValue, setInpValue] = useState("");
+  const [updatedValue, setUpdatedValue] = useState("");
   const [updatedTaskId, setUpdatedTaskId] = useState("");
   const [mode, setMode] = useState("create");
   const [isUpdated, setIsUpdated] = useState(false);
@@ -30,8 +30,8 @@ export const InpContextProvider = ({ children }: inpContextProviderProps) => {
       value={{
         isInpFocus,
         setIsInpFocus,
-        inpValue,
-        setInpValue,
+        updatedValue,
+        setUpdatedValue,
         updatedTaskId,
         setUpdatedTaskId,
         mode,

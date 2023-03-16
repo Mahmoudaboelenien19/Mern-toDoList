@@ -214,8 +214,15 @@ export const taskSlice = createSlice({
     builder.addCase(deleteTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
+      // setTimeout(() => {
+      //   () =>
+      //     (state.tasks = state.tasks.filter(
+      //       (e) => e._id !== action.payload.id
+      //     ));
+      // }, 300);
       state.tasks = state.tasks.filter((e) => e._id !== action.payload.id);
       state.msg = action.payload.message as unknown as string;
+      // state.isChanged = true;
     });
 
     builder.addCase(deleteTodo.rejected, (state, action) => {

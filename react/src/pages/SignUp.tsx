@@ -13,11 +13,12 @@ import {
   btnFormAnimation,
   formTitle,
   formVariants,
-  inputParentAnimation,
+  // inputParentAnimation,
   linkFormAnimation,
 } from "../Variants/form";
 import SignUpInput from "../components/SIngUpInp";
 import { btnHover, linkHover } from "../Variants/globalVariants";
+import { opacityVariant } from "../Variants/options";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -63,6 +64,7 @@ const SignUp = () => {
     getValues,
     formState: { errors, isValid },
   } = methods;
+
   const OnSubmit = (data: FieldValues) => {
     console.log(data);
     console.log({ data });
@@ -87,6 +89,7 @@ const SignUp = () => {
           initial="start"
           action=""
           id="log-in-form"
+          style={{ overflow: "hidden" }}
           onSubmit={handleSubmit(OnSubmit)}
         >
           <motion.h4 variants={formTitle} className="heading">
@@ -117,7 +120,11 @@ const SignUp = () => {
           />
 
           {/* gender */}
-          <motion.div id="radio" variants={inputParentAnimation}>
+          <motion.div
+            id="radio"
+            variants={opacityVariant}
+            transition={{ delay: 0.5, duration: 0.2 }}
+          >
             <label htmlFor="gender">Gender</label>
             <div className="radios">
               <div className="label">
@@ -142,7 +149,11 @@ const SignUp = () => {
             </div>
           </motion.div>
 
-          <motion.div variants={inputParentAnimation} className="inp">
+          <motion.div
+            variants={opacityVariant}
+            transition={{ delay: 0.5, duration: 0.2 }}
+            className="inp"
+          >
             <motion.select {...register("country")}>
               {countries.map((e, i) => {
                 return (

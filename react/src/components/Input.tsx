@@ -7,13 +7,14 @@ import usePassword from "../customHooks/usePassword";
 import useReset from "../customHooks/useResetInp";
 import {
   hidePasswordVariant,
-  inputParentAnimation,
-  inputVariant,
+  // inputParentAnimation,
+  // inputVariant,
   inpVariant,
   placeholderVariant,
   ResetSpanVariant,
   xSpanVariant,
 } from "../Variants/form";
+import { opacityVariant } from "../Variants/options";
 
 interface InputInterface {
   isPassword: boolean;
@@ -62,12 +63,12 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
     onChange(inpVal);
   }, [inpVal]);
   return (
-    <motion.div id="inp" variants={inputParentAnimation}>
+    <motion.div
+      id="inp"
+      variants={opacityVariant}
+      transition={{ delay: 0.5, duration: 0.2 }}
+    >
       <motion.input
-        variants={inputVariant}
-        custom={isFocus}
-        initial="start"
-        animate="end"
         ref={inpRef}
         disabled={isInpAnimateCompleted}
         type={
@@ -141,7 +142,7 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
         <motion.span
           variants={placeholderVariant}
           custom={isFocus}
-          id="placeholder"
+          className="placeholder"
         >
           {" "}
           {placeholder}
