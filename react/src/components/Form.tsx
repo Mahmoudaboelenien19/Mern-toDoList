@@ -1,15 +1,51 @@
-import React, { useState, useRef, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { inpContext } from "../context/inpContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { addTodo, updateTodo } from "../redux/Taskslice";
 import { toast } from "react-toastify";
 import { toastContext } from "../pages/Home";
-
+import { FieldValues, useForm } from "react-hook-form";
+import { opacityVariant } from "../Variants/options";
+import {
+  dotsParent,
+  formPlaceholderVariant,
+  inpVariant,
+} from "../Variants/form";
 const Form: React.FC = () => {
   const dispatch = useAppDispatch();
-  const [inp, setInp] = useState("");
-  const input = useRef<HTMLInputElement>(null!);
+
+  const { register, watch, setFocus, handleSubmit, setValue } = useForm();
+
+  const watchedVal = watch("todo");
+  const OnSubmit = (data: FieldValues) => {
+    setShowToast(true);
+    if (watchedVal?.trim().length === 0) {
+      toast.error("insert a todo to add");
+    } else if (watchedVal?.trim().length > 30) {
+      toast.error("you can't exceed 30 letter");
+    } else {
+      if (mode === "create") {
+        dispatch(addTodo(watchedVal?.trim()));
+      } else {
+        dispatch(
+          updateTodo({
+            id: updatedTaskId,
+            content: watchedVal?.trim(),
+          })
+        );
+        setTimeout(() => {
+          setMode("create");
+        }, 1000);
+        setIsUpdated(true);
+      }
+      setValue("todo", "");
+    }
+    console.log(data);
+    console.log("newForm");
+  };
+
+  const [isFocus, setIsFocus] = useState(false);
   const focus = useContext(inpContext);
   const {
     isInpFocus,
@@ -18,19 +54,24 @@ const Form: React.FC = () => {
     updatedTaskId,
     setMode,
     mode,
-    inpValue,
+    updatedValue,
   } = focus;
+
   const { msg } = useAppSelector((state) => state.tasks);
 
   useEffect(() => {
     if (isInpFocus) {
-      input.current.focus();
-      input.current.value = inpValue;
+      setFocus("todo");
+      setTimeout(() => {
+        setValue("todo", updatedValue);
+      }, 1000);
     }
     const timer = setTimeout(() => {
       setIsInpFocus(false);
     }, 100);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [isInpFocus]);
 
   const { showToast, setShowToast } = useContext(toastContext);
@@ -42,20 +83,14 @@ const Form: React.FC = () => {
     return () => clearTimeout(timer);
   }, [msg, showToast]);
 
-  const handleInp = () => {
-    setInp(input.current!.value);
-  };
-
   const [bg, setBg] = useState("var(--border)");
   useEffect(() => {
-    input.current?.value.trim().length === 0
+    watchedVal?.trim().length === 0
       ? setBg("var(--border)")
-      : input.current?.value.trim().length <= 30
+      : watchedVal?.trim().length <= 30
       ? setBg("var(--update)")
       : setBg("var(--delete)");
-  }, [input.current?.value.trim().length]);
-
-  const [isInpAnimateCompleted, setIsInpAnimateCompleted] = useState(false);
+  }, [watchedVal?.trim().length]);
 
   return (
     <motion.form
@@ -63,42 +98,23 @@ const Form: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ delay: 1, duration: 0.5 }}
       action=""
-      noValidate
-      onSubmit={(e) => {
-        e.preventDefault();
-        setShowToast(true);
-        if (input.current.value.trim().length === 0) {
-          toast.error("insert a todo to add");
-        } else if (input.current.value.trim().length > 30) {
-          toast.error("you can't exceed 30 letter");
-        } else {
-          if (mode === "create") {
-            dispatch(addTodo(inp.trim()));
-          } else {
-            dispatch(
-              updateTodo({
-                id: updatedTaskId,
-                content: input.current.value.trim(),
-              })
-            );
-            setTimeout(() => {
-              setMode("create");
-            }, 1000);
-            setIsUpdated(true);
-          }
-          input.current.value = "";
-        }
-      }}
+      onSubmit={handleSubmit(OnSubmit)}
     >
-      <motion.div id="inp">
+      <motion.div
+        id="inp"
+        variants={opacityVariant}
+        transition={{ delay: 0.5, duration: 0.2 }}
+      >
         <input
-          ref={input}
+          {...register("todo")}
           type="text"
-          required
-          onChange={handleInp}
+          onFocus={() => {
+            setIsFocus(true);
+          }}
           onBlur={() => {
-            if (input.current.value === "") {
+            if (watchedVal === "") {
               setMode("create");
+              setIsFocus(false);
             }
           }}
         />
@@ -106,42 +122,79 @@ const Form: React.FC = () => {
           style={{
             background: `linear-gradient(135deg,${bg},var(--secondary))`,
           }}
-          animate={{ width: "60vw" }}
-          initial={{ width: 0 }}
-          transition={{ delay: 1, duration: 1 }}
+          custom={{ isFocus, bg }}
+          variants={inpVariant}
+          animate="end"
+          initial="start"
           className="mock-inp"
         >
-          <span id="placeholder">
-            <AnimatePresence mode={"wait"}>
-              {mode === "create" ? (
-                <motion.span
-                  key={"add"}
-                  animate={{ opacity: 1 }}
-                  initial={{ opacity: 0 }}
-                  transition={{ delay: 1, duration: 1 }}
-                  exit={{
-                    opacity: 0,
-                    transition: { delay: 0.5, duration: 0.5 },
-                  }}
-                >
-                  Add a Todo ...
-                </motion.span>
-              ) : (
-                <motion.span
-                  key={"update"}
-                  animate={{ opacity: 1 }}
-                  initial={{ opacity: 0 }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
-                  exit={{
-                    opacity: 0,
-                    transition: { delay: 0.5, duration: 0.5 },
-                  }}
-                >
-                  Update Todo ...
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </span>
+          <AnimatePresence mode="wait">
+            {mode === "create" ? (
+              <motion.span
+                key="add"
+                className="placeholder"
+                variants={formPlaceholderVariant}
+                custom={isFocus}
+                initial="start"
+                animate="end"
+                exit="exit"
+              >
+                Add a Todo
+                <AnimatePresence mode="wait">
+                  {isFocus && (
+                    <motion.span
+                      key={"dots-parent"}
+                      variants={dotsParent}
+                      initial="start"
+                      animate="end"
+                      exit="exit"
+                    >
+                      {Array.from("...").map((e, i) => {
+                        return (
+                          <motion.span key={i} variants={opacityVariant}>
+                            {" "}
+                            {e}
+                          </motion.span>
+                        );
+                      })}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.span>
+            ) : (
+              <motion.span
+                key="update"
+                className="placeholder"
+                variants={formPlaceholderVariant}
+                custom={isFocus}
+                initial="start"
+                animate="end"
+                exit="exit"
+              >
+                Update Todo
+                <AnimatePresence mode="wait">
+                  {isFocus && (
+                    <motion.span
+                      key={"dots-parent"}
+                      variants={dotsParent}
+                      initial="start"
+                      animate="end"
+                      exit="exit"
+                    >
+                      {Array.from("...").map((e, i) => {
+                        return (
+                          <motion.span key={i} variants={opacityVariant}>
+                            {" "}
+                            {e}
+                          </motion.span>
+                        );
+                      })}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.div>
       </motion.div>
     </motion.form>

@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { GridFSBucket, MongoClient } from "mongodb";
 import { MongoDB_URL } from "./config.js";
 const client = new MongoClient(MongoDB_URL!);
 
@@ -16,4 +16,10 @@ export const connectToMongo = async () => {
 export const closeMongoConnection = async () => {
   await client.close();
   console.log("MongoDB connection closed");
+};
+
+export const getGridFSBucket = async () => {
+  const db = await connectToMongo();
+  const bucket = new GridFSBucket(db, { bucketName: "uploads" });
+  return bucket;
 };

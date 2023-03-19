@@ -13,7 +13,6 @@ import cookies from "js-cookie";
 
 const date = () => new Date().toLocaleDateString();
 const time = () => new Date().toLocaleTimeString();
-const userId = cookies.get("user-id");
 
 const generateNewToken = async () => {
   const refToken = cookies.get("refresh-token");
@@ -38,6 +37,8 @@ export const addTodo = createAsyncThunk(
       isCompleted: false,
     };
     const { rejectWithValue } = thunk;
+    const userId = cookies.get("user-id");
+
     return await axios
       .post(createToDoRoute(userId as string), todo)
       .then(({ data }) => data);
@@ -112,6 +113,8 @@ export const clearAllTodos = createAsyncThunk(
   "tasks/clearAllTodos",
   async (_, thunk) => {
     const { rejectWithValue } = thunk;
+    const userId = cookies.get("user-id");
+
     return await axios
       .delete(ClearALlToDosRoute(userId as string))
       .then(({ data }) => data.result)
@@ -122,6 +125,7 @@ export const clearAllTodos = createAsyncThunk(
 export const getAllTodos = createAsyncThunk(
   "tasks/getAllTodos",
   async (_, thunk) => {
+    const userId = cookies.get("user-id");
     // const { rejectWithValue } = thunk;
     return await axios
       .get(getAllToDosRoute(userId as string))

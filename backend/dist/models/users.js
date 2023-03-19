@@ -98,7 +98,7 @@ class User {
                 console.log({ userId });
                 const res = yield collection.findOne({ _id: new mongodb_1.ObjectId(userId) });
                 console.log("get 1");
-                (0, database_js_1.closeMongoConnection)();
+                // closeMongoConnection();
                 return res;
             }
             catch (err) {
@@ -120,6 +120,34 @@ class User {
                 const error = new Error("wrong ref token");
                 error.status = 404;
                 throw error;
+            }
+        });
+    }
+    update(obj, userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (mongodb_1.ObjectId.isValid(userId)) {
+                try {
+                    const db = yield (0, database_js_1.connectToMongo)();
+                    const collection = db.collection("users");
+                    if (obj.image && obj.image.fileId) {
+                        const filesCollection = db.collection("fs.files");
+                        const file = yield filesCollection.findOne({
+                            _id: new mongodb_1.ObjectId(obj.image.fileId),
+                        });
+                        console.log({ file });
+                        // Add the file data to the user update
+                        // obj.image.data = file;
+                    }
+                    const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, { $set: obj }, { returnDocument: "after" });
+                    (0, database_js_1.closeMongoConnection)();
+                    return result;
+                }
+                catch (err) {
+                    throw new Error("can't update this user");
+                }
+            }
+            else {
+                return "wrong id";
             }
         });
     }

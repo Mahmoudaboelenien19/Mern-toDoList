@@ -27,19 +27,23 @@ const Task: React.FC<Prop> = ({
   isCompleted,
   index,
 }) => {
-  console.log(`${index} rerendered`);
+  // console.log(`${index} rerendered`);
+  const dispatch = useAppDispatch();
+
+  const states = ["created", "updated", "checked", "unchecked"];
+
   const { setShowToast } = useContext(toastContext);
 
   const [isDeleted, setIsDeleted] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [lineWidth, setLineWidth] = useState(0);
   const [showUpdateLoading, setShowUpdateLoading] = useState(false);
 
   /*   this is to make the width of checked line not get the new width  when it exits
 when i update 
- */ const contentRef = useRef<HTMLElement>(null!);
+*/
+  const contentRef = useRef<HTMLElement>(null!);
+  const lineWidth = useRef<number>(0);
 
-  const states = ["created", "updated", "checked", "unchecked"];
   const focus = useContext(inpContext);
   const {
     setIsInpFocus,
@@ -60,10 +64,8 @@ when i update
     return () => clearTimeout(timer);
   }, [isUpdated]);
 
-  const dispatch = useAppDispatch();
-
   useEffect(() => {
-    setLineWidth(contentRef.current?.offsetWidth);
+    lineWidth.current = contentRef.current?.offsetWidth;
 
     if (!isChecked) return;
     const timer = setTimeout(() => {
@@ -156,7 +158,7 @@ when i update
                   <motion.span
                     key={_id}
                     initial={{ width: 0 }}
-                    animate={{ width: lineWidth }}
+                    animate={{ width: lineWidth.current }}
                     transition={{ delay: 2, duration: 0.5 }}
                     exit={{
                       width: 0,
@@ -290,4 +292,5 @@ when i update
   );
 };
 
-export default memo(Task);
+// export default memo(Task);
+export default Task;

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Options from "./Options";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
@@ -37,17 +37,11 @@ const Tasks = () => {
   }, [isChanged, option]);
 
   const taskCont = useRef<HTMLDivElement>(null!);
-  const [taskContHeight, setTaskContHeight] = useState(
-    taskCont.current?.offsetHeight
-  );
-
-  //todo why height not update
+  const taskContHeightRef = useRef<number>(0);
 
   useEffect(() => {
-    setTaskContHeight(taskCont.current?.offsetHeight);
-  }, [isChanged]);
-  // console.log({ taskContHeight });
-
+    taskContHeightRef.current = taskCont.current?.offsetHeight;
+  }, [option]);
   return (
     <AnimatePresence mode="wait">
       {tasks.length > 0 ? (
@@ -69,7 +63,11 @@ const Tasks = () => {
                   return (
                     <motion.div
                       key={index}
-                      initial={{ opacity: 0, height: taskContHeight }}
+                      initial={{
+                        opacity: 0,
+                        height:
+                          `calc(${taskContHeightRef.current}px - 50px )` || 100,
+                      }}
                       animate={{
                         opacity: 1,
                         transition: { delay: 0.2, duration: 0.4 },

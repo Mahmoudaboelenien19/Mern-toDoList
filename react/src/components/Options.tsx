@@ -45,12 +45,12 @@ const Options = ({ option, setOption }: OptionsProps) => {
   const btnControls = useAnimation();
 
   useEffect(() => {
-    if (tasks.length >= 2 && isAnimateFInished) {
+    if (tasks.length >= 2 && isAnimateFInished && option === "all") {
       {
         btnControls.start("end");
       }
     }
-  }, [isChanged]);
+  }, [isChanged, option]);
   return (
     <motion.div
       id="options"

@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import ClearPopUp from "./components/ClearPopUp";
 import { createContext, useEffect, useState } from "react";
 import Loading from "./components/Loading";
+import IsAuthProvider from "./context/isAuthcontext";
 
 interface ClearContext {
   showClearPopUp: boolean;
@@ -31,30 +32,32 @@ const App = () => {
         <Loading />
       ) : (
         <Router>
-          <div className="App">
-            <ClearContext.Provider
-              value={{ showClearPopUp, setShowClearPopUp }}
-            >
-              <Nav />
-              <AnimatePresence>
-                {showClearPopUp && <ClearPopUp />}
-              </AnimatePresence>
-            </ClearContext.Provider>
+          <IsAuthProvider>
+            <div className="App">
+              <ClearContext.Provider
+                value={{ showClearPopUp, setShowClearPopUp }}
+              >
+                <Nav />
+                <AnimatePresence>
+                  {showClearPopUp && <ClearPopUp />}
+                </AnimatePresence>
+              </ClearContext.Provider>
 
-            <ToastContainer
-              position="bottom-left"
-              autoClose={3000}
-              hideProgressBar
-              newestOnTop
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-              transition={Flip}
-            />
-          </div>
+              <ToastContainer
+                position="bottom-left"
+                autoClose={3000}
+                hideProgressBar
+                newestOnTop
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                transition={Flip}
+              />
+            </div>
+          </IsAuthProvider>
         </Router>
       )}
     </>

@@ -14,8 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const users_js_1 = __importDefault(require("./../models/users.js"));
 const express_1 = require("express");
+const mongodb_1 = require("mongodb");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_js_1 = require("../config.js");
+const upload_js_1 = __importDefault(require("../middleware/upload.js"));
+const database_js_1 = require("../database.js");
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newUser = {
@@ -24,6 +27,10 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             password: req.body.password,
             country: req.body.country,
             phone: req.body.phone,
+            image: req.body.image || {
+                fileId: new mongodb_1.ObjectId("6417420730f8ff045688b1f6"),
+            },
+            gender: req.body.gender,
         };
         const result = yield users_js_1.default.createUser(newUser);
         res
@@ -105,6 +112,59 @@ const getNewRefToken = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         }
     }
 });
+const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { username, password, image, phone } = req.body;
+        let update = {};
+        if (username) {
+            update.username = username;
+        }
+        if (password) {
+            update.password = password;
+            console.log(password);
+        }
+        if (phone) {
+            update.phone = phone;
+        }
+        console.log(req.body.image);
+        if (req.file) {
+            console.log("file");
+            const { file } = req;
+            console.log(file);
+            const metadata = { filename: file.originalname };
+            const bucket = yield (0, database_js_1.getGridFSBucket)();
+            const writestream = bucket.openUploadStreamWithId(file.filename, file.originalname, { metadata });
+            writestream.write(file.buffer);
+            writestream.end();
+            yield new Promise((resolve, reject) => {
+                writestream.once("finish", (data) => __awaiter(void 0, void 0, void 0, function* () {
+                    console.log("finsih");
+                    update.image = {
+                        fileId: data._id,
+                        filename: data.filename,
+                    };
+                    resolve();
+                }));
+            });
+            // res.json({ success: true });
+        }
+        console.log(158);
+        console.log("update");
+        const result = yield users_js_1.default.update(update, req.params.userid);
+        if (result !== "wrong id") {
+            res.status(200).json({
+                result,
+                message: "user updated successfully",
+            });
+        }
+        else {
+            res.status(404).json({ message: result });
+        }
+    }
+    catch (err) {
+        next(err);
+    }
+});
 const logOut = (req, res) => {
     const { refToken } = req.body;
     if (refToken) {
@@ -120,6 +180,18 @@ const logOut = (req, res) => {
     }
 };
 const userRoutes = (0, express_1.Router)();
+userRoutes.route("/file/:id").get((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const db = yield (0, database_js_1.connectToMongo)();
+    const bucket = yield (0, database_js_1.getGridFSBucket)();
+    const imgId = req.params.id;
+    console.log({ imgId });
+    const file = yield bucket.find({ _id: new mongodb_1.ObjectId(imgId) }).toArray();
+    if (!file) {
+        return res.status(404).json({ message: "File not found" });
+    }
+    const readstream = bucket.openDownloadStream(new mongodb_1.ObjectId(imgId));
+    readstream.pipe(res);
+}));
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
 userRoutes.route("/user/:userid/todos").get(getTodos);
@@ -127,4 +199,7 @@ userRoutes.route("/user/:userid").get(getUser);
 userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(clear);
+userRoutes
+    .route("/user/update/:userid")
+    .patch(upload_js_1.default.single("image"), updateUser);
 exports.default = userRoutes;

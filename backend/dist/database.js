@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.closeMongoConnection = exports.connectToMongo = void 0;
+exports.getGridFSBucket = exports.closeMongoConnection = exports.connectToMongo = void 0;
 const mongodb_1 = require("mongodb");
 const config_js_1 = require("./config.js");
 const client = new mongodb_1.MongoClient(config_js_1.MongoDB_URL);
@@ -30,3 +30,9 @@ const closeMongoConnection = () => __awaiter(void 0, void 0, void 0, function* (
     console.log("MongoDB connection closed");
 });
 exports.closeMongoConnection = closeMongoConnection;
+const getGridFSBucket = () => __awaiter(void 0, void 0, void 0, function* () {
+    const db = yield (0, exports.connectToMongo)();
+    const bucket = new mongodb_1.GridFSBucket(db, { bucketName: "uploads" });
+    return bucket;
+});
+exports.getGridFSBucket = getGridFSBucket;

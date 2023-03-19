@@ -3,6 +3,8 @@ import { NextFunction, Request, Response, Router } from "express";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "../config.js";
+import upload from "../middleware/upload.js";
+import { connectToMongo, getGridFSBucket } from "../database.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -12,6 +14,10 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       password: req.body.password,
       country: req.body.country,
       phone: req.body.phone,
+      image: req.body.image || {
+        fileId: new ObjectId("6417420730f8ff045688b1f6"),
+      },
+      gender: req.body.gender,
     };
     const result = await userModel.createUser(newUser);
     res
@@ -128,6 +134,62 @@ const getNewRefToken = async (
   }
 };
 
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { username, password, image, phone } = req.body;
+    let update = {} as UserInterface;
+    if (username) {
+      update.username = username;
+    }
+    if (password) {
+      update.password = password;
+      console.log(password);
+    }
+    if (phone) {
+      update.phone = phone;
+    }
+    console.log(req.body.image);
+    if (req.file) {
+      console.log("file");
+      const { file } = req;
+      console.log(file);
+      const metadata = { filename: file.originalname };
+      const bucket: any = await getGridFSBucket();
+      const writestream = bucket.openUploadStreamWithId(
+        file.filename,
+        file.originalname,
+        { metadata }
+      );
+      writestream.write(file.buffer);
+      writestream.end();
+      await new Promise<void>((resolve, reject) => {
+        writestream.once("finish", async (data: any) => {
+          console.log("finsih");
+          update.image = {
+            fileId: data._id,
+            filename: data.filename,
+          };
+          resolve();
+        });
+      });
+      // res.json({ success: true });
+    }
+    console.log(158);
+    console.log("update");
+    const result = await userModel.update(update, req.params.userid);
+    if (result !== "wrong id") {
+      res.status(200).json({
+        result,
+        message: "user updated successfully",
+      });
+    } else {
+      res.status(404).json({ message: result });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 const logOut = (req: Request, res: Response) => {
   const { refToken } = req.body;
   if (refToken) {
@@ -143,6 +205,20 @@ const logOut = (req: Request, res: Response) => {
 };
 
 const userRoutes = Router();
+userRoutes.route("/file/:id").get(async (req, res) => {
+  const db = await connectToMongo();
+
+  const bucket = await getGridFSBucket();
+  const imgId = req.params.id;
+  console.log({ imgId });
+
+  const file = await bucket.find({ _id: new ObjectId(imgId) }).toArray();
+  if (!file) {
+    return res.status(404).json({ message: "File not found" });
+  }
+  const readstream = bucket.openDownloadStream(new ObjectId(imgId));
+  readstream.pipe(res);
+});
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
 userRoutes.route("/user/:userid/todos").get(getTodos);
@@ -150,4 +226,8 @@ userRoutes.route("/user/:userid").get(getUser);
 userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(clear);
+userRoutes
+  .route("/user/update/:userid")
+  .patch(upload.single("image"), updateUser);
+
 export default userRoutes;

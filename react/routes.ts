@@ -18,6 +18,9 @@ export const ClearALlToDosRoute = (userId: string) =>
 export const getUserRoute = (userId: string) =>
   `http://localhost:3000/user/${userId}`;
 
+export const updateUserRoute = (userId: string) =>
+  `http://localhost:3000/user/update/${userId}`;
+
 export const getNewTokenRoute = `http://localhost:3000/user/auth/refresh`;
 
 export const logOutRoute = `http://localhost:3000/user/logout`;

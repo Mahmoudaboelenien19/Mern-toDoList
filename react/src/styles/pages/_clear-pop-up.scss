@@ -45,18 +45,19 @@
       width: 25px;
       border-radius: 50%;
     }
-    .btn-container {
-      display: flex;
-      justify-content: space-evenly;
-      width: 80%;
-      .btn-clr {
-        background: var(--delete);
-        color: white;
-      }
-      .btn-cancel {
-        background: var(--border);
-        color: white;
-      }
-    }
+  }
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 80%;
+  .btn-clr {
+    background: var(--delete);
+    color: white;
+  }
+  .btn-cancel {
+    background: var(--border);
+    color: white;
   }
 }

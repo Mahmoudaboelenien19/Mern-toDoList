@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { authenticateRoute } from "../../routes.js";
@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useAppDispatch } from "../customHooks/reduxTypes.js";
-import { handleAuth } from "../redux/isAuthSlice.js";
 import {
   btnFormAnimation,
   formTitle,
@@ -16,11 +15,14 @@ import {
 import { btnHover, linkHover } from "../Variants/globalVariants.js";
 import Input from "../components/Input.js";
 import { routeExitVariant } from "../Variants/routes.js";
+import { isAuthContext } from "../context/isAuthcontext.js";
 
 const Login = () => {
   const navigate = useNavigate();
-
   const dispatch = useAppDispatch();
+
+  const authData = useContext(isAuthContext);
+  const { setIsAuth } = authData;
 
   useLayoutEffect(() => {
     document.title = "Listify | Log In";
@@ -80,7 +82,7 @@ const Login = () => {
               const { message, status } = await authenticate(userData);
               if (status === 200) {
                 toast.success(message);
-                dispatch(handleAuth(true));
+                setIsAuth(true);
                 navigate("/");
               } else if (status === 404) {
                 toast.error(message);

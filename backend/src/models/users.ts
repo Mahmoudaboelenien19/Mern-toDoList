@@ -7,11 +7,13 @@ import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 
 export interface UserInterface {
-  username: string;
-  password: string;
-  country: string;
-  email: string;
-  phone: string;
+  username?: string;
+  password?: string;
+  country?: string;
+  email?: string;
+  phone?: string;
+  gender?: string;
+  image?: any;
 }
 
 export interface UserData {
@@ -31,11 +33,11 @@ class User {
   }
 
   async createUser(userData: UserInterface) {
-    if (!(await User.checkEmail(userData.email))) {
+    if (!(await User.checkEmail(userData.email as string))) {
       const db = await connectToMongo();
 
       const collection = db.collection("users");
-      const password = await User.hashPass(userData.password);
+      const password = await User.hashPass(userData.password as string);
 
       const res = await collection.insertOne({
         ...userData,
@@ -101,7 +103,7 @@ class User {
       console.log({ userId });
       const res = await collection.findOne({ _id: new ObjectId(userId) });
       console.log("get 1");
-      closeMongoConnection();
+      // closeMongoConnection();
       return res;
     } catch (err) {
       console.log("get 2");
@@ -124,6 +126,38 @@ class User {
       const error: Error = new Error("wrong ref token");
       error.status = 404;
       throw error;
+    }
+  }
+
+  async update(obj: UserInterface, userId: string) {
+    if (ObjectId.isValid(userId)) {
+      try {
+        const db = await connectToMongo();
+        const collection = db.collection("users");
+        if (obj.image && obj.image.fileId) {
+          const filesCollection = db.collection("fs.files");
+          const file = await filesCollection.findOne({
+            _id: new ObjectId(obj.image.fileId),
+          });
+
+          console.log({ file });
+          // Add the file data to the user update
+          // obj.image.data = file;
+        }
+
+        const result = await collection.findOneAndUpdate(
+          { _id: new ObjectId(userId) },
+          { $set: obj },
+          { returnDocument: "after" }
+        );
+
+        closeMongoConnection();
+        return result;
+      } catch (err) {
+        throw new Error("can't update this user");
+      }
+    } else {
+      return "wrong id";
     }
   }
 }

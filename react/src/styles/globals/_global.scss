@@ -19,3 +19,12 @@ body {
 *::-webkit-scrollbar-thumb {
   background: var(--border);
 }
+
+.btn {
+  border: 0;
+  outline: 0;
+  box-shadow: 0;
+  width: fit-content;
+  padding: 4px;
+  text-transform: capitalize;
+}
