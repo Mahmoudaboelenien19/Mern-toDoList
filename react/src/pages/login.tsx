@@ -19,7 +19,6 @@ import { isAuthContext } from "../context/isAuthcontext.js";
 
 const Login = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   const authData = useContext(isAuthContext);
   const { setIsAuth } = authData;

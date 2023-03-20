@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import { AiOutlineUser } from "react-icons/ai";
 import { GiExitDoor } from "react-icons/gi";
 import { dropDownVariant } from "../Variants/nav";
+import { FaQuestionCircle } from "react-icons/fa";
 
 const Nav: React.FC = () => {
   const authData = useContext(isAuthContext);
@@ -162,16 +163,19 @@ const Nav: React.FC = () => {
                       <span className="nav-icon">
                         <AiOutlineUser />
                       </span>
-                      <Link className="btn-state" to="/user">
-                        update profile
-                      </Link>
+                      <Link to="/user">update profile</Link>
+                    </li>
+                    <li>
+                      <span className="nav-icon">
+                        <FaQuestionCircle />
+                      </span>
+                      <Link to="/faq">FAQ</Link>
                     </li>
                     <li>
                       <span className="nav-icon">
                         <GiExitDoor />
                       </span>
                       <Link
-                        className="btn-state"
                         to="/login"
                         onClick={() => {
                           handleLogOut();

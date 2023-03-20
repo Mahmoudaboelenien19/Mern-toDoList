@@ -154,14 +154,17 @@ const SignUp = () => {
             transition={{ delay: 0.5, duration: 0.2 }}
             className="inp"
           >
-            <motion.select {...register("country")}>
+            <motion.select id="select" {...register("country")}>
               {countries.map((e, i) => {
                 return (
-                  <option key={Math.random()} value={e.name.common}>
-                    {e.name.common}
-                  </option>
+                  <>
+                    <option key={Math.random()} value={e.name.common}>
+                      {e.name.common}
+                    </option>
+                  </>
                 );
               })}
+              <option selected> select your country</option>
             </motion.select>
           </motion.div>
 

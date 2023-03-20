@@ -56,7 +56,7 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
       }, 2000);
     }
   }, []);
-
+  console.log({ alreadyRegisteredEmail });
   const [inpVal, setInpVal] = useState(alreadyRegisteredEmail);
 
   useEffect(() => {
