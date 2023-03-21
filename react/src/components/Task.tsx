@@ -1,12 +1,15 @@
-import React, { memo, useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineArrowUp } from "react-icons/ai";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { inpContext } from "../context/inpContext";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
+import { useAppDispatch } from "../customHooks/reduxTypes";
 import { checkTodo, deleteTodo } from "../redux/Taskslice";
 import { toastContext } from "../pages/Home";
 import { singletaskVariants } from "../Variants/task";
+import { AiOutlineClockCircle } from "react-icons/ai";
+import Reminder from "./Reminder";
+import { btnHover, taskbtnHover } from "../Variants/globalVariants";
 
 interface Prop {
   _id?: string;
@@ -80,6 +83,8 @@ when i update
     controls.set("start");
     controls.start("end");
   }, []);
+
+  const [showReminder, setShowReminder] = useState(false);
   return (
     <>
       {!isDeleted && (
@@ -218,9 +223,17 @@ when i update
           </div>
           <div id="btns">
             <motion.button
-              whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px rgb(0,0,0) " }}
-              transition={{ type: "spring", stiffness: 300 }}
-              whileFocus={{ scale: 1.5 }}
+              whileHover={taskbtnHover}
+              className="btn"
+              title="set reminder"
+              onClick={() => setShowReminder(true)}
+            >
+              <AiOutlineClockCircle />
+            </motion.button>
+            <motion.button
+              className="btn"
+              whileHover={taskbtnHover}
+              title="update"
             >
               <AiOutlineArrowUp
                 onClick={() => {
@@ -233,8 +246,8 @@ when i update
               />
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px rgb(0,0,0) " }}
-              transition={{ type: "spring", stiffness: 300 }}
+              className="btn"
+              whileHover={taskbtnHover}
               onClick={() => {
                 dispatch(
                   checkTodo({ id: _id!, isChecked: !isCompleted, content })
@@ -242,13 +255,13 @@ when i update
 
                 setIsChecked(true);
               }}
+              title={isCompleted ? "uncheck" : "check"}
             >
               <IoCheckmarkDoneOutline />
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.2, boxShadow: "1px 1px .5px rgb(0,0,0) " }}
-              // transition={{ type: "spring", stiffness: 300 }}
-              whileFocus={{ scale: 1.2 }}
+              className="btn"
+              whileHover={taskbtnHover}
               onClick={() => {
                 setShowToast(true);
                 dispatch(deleteTodo(_id!));
@@ -258,10 +271,10 @@ when i update
                 controls.set({ opacity: 1 });
                 controls.start({
                   opacity: 0,
-
                   transition: { duration: 0.5 },
                 });
               }}
+              title="delete"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -288,6 +301,13 @@ when i update
           </div>
         </motion.div>
       )}
+      <AnimatePresence mode="wait">
+        {showReminder && (
+          <>
+            <Reminder setShowReminder={setShowReminder} />
+          </>
+        )}
+      </AnimatePresence>
     </>
   );
 };

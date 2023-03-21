@@ -154,8 +154,10 @@
 
       button {
         @extend %centered;
-        padding: 1px;
-        $clrs: 1 var(--update), 2 darkblue, 3 var(--delete);
+        width: 20px;
+        height: 20px;
+        padding: 2px;
+        $clrs: 1 var(--unchecked), 2 var(--update), 3 darkblue, 4 var(--delete);
         @each $i, $clr in $clrs {
           &:nth-child(#{$i}) {
             background: $clr;

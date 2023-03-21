@@ -151,7 +151,7 @@ class User {
           { returnDocument: "after" }
         );
 
-        closeMongoConnection();
+        // closeMongoConnection();
         return result;
       } catch (err) {
         throw new Error("can't update this user");

@@ -16,10 +16,10 @@
   .faq {
     @extend %centered;
     flex-direction: column;
-    background: green;
-    padding: 10px;
+    background: rgb(67, 63, 63);
     color: white;
-
+    letter-spacing: 0.8px;
+    padding: 10px;
     cursor: pointer;
     .question {
       @extend %centered;

@@ -3,6 +3,8 @@ import { clearAllTodos } from "../redux/Taskslice";
 import { useAppDispatch } from "../customHooks/reduxTypes";
 import { useContext } from "react";
 import { ClearContext } from "../App";
+import { overleyVariant } from "../Variants/user";
+import { popVariant } from "../Variants/globalVariants";
 
 const ClearPopUp = () => {
   const { setShowClearPopUp } = useContext(ClearContext);
@@ -11,21 +13,16 @@ const ClearPopUp = () => {
   return (
     <motion.div
       id="overley"
-      animate={{ background: " rgba(255, 166, 0, 0.38)" }}
-      exit={{ opacity: 0, transition: { delay: 1 } }}
-      transition={{ delay: 0.2, duration: 1 }}
+      variants={overleyVariant}
+      animate="end"
+      exit="exit"
+      initial="start"
+      key={"overley"}
     >
-      <motion.section
-        animate={{ y: 0 }}
-        initial={{ y: -1000 }}
-        exit={{ y: "-100vh", transition: { type: "tween", duration: 1.4 } }}
-        transition={{ delay: 1.2, type: "spring", stiffness: 150 }}
-        id="clr-pop"
-      >
+      <motion.section variants={popVariant} key={"reminder"} id="clr-pop">
         <h3>Are you sure to clear All todos ?!</h3>
         <motion.button
-          className="btn-x"
-          whileHover={{ background: "wheat", color: "var(--delete" }}
+          className="btn btn-x cancel"
           transition={{ duration: 1 }}
           onClick={() => setShowClearPopUp(false)}
         >
@@ -36,7 +33,7 @@ const ClearPopUp = () => {
           <motion.button
             whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px rgb(0,0,0) " }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="btn-clr"
+            className="btn clear"
             onClick={() => {
               dispatch(clearAllTodos());
               setShowClearPopUp(false);
@@ -47,7 +44,7 @@ const ClearPopUp = () => {
           <motion.button
             whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px rgb(0,0,0) " }}
             transition={{ type: "spring", stiffness: 300 }}
-            className="btn-cancel"
+            className="btn cancel"
             onClick={() => setShowClearPopUp(false)}
           >
             cancel

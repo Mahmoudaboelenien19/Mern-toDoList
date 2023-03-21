@@ -1,6 +1,5 @@
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
 import { useEffect, useState } from "react";
-import { opacityVariant } from "../Variants/options";
 
 interface Props {
   question?: string;
@@ -20,7 +19,6 @@ const OneFaq = ({ question, answer, index, faqIndex, setFaqIndex }: Props) => {
       opacity: 1,
 
       height: "fit-content",
-
       transition: {
         delay: 0.6,
         duration: 0.5,
@@ -39,20 +37,26 @@ const OneFaq = ({ question, answer, index, faqIndex, setFaqIndex }: Props) => {
       },
     },
   };
-
+  const [showAnswer, setShowAnswer] = useState(false);
+  useEffect(() => {
+    if (faqIndex !== index) {
+      setShowAnswer(false);
+    }
+  }, [faqIndex]);
   return (
     <motion.div className="faq" key={index}>
       <p
         className="question"
         onClick={() => {
           setFaqIndex(index);
+          setShowAnswer(!showAnswer);
         }}
       >
         {question}
       </p>
 
       <AnimatePresence mode="wait">
-        {index === faqIndex && (
+        {index === faqIndex && showAnswer && (
           <motion.p
             variants={faqVariant}
             initial="start"
@@ -61,7 +65,6 @@ const OneFaq = ({ question, answer, index, faqIndex, setFaqIndex }: Props) => {
             key={question}
             className="answer"
           >
-            {" "}
             {answer}
           </motion.p>
         )}

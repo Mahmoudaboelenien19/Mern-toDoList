@@ -13,6 +13,7 @@ interface isAuthContext {
   isAuth: boolean;
   srcImg: any;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsDataUpdated: React.Dispatch<React.SetStateAction<boolean>>;
   userDetails: {
     phone: string;
     password: string;
@@ -26,6 +27,7 @@ interface isAuthContext {
 
 const IsAuthProvider = ({ children }: Props) => {
   const [isAuth, setIsAuth] = useState(false);
+  const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [userDetails, setUserDetails] = useState({
     phone: "",
     password: "",
@@ -77,10 +79,16 @@ const IsAuthProvider = ({ children }: Props) => {
     } else {
       setIsAuth(false);
     }
-  }, [isAuth]);
+  }, [isAuth, isDataUpdated]);
 
+  useEffect(() => {
+    if (!isDataUpdated) return;
+    setIsDataUpdated(false);
+  }, [isDataUpdated]);
   return (
-    <isAuthContext.Provider value={{ setIsAuth, isAuth, userDetails, srcImg }}>
+    <isAuthContext.Provider
+      value={{ setIsAuth, isAuth, userDetails, srcImg, setIsDataUpdated }}
+    >
       {children}
     </isAuthContext.Provider>
   );

@@ -74,6 +74,7 @@
         width: 200px;
         font-weight: 500;
         color: grey;
+        margin-right: 8px;
       }
     }
   }
@@ -156,4 +157,15 @@ input[type="file"] {
   100% {
     opacity: 0.7;
   }
+}
+
+.update-inp {
+  background: #d6cec0;
+  border: 0;
+  border-bottom: 2px solid var(--link-hover);
+  outline: 0;
+  height: 30px;
+  padding: 0 5px;
+  color: black !important ;
+  letter-spacing: 1px;
 }

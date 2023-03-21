@@ -23,8 +23,21 @@ body {
 .btn {
   border: 0;
   outline: 0;
-  box-shadow: 0;
   width: fit-content;
-  padding: 4px;
+  padding: 5px;
   text-transform: capitalize;
+  border-radius: 4px;
+  color: white;
+}
+
+.cancel {
+  background: var(--border);
+}
+
+.clear {
+  background: var(--delete);
+}
+
+.remind {
+  background: var(--unchecked);
 }

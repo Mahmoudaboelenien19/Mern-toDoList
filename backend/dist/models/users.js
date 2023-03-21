@@ -139,7 +139,7 @@ class User {
                         // obj.image.data = file;
                     }
                     const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, { $set: obj }, { returnDocument: "after" });
-                    (0, database_js_1.closeMongoConnection)();
+                    // closeMongoConnection();
                     return result;
                 }
                 catch (err) {

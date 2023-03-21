@@ -8,6 +8,7 @@ import { updateUserRoute } from "../../routes";
 import Cookies from "js-cookie";
 import AvatarEditor from "react-avatar-editor";
 import { avatarVariant, overleyVariant } from "../Variants/user";
+import UpdateUser from "./UpdateUser";
 
 const detailsVariant = {
   start: {},
@@ -28,7 +29,7 @@ const User: React.FC = () => {
 
   const userDataArr = [
     {
-      span: "name",
+      span: "username",
       value: username,
     },
     {
@@ -62,7 +63,6 @@ const User: React.FC = () => {
 
   const handleUpdateImage = async () => {
     const userId = Cookies.get("user-id");
-
     // Convert data URL to Blob
     const canvas = editorRef.current.getImageScaledToCanvas();
     const dataURL = canvas.toDataURL("image/jpeg");
@@ -197,17 +197,14 @@ const User: React.FC = () => {
         initial="start"
         animate="end"
       >
-        {userDataArr.map(({ span, value }, index) => {
+        {userDataArr.map((e, index) => {
           return (
-            <motion.div className="parent" variants={opacityVariant} key={span}>
-              <div className="detail-parent">
-                <span className="span detail">{span}</span>
-                <span className="span value">{value}</span>
-                <motion.button whileHover={linkHover} className="btn">
-                  update
-                </motion.button>
-              </div>
-              <span className=" hr"></span>
+            <motion.div
+              className="parent"
+              variants={opacityVariant}
+              key={e.span}
+            >
+              <UpdateUser key={index} {...e} />
             </motion.div>
           );
         })}
