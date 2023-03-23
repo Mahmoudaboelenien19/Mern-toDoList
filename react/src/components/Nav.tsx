@@ -11,6 +11,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { GiExitDoor } from "react-icons/gi";
 import { dropDownVariant } from "../Variants/nav";
 import { FaQuestionCircle } from "react-icons/fa";
+import Notification from "./Notification";
 
 const Nav: React.FC = () => {
   const authData = useContext(isAuthContext);
@@ -48,6 +49,9 @@ const Nav: React.FC = () => {
   // document.addEventListener("click", closeDropDown);
   // return () => document.removeEventListener("click", closeDropDown);
   // }, [isImageClicked]);
+
+  const [isNotificationClicked, setIsNotificationClicked] = useState(false);
+  console.log({ isNotificationClicked });
   return (
     <>
       <motion.nav
@@ -136,10 +140,11 @@ const Nav: React.FC = () => {
                   onClick={() => {
                     setisImageClicked(true);
                     setShowDropDown(!showDropDown);
+                    setIsNotificationClicked(false);
                   }}
                 />
               )}
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {showDropDown && isImageClicked && (
                   <motion.ul
                     ref={dropDownRef}
@@ -191,14 +196,30 @@ const Nav: React.FC = () => {
             </>
           ) : (
             <>
-              <Link className="btn-state" to="/login">
+              <Link className="login-link" to="/login">
                 log in
               </Link>
             </>
           )}
-          <IoNotifications size={20} color={"gray"} />
+
+          <span
+            onClick={() => {
+              setIsNotificationClicked(!isNotificationClicked);
+              setShowDropDown(false);
+            }}
+          >
+            <IoNotifications size={20} color={"gray"} />
+            <AnimatePresence mode="wait">
+              {isNotificationClicked && (
+                <>
+                  <Notification />
+                </>
+              )}
+            </AnimatePresence>
+          </span>
         </div>
       </motion.nav>
+
       <NavRoutes />
     </>
   );

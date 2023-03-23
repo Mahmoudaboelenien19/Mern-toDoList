@@ -109,6 +109,18 @@ export const checkTodo = createAsyncThunk(
   }
 );
 
+export const addReminder = createAsyncThunk(
+  "tasks/addReminder",
+  async (obj: Task, thunk) => {
+    const { rejectWithValue } = thunk;
+    console.log({ obj });
+    return await axios
+      .patch(updateToDoRoute(obj._id!), obj)
+      .then(({ data }) => data);
+    // .catch(({ err: { response } }) => rejectWithValue(response.data));
+  }
+);
+
 export const clearAllTodos = createAsyncThunk(
   "tasks/clearAllTodos",
   async (_, thunk) => {
@@ -141,6 +153,7 @@ export interface Task {
   date: string;
   state: string;
   isCompleted: boolean;
+  remind: string;
 }
 
 export interface tasksState {
@@ -299,6 +312,29 @@ export const taskSlice = createSlice({
     });
 
     builder.addCase(checkTodo.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+    });
+
+    builder.addCase(addReminder.pending, (state) => {
+      state.isLoading = true;
+      state.msg = "";
+      state.isChanged = false;
+    });
+
+    builder.addCase(addReminder.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.tasks = state.tasks.map((e) =>
+        e._id === action.payload.result.value._id
+          ? action.payload.result.value
+          : e
+      );
+      state.msg = action.payload.message as unknown as string;
+      state.isChanged = true;
+    });
+
+    builder.addCase(addReminder.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
     });

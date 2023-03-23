@@ -178,6 +178,7 @@ const SignUp = () => {
             variants={btnFormAnimation}
             whileHover={btnHover}
             id="log-btn"
+            className="btn"
             onClick={async () => {
               const data = getValues();
               if (isValid) {

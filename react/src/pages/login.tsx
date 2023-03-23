@@ -69,6 +69,7 @@ const Login = () => {
           variants={btnFormAnimation}
           whileHover={btnHover}
           id="log-btn"
+          className="btn"
           onClick={async () => {
             const email = emailInp;
             const password = passInp;

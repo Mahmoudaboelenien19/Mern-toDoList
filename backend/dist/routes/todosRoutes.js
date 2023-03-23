@@ -23,6 +23,7 @@ const addTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             time: req.body.time,
             state: req.body.state,
             isCompleted: req.body.isCompleted,
+            remind: "",
         };
         const result = yield todos_js_1.default.create(todo, req.params.id);
         if (result !== "wrong id") {
@@ -47,6 +48,7 @@ const updateTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             time: req.body.time,
             state: req.body.state,
             isCompleted: req.body.isCompleted,
+            remind: req.body.remind,
         };
         const result = yield todos_js_1.default.update(todo, req.params.todoid);
         if (result !== "wrong id") {

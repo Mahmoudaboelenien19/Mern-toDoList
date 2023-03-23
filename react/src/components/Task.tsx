@@ -3,14 +3,16 @@ import { AiOutlineArrowUp } from "react-icons/ai";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { inpContext } from "../context/inpContext";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import { useAppDispatch } from "../customHooks/reduxTypes";
+import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { checkTodo, deleteTodo } from "../redux/Taskslice";
 import { toastContext } from "../pages/Home";
 import { singletaskVariants } from "../Variants/task";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import Reminder from "./Reminder";
-import { btnHover, taskbtnHover } from "../Variants/globalVariants";
-
+import { taskbtnHover } from "../Variants/globalVariants";
+import { GiRingingBell } from "react-icons/gi";
+import { opacityVariant } from "../Variants/options";
+import useTimeDiff from "../customHooks/useTimeDiff";
 interface Prop {
   _id?: string;
   content: string;
@@ -19,6 +21,7 @@ interface Prop {
   isCompleted: boolean;
   state: string;
   index: number;
+  remind: string;
 }
 
 const Task: React.FC<Prop> = ({
@@ -29,15 +32,18 @@ const Task: React.FC<Prop> = ({
   state,
   isCompleted,
   index,
+  remind,
 }) => {
   // console.log(`${index} rerendered`);
   const dispatch = useAppDispatch();
 
   const states = ["created", "updated", "checked", "unchecked"];
+  const [days, hours, minutes, seconds] = useTimeDiff(remind);
 
   const { setShowToast } = useContext(toastContext);
 
   const [isDeleted, setIsDeleted] = useState(false);
+  const [reminderIndex, setReminderIndex] = useState(-1);
   const [isChecked, setIsChecked] = useState(false);
   const [showUpdateLoading, setShowUpdateLoading] = useState(false);
 
@@ -46,7 +52,6 @@ when i update
 */
   const contentRef = useRef<HTMLElement>(null!);
   const lineWidth = useRef<number>(0);
-
   const focus = useContext(inpContext);
   const {
     setIsInpFocus,
@@ -85,6 +90,9 @@ when i update
   }, []);
 
   const [showReminder, setShowReminder] = useState(false);
+  const Bellcontrols = useAnimation();
+
+  console.log({ remind, days });
   return (
     <>
       {!isDeleted && (
@@ -98,6 +106,11 @@ when i update
           }}
           variants={singletaskVariants}
           animate={controls}
+          onAnimationComplete={() => {
+            Bellcontrols.set("start");
+
+            Bellcontrols.start("end");
+          }}
         >
           <AnimatePresence mode="wait">
             {states.map((border, index) => {
@@ -220,13 +233,37 @@ when i update
             <span>{time}</span>
             <span> && </span>
             <span>{date}</span>
+            {/* <AnimatePresence> */}
+            {remind && days && (
+              <span
+                // variants={opacityVariant}
+                // animate={Bellcontrols}
+                // key="bell"
+                // exit="exit"
+                // initial="start"
+                className="bell"
+              >
+                <GiRingingBell color="var(--bell)" fontSize={12} />
+                {days > 0 ? (
+                  <small>
+                    should be done in {days}:{hours}:{minutes}:{seconds}
+                  </small>
+                ) : (
+                  <small> This task should have been done </small>
+                )}
+              </span>
+            )}
+            {/* </AnimatePresence> */}
           </div>
           <div id="btns">
             <motion.button
               whileHover={taskbtnHover}
               className="btn"
               title="set reminder"
-              onClick={() => setShowReminder(true)}
+              onClick={() => {
+                setShowReminder(true);
+                setReminderIndex(index);
+              }}
             >
               <AiOutlineClockCircle />
             </motion.button>
@@ -304,7 +341,10 @@ when i update
       <AnimatePresence mode="wait">
         {showReminder && (
           <>
-            <Reminder setShowReminder={setShowReminder} />
+            <Reminder
+              setShowReminder={setShowReminder}
+              reminderIndex={reminderIndex}
+            />
           </>
         )}
       </AnimatePresence>

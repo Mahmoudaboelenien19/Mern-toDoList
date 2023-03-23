@@ -97,6 +97,7 @@ const Options = ({ option, setOption }: OptionsProps) => {
             animate={btnControls}
             variants={clearBtn}
             id="clear"
+            className="btn"
             whileHover={isAnimateFInished ? btnHover : {}}
             onClick={() => {
               setShowClearPopUp(true);

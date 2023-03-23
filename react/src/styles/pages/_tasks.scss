@@ -26,15 +26,10 @@
     }
     #clear {
       @extend %centered;
-      // position: relative;
-      // top: -35px;
+
       background-color: var(--delete);
-      // right: 5px;
-      // transform: translate(0, -20px);
+
       padding: 6px;
-      outline: 0;
-      border: 0;
-      border-radius: 2px;
       gap: 4px;
       color: white;
       white-space: nowrap;
@@ -214,5 +209,13 @@
         transform: translate(0, 8px);
       }
     }
+  }
+}
+
+.bell {
+  margin-left: 10px;
+  small {
+    margin-left: 4px;
+    font-size: 10px;
   }
 }
