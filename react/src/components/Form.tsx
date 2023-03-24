@@ -12,13 +12,23 @@ import {
   formPlaceholderVariant,
   inpVariant,
 } from "../Variants/form";
+import axios from "axios";
+import { addNotificationRoute } from "../../routes";
+import Cookies from "js-cookie";
+import { addtoNotificationArr } from "../redux/NotificationSlice";
 const Form: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { register, watch, setFocus, handleSubmit, setValue } = useForm();
 
+  const addNotificationtoDB = async (obj: any) => {
+    const userId = Cookies.get("user-id");
+    const url = addNotificationRoute(userId as string);
+    return await axios.patch(url, obj);
+  };
+
   const watchedVal = watch("todo");
-  const OnSubmit = (data: FieldValues) => {
+  const OnSubmit = async (data: FieldValues) => {
     setShowToast(true);
     if (watchedVal?.trim().length === 0) {
       toast.error("insert a todo to add");
@@ -26,7 +36,20 @@ const Form: React.FC = () => {
       toast.error("you can't exceed 30 letter");
     } else {
       if (mode === "create") {
-        dispatch(addTodo(watchedVal?.trim()));
+        const {
+          payload: {
+            todo: { time, date, content, state },
+          },
+        } = await dispatch(addTodo(watchedVal?.trim()));
+        const addedNotificationObj = {
+          isRead: false,
+          state,
+          time: `${date}-${time}`,
+          content,
+        };
+        const newNotification = await addNotificationtoDB(addedNotificationObj);
+        const arr = newNotification.data.result.value.notification;
+        dispatch(addtoNotificationArr(arr[arr.length - 1]));
       } else {
         dispatch(
           updateTodo({

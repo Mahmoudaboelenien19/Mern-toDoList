@@ -3,7 +3,7 @@ import { AiOutlineArrowUp } from "react-icons/ai";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { inpContext } from "../context/inpContext";
 import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
+import { useAppDispatch } from "../customHooks/reduxTypes";
 import { checkTodo, deleteTodo } from "../redux/Taskslice";
 import { toastContext } from "../pages/Home";
 import { singletaskVariants } from "../Variants/task";
@@ -11,7 +11,6 @@ import { AiOutlineClockCircle } from "react-icons/ai";
 import Reminder from "./Reminder";
 import { taskbtnHover } from "../Variants/globalVariants";
 import { GiRingingBell } from "react-icons/gi";
-import { opacityVariant } from "../Variants/options";
 import useTimeDiff from "../customHooks/useTimeDiff";
 interface Prop {
   _id?: string;
@@ -51,7 +50,7 @@ const Task: React.FC<Prop> = ({
 when i update 
 */
   const contentRef = useRef<HTMLElement>(null!);
-  const lineWidth = useRef<number>(0);
+  const [lineWidth, setLineWidth] = useState(contentRef?.current?.offsetWidth);
   const focus = useContext(inpContext);
   const {
     setIsInpFocus,
@@ -73,13 +72,17 @@ when i update
   }, [isUpdated]);
 
   useEffect(() => {
-    lineWidth.current = contentRef.current?.offsetWidth;
-
+    const timer1 = setTimeout(() => {
+      setLineWidth(contentRef?.current?.offsetWidth);
+    }, 100);
     if (!isChecked) return;
     const timer = setTimeout(() => {
       setIsChecked(false);
     }, 3000);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(timer1);
+    };
   }, [isChecked]);
 
   //controll animation
@@ -92,7 +95,6 @@ when i update
   const [showReminder, setShowReminder] = useState(false);
   const Bellcontrols = useAnimation();
 
-  console.log({ remind, days });
   return (
     <>
       {!isDeleted && (
@@ -176,7 +178,7 @@ when i update
                   <motion.span
                     key={_id}
                     initial={{ width: 0 }}
-                    animate={{ width: lineWidth.current }}
+                    animate={{ width: lineWidth }}
                     transition={{ delay: 2, duration: 0.5 }}
                     exit={{
                       width: 0,
@@ -246,7 +248,8 @@ when i update
                 <GiRingingBell color="var(--bell)" fontSize={12} />
                 {days > 0 ? (
                   <small>
-                    should be done in {days}:{hours}:{minutes}:{seconds}
+                    should be done in {days} d: {hours} h: {minutes} m:{" "}
+                    {seconds} s
                   </small>
                 ) : (
                   <small> This task should have been done </small>

@@ -151,6 +151,112 @@ class User {
             }
         });
     }
+    addNotification(userId, { state, time, content }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (mongodb_1.ObjectId.isValid(userId)) {
+                console.log("id valid");
+                try {
+                    const notificationObj = {
+                        state,
+                        time,
+                        content,
+                        _id: new mongodb_1.ObjectId(),
+                        isRead: false,
+                    };
+                    const db = yield (0, database_js_1.connectToMongo)();
+                    const collection = db.collection("users");
+                    const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, {
+                        $push: {
+                            notification: notificationObj,
+                        },
+                    }, { returnDocument: "after" });
+                    // closeMongoConnection();
+                    return result;
+                }
+                catch (err) {
+                    throw new Error("can't update this user");
+                }
+            }
+            else {
+                return "wrong id";
+            }
+        });
+    }
+    //look at projection in this fn then delete this fn
+    getNotification(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (mongodb_1.ObjectId.isValid(userId)) {
+                try {
+                    const db = yield (0, database_js_1.connectToMongo)();
+                    const collection = db.collection("users");
+                    const result = yield collection
+                        .find({ _id: new mongodb_1.ObjectId(userId) }, { projection: { notification: 1 } })
+                        .toArray();
+                    // closeMongoConnection();
+                    return result;
+                }
+                catch (err) {
+                    throw new Error("can't update this user");
+                }
+            }
+            else {
+                return "wrong id";
+            }
+        });
+    }
+    deleteNotification(userId, notificationId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (mongodb_1.ObjectId.isValid(userId)) {
+                try {
+                    const notificationObj = {
+                        _id: new mongodb_1.ObjectId(notificationId),
+                    };
+                    const db = yield (0, database_js_1.connectToMongo)();
+                    const collection = db.collection("users");
+                    const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, {
+                        $pull: {
+                            notification: notificationObj,
+                        },
+                    }, { returnDocument: "after" });
+                    // closeMongoConnection();
+                    return result;
+                }
+                catch (err) {
+                    throw new Error("can't update this user");
+                }
+            }
+            else {
+                return "wrong id";
+            }
+        });
+    }
+    markasReadNotification(userId, notificationId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log({ userId, notificationId });
+            if (mongodb_1.ObjectId.isValid(userId)) {
+                try {
+                    const db = yield (0, database_js_1.connectToMongo)();
+                    const collection = db.collection("users");
+                    const result = yield collection.findOneAndUpdate({
+                        _id: new mongodb_1.ObjectId(userId),
+                        "notification._id": new mongodb_1.ObjectId(notificationId),
+                    }, {
+                        $set: {
+                            "notification.$.isRead": true,
+                        },
+                    }, { returnDocument: "after" });
+                    // closeMongoConnection();
+                    return result;
+                }
+                catch (err) {
+                    throw new Error("can't update this user");
+                }
+            }
+            else {
+                return "wrong id";
+            }
+        });
+    }
 }
 const userModel = new User();
 exports.default = userModel;

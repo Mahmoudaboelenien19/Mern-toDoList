@@ -209,14 +209,14 @@ const Nav: React.FC = () => {
             }}
           >
             <IoNotifications size={20} color={"gray"} />
-            <AnimatePresence mode="wait">
-              {isNotificationClicked && (
-                <>
-                  <Notification />
-                </>
-              )}
-            </AnimatePresence>
           </span>
+          <AnimatePresence mode="wait">
+            {isNotificationClicked && (
+              <>
+                <Notification />
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </motion.nav>
 

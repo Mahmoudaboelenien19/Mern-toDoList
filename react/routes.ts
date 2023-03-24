@@ -21,6 +21,14 @@ export const getUserRoute = (userId: string) =>
 export const updateUserRoute = (userId: string) =>
   `http://localhost:3000/user/update/${userId}`;
 
+export const addNotificationRoute = (userId: string) =>
+  `http://localhost:3000/user/${userId}/addnotification`;
+
+export const deleteNotificationRoute = (
+  userId: string,
+  notificationId: string
+) => `http://localhost:3000/user/${userId}/${notificationId}`;
+
 export const getNewTokenRoute = `http://localhost:3000/user/auth/refresh`;
 
 export const logOutRoute = `http://localhost:3000/user/logout`;

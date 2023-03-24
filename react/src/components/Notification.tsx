@@ -1,7 +1,11 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { dropDownVariant } from "../Variants/nav";
+import { useAppSelector } from "../customHooks/reduxTypes";
+import NotificationChild from "./NotificationChild";
+
 const Notification = () => {
+  const { notificationArr } = useAppSelector((state) => state.notification);
+
   return (
     <motion.div
       key={"notification"}
@@ -11,7 +15,21 @@ const Notification = () => {
       exit="exit"
       animate="end"
     >
-      <span className="nodata">no reminders to show</span>
+      <>
+        {notificationArr.length > 0 ? (
+          <div className=" notification-parent">
+            {notificationArr.map((e, index) => {
+              return (
+                <>
+                  <NotificationChild key={index} {...e} />
+                </>
+              );
+            })}
+          </div>
+        ) : (
+          <span className="nodata">no reminders to show</span>
+        )}
+      </>
     </motion.div>
   );
 };

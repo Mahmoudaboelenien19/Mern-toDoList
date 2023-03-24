@@ -342,4 +342,3 @@ export const taskSlice = createSlice({
 });
 
 export const { handleIsChecked } = taskSlice.actions;
-export default taskSlice.reducer;

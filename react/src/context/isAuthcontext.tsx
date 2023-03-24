@@ -1,8 +1,9 @@
 import { createContext, useState, useEffect } from "react";
-import { useAppSelector } from "../customHooks/reduxTypes";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { getUserRoute } from "../../routes";
+import { useAppDispatch } from "../customHooks/reduxTypes";
+import { addtoNotificationArr } from "../redux/NotificationSlice";
 
 export const isAuthContext = createContext({} as isAuthContext);
 
@@ -26,6 +27,7 @@ interface isAuthContext {
 }
 
 const IsAuthProvider = ({ children }: Props) => {
+  const dispatch = useAppDispatch();
   const [isAuth, setIsAuth] = useState(false);
   const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [userDetails, setUserDetails] = useState({
@@ -36,11 +38,19 @@ const IsAuthProvider = ({ children }: Props) => {
     email: "",
     username: "",
     image: {} as { metadata: Record<string, any> },
+    notification: [],
   });
+
+  interface notificationInterface {
+    isRead: boolean;
+    _id?: string;
+    notification: string;
+  }
+
   const getUserData = async (userId: string) => {
     if (userId) {
       return await axios.get(getUserRoute(userId!)).then(({ data }) => {
-        console.log(data);
+        dispatch(addtoNotificationArr(data.user.notification));
         setUserDetails({
           ...userDetails,
           phone: data.user.phone,
@@ -49,6 +59,7 @@ const IsAuthProvider = ({ children }: Props) => {
           email: data.user.email,
           username: data.user.username,
           image: data.user.image,
+          notification: data.user.notification,
         });
       });
     }
@@ -75,7 +86,6 @@ const IsAuthProvider = ({ children }: Props) => {
     if (user) {
       setIsAuth(true);
       getUserData(user);
-      console.log("useeffect true runs");
     } else {
       setIsAuth(false);
     }

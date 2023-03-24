@@ -6,6 +6,13 @@ import { BCRYPT_PASS, REFRESH_TOKEN_SECRET, SALT } from "../config.js";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 
+interface notificationInterface {
+  _id?: ObjectId;
+  state: string;
+  time: string;
+  isRead: boolean;
+  content: string;
+}
 export interface UserInterface {
   username?: string;
   password?: string;
@@ -14,6 +21,7 @@ export interface UserInterface {
   phone?: string;
   gender?: string;
   image?: any;
+  notification?: notificationInterface[];
 }
 
 export interface UserData {
@@ -148,6 +156,124 @@ class User {
         const result = await collection.findOneAndUpdate(
           { _id: new ObjectId(userId) },
           { $set: obj },
+          { returnDocument: "after" }
+        );
+
+        // closeMongoConnection();
+        return result;
+      } catch (err) {
+        throw new Error("can't update this user");
+      }
+    } else {
+      return "wrong id";
+    }
+  }
+
+  async addNotification(
+    userId: string,
+    { state, time, content }: { state: string; time: string; content: string }
+  ) {
+    if (ObjectId.isValid(userId)) {
+      console.log("id valid");
+
+      try {
+        const notificationObj: notificationInterface = {
+          state,
+          time,
+          content,
+          _id: new ObjectId(),
+          isRead: false,
+        };
+        const db = await connectToMongo();
+        const collection = db.collection("users");
+        const result = await collection.findOneAndUpdate(
+          { _id: new ObjectId(userId) },
+          {
+            $push: {
+              notification: notificationObj,
+            } as any,
+          },
+          { returnDocument: "after" }
+        );
+
+        // closeMongoConnection();
+        return result;
+      } catch (err) {
+        throw new Error("can't update this user");
+      }
+    } else {
+      return "wrong id";
+    }
+  }
+
+  //look at projection in this fn then delete this fn
+  async getNotification(userId: string) {
+    if (ObjectId.isValid(userId)) {
+      try {
+        const db = await connectToMongo();
+        const collection = db.collection("users");
+        const result = await collection
+          .find(
+            { _id: new ObjectId(userId) },
+            { projection: { notification: 1 } }
+          )
+          .toArray();
+
+        // closeMongoConnection();
+        return result;
+      } catch (err) {
+        throw new Error("can't update this user");
+      }
+    } else {
+      return "wrong id";
+    }
+  }
+
+  async deleteNotification(userId: string, notificationId: string) {
+    if (ObjectId.isValid(userId)) {
+      try {
+        const notificationObj = {
+          _id: new ObjectId(notificationId),
+        };
+        const db = await connectToMongo();
+        const collection = db.collection("users");
+        const result = await collection.findOneAndUpdate(
+          { _id: new ObjectId(userId) },
+          {
+            $pull: {
+              notification: notificationObj,
+            } as any,
+          },
+          { returnDocument: "after" }
+        );
+
+        // closeMongoConnection();
+        return result;
+      } catch (err) {
+        throw new Error("can't update this user");
+      }
+    } else {
+      return "wrong id";
+    }
+  }
+
+  async markasReadNotification(userId: string, notificationId: string) {
+    console.log({ userId, notificationId });
+    if (ObjectId.isValid(userId)) {
+      try {
+        const db = await connectToMongo();
+        const collection = db.collection("users");
+        const result = await collection.findOneAndUpdate(
+          {
+            _id: new ObjectId(userId),
+            "notification._id": new ObjectId(notificationId),
+          },
+          {
+            $set: {
+              "notification.$.isRead": true,
+            },
+          } as any,
+
           { returnDocument: "after" }
         );
 

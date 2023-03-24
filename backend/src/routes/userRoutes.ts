@@ -15,9 +15,10 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       country: req.body.country,
       phone: req.body.phone,
       image: req.body.image || {
-        fileId: new ObjectId("6417420730f8ff045688b1f6"),
+        fileId: new ObjectId("6416feef33f9fb8e8c6585cc"),
       },
       gender: req.body.gender,
+      notification: [],
     };
     const result = await userModel.createUser(newUser);
     res
@@ -134,6 +135,41 @@ const getNewRefToken = async (
   }
 };
 
+const addNotificationRouteFn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.params.userid;
+
+  const result = await userModel.addNotification(userId, req.body);
+  res.json({ result, msg: "noti added" });
+};
+
+const deleteNotification = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.params.userid;
+  const notificationId = req.params.notificationid;
+
+  const result = await userModel.deleteNotification(userId, notificationId);
+  res.json({ result, msg: "noti added" });
+};
+
+const isReadNotification = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.params.userid;
+  const notificationId = req.params.notificationid;
+
+  const result = await userModel.markasReadNotification(userId, notificationId);
+  res.json({ result });
+};
+
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { username, password, image, phone } = req.body;
@@ -226,6 +262,11 @@ userRoutes.route("/user/:userid").get(getUser);
 userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(clear);
+userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
+userRoutes
+  .route("/user/:userid/:notificationid")
+  .delete(deleteNotification)
+  .patch(isReadNotification);
 userRoutes
   .route("/user/update/:userid")
   .patch(upload.single("image"), updateUser);

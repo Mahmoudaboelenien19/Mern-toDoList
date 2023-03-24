@@ -28,9 +28,10 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             country: req.body.country,
             phone: req.body.phone,
             image: req.body.image || {
-                fileId: new mongodb_1.ObjectId("6417420730f8ff045688b1f6"),
+                fileId: new mongodb_1.ObjectId("6416feef33f9fb8e8c6585cc"),
             },
             gender: req.body.gender,
+            notification: [],
         };
         const result = yield users_js_1.default.createUser(newUser);
         res
@@ -111,6 +112,23 @@ const getNewRefToken = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             res.status(200).json({ refreshToken, accessToken });
         }
     }
+});
+const addNotificationRouteFn = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userid;
+    const result = yield users_js_1.default.addNotification(userId, req.body);
+    res.json({ result, msg: "noti added" });
+});
+const deleteNotification = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userid;
+    const notificationId = req.params.notificationid;
+    const result = yield users_js_1.default.deleteNotification(userId, notificationId);
+    res.json({ result, msg: "noti added" });
+});
+const isReadNotification = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userid;
+    const notificationId = req.params.notificationid;
+    const result = yield users_js_1.default.markasReadNotification(userId, notificationId);
+    res.json({ result });
 });
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -199,6 +217,11 @@ userRoutes.route("/user/:userid").get(getUser);
 userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(clear);
+userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
+userRoutes
+    .route("/user/:userid/:notificationid")
+    .delete(deleteNotification)
+    .patch(isReadNotification);
 userRoutes
     .route("/user/update/:userid")
     .patch(upload_js_1.default.single("image"), updateUser);

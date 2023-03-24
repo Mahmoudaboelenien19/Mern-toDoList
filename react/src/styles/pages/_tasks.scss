@@ -108,9 +108,10 @@
       margin: auto;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      grid-template:
-        "content content content btns" 25px
-        "time time time btns" 15px;
+
+      grid-template-areas:
+        "content content content btns"
+        "time time time btns";
       background: var(--secondary);
       color: var(--main);
       .custom-border {
@@ -144,14 +145,18 @@
     }
     #btns {
       grid-area: btns;
-      @extend %centered;
-      gap: 5px;
+      display: flex;
 
+      align-items: center;
+      justify-content: flex-start;
+      gap: 5px;
+      height: 40px;
       button {
         @extend %centered;
         width: 20px;
         height: 20px;
         padding: 2px;
+        box-shadow: 0.5px 0.5px 0 grey;
         $clrs: 1 var(--unchecked), 2 var(--update), 3 darkblue, 4 var(--delete);
         @each $i, $clr in $clrs {
           &:nth-child(#{$i}) {
