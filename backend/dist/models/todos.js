@@ -37,7 +37,7 @@ class Todos {
                 try {
                     const db = yield (0, database_1.connectToMongo)();
                     const collection = db.collection("todos");
-                    const result = yield collection.deleteOne({
+                    const result = yield collection.findOneAndDelete({
                         _id: new mongodb_1.ObjectId(todoId),
                     });
                     setTimeout(() => {

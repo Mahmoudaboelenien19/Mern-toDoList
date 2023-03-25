@@ -12,20 +12,17 @@ import {
   formPlaceholderVariant,
   inpVariant,
 } from "../Variants/form";
-import axios from "axios";
-import { addNotificationRoute } from "../../routes";
-import Cookies from "js-cookie";
 import { addtoNotificationArr } from "../redux/NotificationSlice";
+import useNotification from "../customHooks/useNotification";
+
+import { date as dateFN, time as timeFn } from "../redux/Taskslice";
+
 const Form: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const { register, watch, setFocus, handleSubmit, setValue } = useForm();
 
-  const addNotificationtoDB = async (obj: any) => {
-    const userId = Cookies.get("user-id");
-    const url = addNotificationRoute(userId as string);
-    return await axios.patch(url, obj);
-  };
+  const { addNotificationtoDB } = useNotification();
 
   const watchedVal = watch("todo");
   const OnSubmit = async (data: FieldValues) => {
@@ -36,16 +33,13 @@ const Form: React.FC = () => {
       toast.error("you can't exceed 30 letter");
     } else {
       if (mode === "create") {
-        const {
-          payload: {
-            todo: { time, date, content, state },
-          },
-        } = await dispatch(addTodo(watchedVal?.trim()));
+        dispatch(addTodo(watchedVal?.trim()));
         const addedNotificationObj = {
           isRead: false,
-          state,
-          time: `${date}-${time}`,
-          content,
+          time: `${dateFN()}-${timeFn()}`,
+
+          state: "created",
+          content: watchedVal?.trim(),
         };
         const newNotification = await addNotificationtoDB(addedNotificationObj);
         const arr = newNotification.data.result.value.notification;
@@ -57,6 +51,17 @@ const Form: React.FC = () => {
             content: watchedVal?.trim(),
           })
         );
+
+        const addedNotificationObj = {
+          isRead: false,
+          state: "updated",
+          time: `${dateFN()}-${timeFn()}`,
+          content: watchedVal?.trim(),
+        };
+        const newNotification = await addNotificationtoDB(addedNotificationObj);
+        const arr = newNotification.data.result.value.notification;
+        dispatch(addtoNotificationArr(arr[arr.length - 1]));
+
         setTimeout(() => {
           setMode("create");
         }, 1000);
@@ -64,8 +69,6 @@ const Form: React.FC = () => {
       }
       setValue("todo", "");
     }
-    console.log(data);
-    console.log("newForm");
   };
 
   const [isFocus, setIsFocus] = useState(false);

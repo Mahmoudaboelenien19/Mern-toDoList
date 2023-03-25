@@ -6,12 +6,12 @@ interface optionsVariantInterface {
 }
 
 export const optionVariant = {
-  start: ({ newOption, option, isOptionClicked }: optionsVariantInterface) => ({
-    opacity: option === newOption && isOptionClicked ? 0.4 : 1,
-  }),
-  end: ({ newOption, option, isOptionClicked }: optionsVariantInterface) => ({
-    opacity: option === newOption && isOptionClicked ? 1 : 0.4,
-  }),
+  start: {
+    opacity: 0,
+  },
+  end: {
+    opacity: 0.4,
+  },
 
   exit: {
     opacity: 0,

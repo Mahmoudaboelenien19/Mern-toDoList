@@ -18,7 +18,6 @@ const Options = ({ option, setOption }: OptionsProps) => {
   const { setShowClearPopUp } = useContext(ClearContext);
   const [isAnimateFInished, setIsAnimateFInished] = useState(false);
   const { tasks, isChanged } = useAppSelector((state) => state.tasks);
-  const [isOptionClicked, setIsOptionClicked] = useState(false);
   const optionsArr = [
     {
       newOption: "all",
@@ -69,11 +68,9 @@ const Options = ({ option, setOption }: OptionsProps) => {
               className={option === newOption ? "active" : ""}
               key={index}
               transition={{ duration: 0.2 }}
-              custom={{ index, option, newOption, isOptionClicked }}
               variants={optionVariant}
               onClick={() => {
                 handleCLick();
-                setIsOptionClicked(true);
               }}
             >
               {newOption} ({handleLength()})

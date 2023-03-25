@@ -1,3 +1,4 @@
+import { auth } from "./../middleware/auth";
 import userModel, { UserData, UserInterface } from "./../models/users.js";
 import { NextFunction, Request, Response, Router } from "express";
 import { ObjectId } from "mongodb";
@@ -172,6 +173,8 @@ const isReadNotification = async (
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    console.log("updated");
+    console.log(req.body);
     const { username, password, image, phone } = req.body;
     let update = {} as UserInterface;
     if (username) {
@@ -257,11 +260,11 @@ userRoutes.route("/file/:id").get(async (req, res) => {
 });
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
-userRoutes.route("/user/:userid/todos").get(getTodos);
+userRoutes.route("/user/:userid/todos").get(auth, getTodos);
 userRoutes.route("/user/:userid").get(getUser);
 userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
-userRoutes.route("/user/:userid/cleartodos").delete(clear);
+userRoutes.route("/user/:userid/cleartodos").delete(auth, clear);
 userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
 userRoutes
   .route("/user/:userid/:notificationid")

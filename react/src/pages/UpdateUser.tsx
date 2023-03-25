@@ -7,6 +7,7 @@ import { updateUserRoute } from "../../routes";
 import { useAppSelector } from "../customHooks/reduxTypes";
 import { isAuthContext } from "../context/isAuthcontext";
 import { opacityVariant } from "../Variants/options";
+import { generateNewToken } from "../redux/Taskslice";
 
 interface Props {
   span: string;
@@ -24,9 +25,16 @@ const UpdateUser = ({ span, value }: Props) => {
   const [updateCLicked, setUpdateCLicked] = useState(false);
 
   const inpRef = useRef<HTMLInputElement>(null!);
+
   const updatedata = async (obj: updateFnInterface) => {
     const userId = Cookies.get("user-id");
-    return await axios.patch(updateUserRoute(userId as string), obj);
+    const { accessToken } = await generateNewToken();
+    // , {
+    //   headers: { Authorization: `Bearer ${accessToken}` },
+    // }
+    const url = updateUserRoute(userId as string);
+    console.log({ url });
+    return await axios.patch(url, obj);
   };
 
   //todo make setupdate in isauth to refetch and set it here
@@ -82,13 +90,13 @@ const UpdateUser = ({ span, value }: Props) => {
           }
           onClick={() => {
             setUpdateCLicked(true);
-            if (updateCLicked) {
-              const updatedData = { [span]: inpRef.current.value };
-              console.log(updatedData);
-              updatedata(updatedData);
-              setUpdateCLicked(false);
-              setIsDataUpdated(true);
-            }
+            // if (updateCLicked) {
+            const updatedData = { [span]: inpRef.current.value };
+            console.log(updatedData);
+            updatedata(updatedData);
+            setUpdateCLicked(false);
+            setIsDataUpdated(true);
+            // }
           }}
         >
           update

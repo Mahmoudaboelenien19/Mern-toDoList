@@ -31,20 +31,28 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
   };
 
   return (
-    <div
-      className={`${isRead ? "is-read" : ""} notificattion-child`}
-      onClick={() => {
-        dispatch(isReadNotification(_id!));
-        readNotificationFromDB();
-      }}
-    >
+    <div className={`${isRead ? "is-read" : ""} notificattion-child`}>
       <>
         <small>
           <span>you {state} </span>
           <small className="content">{content}</small>
         </small>
       </>
-      <span className="time">{time} </span>
+      <small>
+        <span className="time">{time} </span>
+
+        {!isRead && (
+          <button
+            className="btn read"
+            onClick={() => {
+              dispatch(isReadNotification(_id!));
+              readNotificationFromDB();
+            }}
+          >
+            mark as read
+          </button>
+        )}
+      </small>
       <button
         className="btn del"
         onClick={() => {

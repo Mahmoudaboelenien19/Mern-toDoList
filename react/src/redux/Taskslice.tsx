@@ -11,10 +11,10 @@ import {
 } from "../../routes";
 import cookies from "js-cookie";
 
-const date = () => new Date().toLocaleDateString();
-const time = () => new Date().toLocaleTimeString();
+export const date = () => new Date().toLocaleDateString();
+export const time = () => new Date().toLocaleTimeString();
 
-const generateNewToken = async () => {
+export const generateNewToken = async () => {
   const refToken = cookies.get("refresh-token");
   console.log({ refToken });
   if (refToken) {
@@ -51,7 +51,6 @@ export const deleteTodo = createAsyncThunk(
   async (id: string, thunk) => {
     const { rejectWithValue } = thunk;
     const { accessToken } = await generateNewToken();
-    console.log({ accessToken });
 
     return await axios
       .delete(deleteToDoRoute(id), {
@@ -73,6 +72,7 @@ export const updateTodo = createAsyncThunk(
   async ({ id, content }: UpdateTask, thunk) => {
     console.log(`id of update -> ${id}`);
     const { rejectWithValue } = thunk;
+    const { accessToken } = await generateNewToken();
 
     const todo = {
       content,
@@ -83,7 +83,9 @@ export const updateTodo = createAsyncThunk(
     };
 
     return await axios
-      .patch(updateToDoRoute(id), todo)
+      .patch(updateToDoRoute(id), todo, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then(({ data }) => data);
     // .catch(({ err: { response } }) => rejectWithValue(response.data));
   }
@@ -93,7 +95,8 @@ export const checkTodo = createAsyncThunk(
   "tasks/checkTodo",
   async ({ id, content, isChecked }: UpdateTask, thunk) => {
     const { rejectWithValue } = thunk;
-    console.log({ id });
+    const { accessToken } = await generateNewToken();
+
     const todo = {
       content,
       time: time(),
@@ -103,7 +106,9 @@ export const checkTodo = createAsyncThunk(
     };
 
     return await axios
-      .patch(updateToDoRoute(id), todo)
+      .patch(updateToDoRoute(id), todo, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then(({ data }) => data);
     // .catch(({ err: { response } }) => rejectWithValue(response.data));
   }
@@ -113,9 +118,12 @@ export const addReminder = createAsyncThunk(
   "tasks/addReminder",
   async (obj: Task, thunk) => {
     const { rejectWithValue } = thunk;
-    console.log({ obj });
+    const { accessToken } = await generateNewToken();
+
     return await axios
-      .patch(updateToDoRoute(obj._id!), obj)
+      .patch(updateToDoRoute(obj._id!), obj, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then(({ data }) => data);
     // .catch(({ err: { response } }) => rejectWithValue(response.data));
   }
@@ -126,9 +134,12 @@ export const clearAllTodos = createAsyncThunk(
   async (_, thunk) => {
     const { rejectWithValue } = thunk;
     const userId = cookies.get("user-id");
+    const { accessToken } = await generateNewToken();
 
     return await axios
-      .delete(ClearALlToDosRoute(userId as string))
+      .delete(ClearALlToDosRoute(userId as string), {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then(({ data }) => data.result)
       .catch(({ response: { data } }) => rejectWithValue(data));
   }
@@ -138,9 +149,13 @@ export const getAllTodos = createAsyncThunk(
   "tasks/getAllTodos",
   async (_, thunk) => {
     const userId = cookies.get("user-id");
+
+    const { accessToken } = await generateNewToken();
     // const { rejectWithValue } = thunk;
     return await axios
-      .get(getAllToDosRoute(userId as string))
+      .get(getAllToDosRoute(userId as string), {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
       .then(({ data }) => data.result)
       .then((data) => data.reverse());
     // .catch(({ response: { data } }) => rejectWithValue(data));

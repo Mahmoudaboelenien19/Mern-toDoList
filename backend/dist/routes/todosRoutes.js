@@ -72,6 +72,7 @@ const deleteTodo = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             res.status(200).json({
                 id: req.params.todoid,
                 message: "todo deleted successfully",
+                result,
             });
         }
         else {
@@ -100,7 +101,7 @@ const todoRoutes = (0, express_1.Router)();
 todoRoutes.route("/user/:id/addtodo").post(addTodo);
 todoRoutes
     .route("/todo/:todoid")
-    .patch(updateTodo)
+    .patch(auth_js_1.auth, updateTodo)
     .delete(auth_js_1.auth, deleteTodo)
     .get(getTodo);
 exports.default = todoRoutes;

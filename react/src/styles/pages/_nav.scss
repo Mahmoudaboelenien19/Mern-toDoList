@@ -171,10 +171,12 @@ span.nav-icon {
     @extend %centered;
     flex-direction: column;
     gap: 5px;
-
+    h4 {
+      margin-bottom: 10px;
+    }
     .notificattion-child {
       position: relative;
-      background: #7baebf;
+      background: darkgrey;
       height: 35px;
       width: 100%;
       padding: 0 5px;
@@ -184,10 +186,22 @@ span.nav-icon {
       justify-content: space-evenly;
       flex-direction: column;
       &.is-read {
-        background: green;
+        background: #dcdada;
+        & > * {
+          color: black;
+          .content {
+            color: darkblue;
+          }
+        }
+      }
+      .btn.read {
+        background: transparent;
+        font-size: 10px;
+        color: var(--border);
+        margin-left: 10px;
       }
       .content {
-        color: black;
+        color: darkblue;
         margin-left: 3px;
         font-size: 12px;
       }

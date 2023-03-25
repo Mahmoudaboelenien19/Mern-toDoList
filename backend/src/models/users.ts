@@ -51,7 +51,7 @@ class User {
         ...userData,
         password,
       });
-      closeMongoConnection();
+      // closeMongoConnection();
       return res;
     } else {
       throw new Error("user is already exist");
@@ -68,7 +68,7 @@ class User {
         result.password
       );
       if (check) {
-        closeMongoConnection();
+        // closeMongoConnection();
         return { ...user, id: result._id };
       } else {
         closeMongoConnection();
@@ -92,7 +92,7 @@ class User {
     const res = await collection
       .find({ userId: new ObjectId(userId) })
       .toArray();
-    closeMongoConnection();
+    // closeMongoConnection();
     return res;
   }
 
@@ -100,7 +100,7 @@ class User {
     const db = await connectToMongo();
     const collection = db.collection("todos");
     const res = await collection.deleteMany({ userId: new ObjectId(userId) });
-    closeMongoConnection();
+    // closeMongoConnection();
     return res;
   }
 
@@ -116,7 +116,7 @@ class User {
     } catch (err) {
       console.log("get 2");
 
-      closeMongoConnection();
+      // closeMongoConnection();
       const error: Error = new Error("this is wring id");
       error.status = 404;
       throw error;

@@ -18,6 +18,7 @@ const Notification = () => {
       <>
         {notificationArr.length > 0 ? (
           <div className=" notification-parent">
+            <h4 className="heading">Notification</h4>
             {notificationArr.map((e, index) => {
               return (
                 <>

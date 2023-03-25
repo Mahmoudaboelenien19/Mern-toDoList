@@ -12,6 +12,9 @@ import Reminder from "./Reminder";
 import { taskbtnHover } from "../Variants/globalVariants";
 import { GiRingingBell } from "react-icons/gi";
 import useTimeDiff from "../customHooks/useTimeDiff";
+import useNotification from "../customHooks/useNotification";
+import { addtoNotificationArr } from "../redux/NotificationSlice";
+import { date as dateFN, time as timeFn } from "../redux/Taskslice";
 interface Prop {
   _id?: string;
   content: string;
@@ -33,7 +36,8 @@ const Task: React.FC<Prop> = ({
   index,
   remind,
 }) => {
-  // console.log(`${index} rerendered`);
+  const { addNotificationtoDB } = useNotification();
+
   const dispatch = useAppDispatch();
 
   const states = ["created", "updated", "checked", "unchecked"];
@@ -226,7 +230,7 @@ when i update
                       }}
                       className="state"
                     >
-                      {state} in{" "}
+                      {state} in
                     </motion.span>
                   );
                 }
@@ -235,20 +239,13 @@ when i update
             <span>{time}</span>
             <span> && </span>
             <span>{date}</span>
-            {/* <AnimatePresence> */}
+
             {remind && days && (
-              <span
-                // variants={opacityVariant}
-                // animate={Bellcontrols}
-                // key="bell"
-                // exit="exit"
-                // initial="start"
-                className="bell"
-              >
+              <span className="bell">
                 <GiRingingBell color="var(--bell)" fontSize={12} />
                 {days > 0 ? (
                   <small>
-                    should be done in {days} d: {hours} h: {minutes} m:{" "}
+                    should be done in {days} d: {hours} h: {minutes} m:
                     {seconds} s
                   </small>
                 ) : (
@@ -256,7 +253,6 @@ when i update
                 )}
               </span>
             )}
-            {/* </AnimatePresence> */}
           </div>
           <div id="btns">
             <motion.button
@@ -288,10 +284,22 @@ when i update
             <motion.button
               className="btn"
               whileHover={taskbtnHover}
-              onClick={() => {
+              onClick={async () => {
                 dispatch(
                   checkTodo({ id: _id!, isChecked: !isCompleted, content })
                 );
+
+                const addedNotificationObj = {
+                  isRead: false,
+                  state: !isCompleted ? "checked" : "unchecked",
+                  time: `${dateFN()}-${timeFn()}`,
+                  content,
+                };
+                const newNotification = await addNotificationtoDB(
+                  addedNotificationObj
+                );
+                const arr = newNotification.data.result.value.notification;
+                dispatch(addtoNotificationArr(arr[arr.length - 1]));
 
                 setIsChecked(true);
               }}
@@ -302,9 +310,27 @@ when i update
             <motion.button
               className="btn"
               whileHover={taskbtnHover}
-              onClick={() => {
+              onClick={async () => {
                 setShowToast(true);
-                dispatch(deleteTodo(_id!));
+                const {
+                  payload: {
+                    result: {
+                      value: { content },
+                    },
+                  },
+                } = await dispatch(deleteTodo(_id!));
+
+                const addedNotificationObj = {
+                  isRead: false,
+                  state: "deleted",
+                  time: `${dateFN()}-${timeFn()}`,
+                  content,
+                };
+                const newNotification = await addNotificationtoDB(
+                  addedNotificationObj
+                );
+                const arr = newNotification.data.result.value.notification;
+                dispatch(addtoNotificationArr(arr[arr.length - 1]));
                 setTimeout(() => {
                   setIsDeleted(true);
                 }, 400);
@@ -347,6 +373,7 @@ when i update
             <Reminder
               setShowReminder={setShowReminder}
               reminderIndex={reminderIndex}
+              key={reminderIndex}
             />
           </>
         )}
@@ -355,5 +382,4 @@ when i update
   );
 };
 
-// export default memo(Task);
 export default Task;

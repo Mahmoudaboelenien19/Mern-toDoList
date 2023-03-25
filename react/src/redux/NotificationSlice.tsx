@@ -24,7 +24,7 @@ const notificationSlice = createSlice({
       if (Array.isArray(action.payload)) {
         state.notificationArr = action.payload;
       } else {
-        state.notificationArr = [...state.notificationArr, action.payload];
+        state.notificationArr = [action.payload, ...state.notificationArr];
       }
     },
     removeNotification(state, action) {

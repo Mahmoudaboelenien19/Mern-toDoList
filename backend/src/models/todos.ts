@@ -29,7 +29,7 @@ class Todos {
       try {
         const db = await connectToMongo();
         const collection = db.collection("todos");
-        const result = await collection.deleteOne({
+        const result = await collection.findOneAndDelete({
           _id: new ObjectId(todoId),
         });
         setTimeout(() => {

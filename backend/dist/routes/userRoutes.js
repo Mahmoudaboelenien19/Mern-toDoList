@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const auth_1 = require("./../middleware/auth");
 const users_js_1 = __importDefault(require("./../models/users.js"));
 const express_1 = require("express");
 const mongodb_1 = require("mongodb");
@@ -132,6 +133,8 @@ const isReadNotification = (req, res, next) => __awaiter(void 0, void 0, void 0,
 });
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log("updated");
+        console.log(req.body);
         const { username, password, image, phone } = req.body;
         let update = {};
         if (username) {
@@ -212,11 +215,11 @@ userRoutes.route("/file/:id").get((req, res) => __awaiter(void 0, void 0, void 0
 }));
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
-userRoutes.route("/user/:userid/todos").get(getTodos);
+userRoutes.route("/user/:userid/todos").get(auth_1.auth, getTodos);
 userRoutes.route("/user/:userid").get(getUser);
 userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
-userRoutes.route("/user/:userid/cleartodos").delete(clear);
+userRoutes.route("/user/:userid/cleartodos").delete(auth_1.auth, clear);
 userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
 userRoutes
     .route("/user/:userid/:notificationid")

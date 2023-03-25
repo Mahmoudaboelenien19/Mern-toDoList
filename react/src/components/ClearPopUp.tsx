@@ -5,10 +5,14 @@ import { useContext } from "react";
 import { ClearContext } from "../App";
 import { overleyVariant } from "../Variants/user";
 import { popVariant } from "../Variants/globalVariants";
+import { date as dateFN, time as timeFn } from "../redux/Taskslice";
+import { addtoNotificationArr } from "../redux/NotificationSlice";
+import useNotification from "../customHooks/useNotification";
 
 const ClearPopUp = () => {
   const { setShowClearPopUp } = useContext(ClearContext);
   const dispatch = useAppDispatch();
+  const { addNotificationtoDB } = useNotification();
 
   return (
     <motion.div
@@ -34,9 +38,20 @@ const ClearPopUp = () => {
             whileHover={{ scale: 1.2, boxShadow: "2px 2px 1px rgb(0,0,0) " }}
             transition={{ type: "spring", stiffness: 300 }}
             className="btn clear"
-            onClick={() => {
+            onClick={async () => {
               dispatch(clearAllTodos());
               setShowClearPopUp(false);
+              const addedNotificationObj = {
+                isRead: false,
+                state: "cleared ALl todos",
+                time: `${dateFN()}-${timeFn()}`,
+                content: "",
+              };
+              const newNotification = await addNotificationtoDB(
+                addedNotificationObj
+              );
+              const arr = newNotification.data.result.value.notification;
+              dispatch(addtoNotificationArr(arr[arr.length - 1]));
             }}
           >
             clear

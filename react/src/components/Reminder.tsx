@@ -1,10 +1,13 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { overleyVariant } from "../Variants/user";
 import { motion } from "framer-motion";
 import { btnHover, popVariant } from "../Variants/globalVariants";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { addReminder } from "../redux/Taskslice";
-import moment from "moment";
+import { date as dateFN, time as timeFn } from "../redux/Taskslice";
+import { addtoNotificationArr } from "../redux/NotificationSlice";
+import useNotification from "../customHooks/useNotification";
+
 interface Props {
   setShowReminder: React.Dispatch<React.SetStateAction<boolean>>;
   reminderIndex: number;
@@ -14,6 +17,7 @@ const Reminder = ({ setShowReminder, reminderIndex }: Props) => {
   const handleCloseReminder = () => {
     setShowReminder(false);
   };
+  const { addNotificationtoDB } = useNotification();
 
   const { tasks } = useAppSelector((state) => state.tasks);
   const dispatch = useAppDispatch();
@@ -37,7 +41,7 @@ const Reminder = ({ setShowReminder, reminderIndex }: Props) => {
         />
         <div className="btn-container">
           <motion.button
-            onClick={() => {
+            onClick={async () => {
               handleCloseReminder();
               dispatch(
                 addReminder({
@@ -45,6 +49,18 @@ const Reminder = ({ setShowReminder, reminderIndex }: Props) => {
                   remind: DateRef.current.value,
                 })
               );
+
+              const addedNotificationObj = {
+                isRead: false,
+                state: "added a reminder",
+                time: `${dateFN()}-${timeFn()}`,
+                content: tasks[reminderIndex].content,
+              };
+              const newNotification = await addNotificationtoDB(
+                addedNotificationObj
+              );
+              const arr = newNotification.data.result.value.notification;
+              dispatch(addtoNotificationArr(arr[arr.length - 1]));
             }}
             whileHover={btnHover}
             className="btn remind"

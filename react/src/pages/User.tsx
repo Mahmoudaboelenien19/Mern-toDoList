@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import AvatarEditor from "react-avatar-editor";
 import { avatarVariant, overleyVariant } from "../Variants/user";
 import UpdateUser from "./UpdateUser";
+import { generateNewToken } from "../redux/Taskslice";
 
 const detailsVariant = {
   start: {},
@@ -63,6 +64,8 @@ const User: React.FC = () => {
 
   const handleUpdateImage = async () => {
     const userId = Cookies.get("user-id");
+    const { accessToken } = await generateNewToken();
+
     // Convert data URL to Blob
     const canvas = editorRef.current.getImageScaledToCanvas();
     const dataURL = canvas.toDataURL("image/jpeg");
@@ -72,7 +75,9 @@ const User: React.FC = () => {
     const file = new File([blob], "cropped-image.jpg", { type: "image/jpeg" });
     const formData = new FormData();
     formData.append("image", file as any);
-    return await axios.patch(updateUserRoute(userId as string), formData);
+    return await axios.patch(updateUserRoute(userId as string), formData, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
   };
 
   const [edit, setEdit] = useState(false);

@@ -50,7 +50,7 @@ const IsAuthProvider = ({ children }: Props) => {
   const getUserData = async (userId: string) => {
     if (userId) {
       return await axios.get(getUserRoute(userId!)).then(({ data }) => {
-        dispatch(addtoNotificationArr(data.user.notification));
+        dispatch(addtoNotificationArr(data.user.notification.reverse()));
         setUserDetails({
           ...userDetails,
           phone: data.user.phone,

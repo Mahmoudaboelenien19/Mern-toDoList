@@ -36,7 +36,7 @@ class User {
                 const collection = db.collection("users");
                 const password = yield User.hashPass(userData.password);
                 const res = yield collection.insertOne(Object.assign(Object.assign({}, userData), { password }));
-                (0, database_js_1.closeMongoConnection)();
+                // closeMongoConnection();
                 return res;
             }
             else {
@@ -52,7 +52,7 @@ class User {
             if (result) {
                 const check = yield bcrypt_1.default.compare(user.password + config_js_1.BCRYPT_PASS, result.password);
                 if (check) {
-                    (0, database_js_1.closeMongoConnection)();
+                    // closeMongoConnection();
                     return Object.assign(Object.assign({}, user), { id: result._id });
                 }
                 else {
@@ -77,7 +77,7 @@ class User {
             const res = yield collection
                 .find({ userId: new mongodb_1.ObjectId(userId) })
                 .toArray();
-            (0, database_js_1.closeMongoConnection)();
+            // closeMongoConnection();
             return res;
         });
     }
@@ -86,7 +86,7 @@ class User {
             const db = yield (0, database_js_1.connectToMongo)();
             const collection = db.collection("todos");
             const res = yield collection.deleteMany({ userId: new mongodb_1.ObjectId(userId) });
-            (0, database_js_1.closeMongoConnection)();
+            // closeMongoConnection();
             return res;
         });
     }
@@ -103,7 +103,7 @@ class User {
             }
             catch (err) {
                 console.log("get 2");
-                (0, database_js_1.closeMongoConnection)();
+                // closeMongoConnection();
                 const error = new Error("this is wring id");
                 error.status = 404;
                 throw error;
