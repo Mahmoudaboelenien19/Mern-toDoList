@@ -1,10 +1,9 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { linkHover } from "../Variants/globalVariants";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { updateUserRoute } from "../../routes";
-import { useAppSelector } from "../customHooks/reduxTypes";
 import { isAuthContext } from "../context/isAuthcontext";
 import { opacityVariant } from "../Variants/options";
 import { generateNewToken } from "../redux/Taskslice";
@@ -21,7 +20,7 @@ interface updateFnInterface {
   phone?: string;
 }
 const UpdateUser = ({ span, value }: Props) => {
-  const { setIsDataUpdated } = useContext(isAuthContext);
+  const { setIsDataUpdated, isDataUpdated } = useContext(isAuthContext);
   const [updateCLicked, setUpdateCLicked] = useState(false);
 
   const inpRef = useRef<HTMLInputElement>(null!);
@@ -29,15 +28,17 @@ const UpdateUser = ({ span, value }: Props) => {
   const updatedata = async (obj: updateFnInterface) => {
     const userId = Cookies.get("user-id");
     const { accessToken } = await generateNewToken();
-    // , {
-    //   headers: { Authorization: `Bearer ${accessToken}` },
-    // }
+
     const url = updateUserRoute(userId as string);
-    console.log({ url });
-    return await axios.patch(url, obj);
+    return await axios.patch(url, obj, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
   };
 
-  //todo make setupdate in isauth to refetch and set it here
+  useEffect(() => {
+    if (!isDataUpdated) return;
+    setIsDataUpdated(false);
+  }, [isDataUpdated]);
   return (
     <>
       <div className="detail-parent">
@@ -90,13 +91,12 @@ const UpdateUser = ({ span, value }: Props) => {
           }
           onClick={() => {
             setUpdateCLicked(true);
-            // if (updateCLicked) {
-            const updatedData = { [span]: inpRef.current.value };
-            console.log(updatedData);
-            updatedata(updatedData);
-            setUpdateCLicked(false);
-            setIsDataUpdated(true);
-            // }
+            if (updateCLicked) {
+              const updatedData = { [span]: inpRef.current.value };
+              updatedata(updatedData);
+              setUpdateCLicked(false);
+              setIsDataUpdated(true);
+            }
           }}
         >
           update

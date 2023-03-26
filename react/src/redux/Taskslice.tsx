@@ -16,7 +16,6 @@ export const time = () => new Date().toLocaleTimeString();
 
 export const generateNewToken = async () => {
   const refToken = cookies.get("refresh-token");
-  console.log({ refToken });
   if (refToken) {
     return await axios
       .post(getNewTokenRoute, { refToken }, { withCredentials: true })
@@ -246,15 +245,8 @@ export const taskSlice = createSlice({
     builder.addCase(deleteTodo.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isError = false;
-      // setTimeout(() => {
-      //   () =>
-      //     (state.tasks = state.tasks.filter(
-      //       (e) => e._id !== action.payload.id
-      //     ));
-      // }, 300);
       state.tasks = state.tasks.filter((e) => e._id !== action.payload.id);
       state.msg = action.payload.message as unknown as string;
-      // state.isChanged = true;
     });
 
     builder.addCase(deleteTodo.rejected, (state, action) => {

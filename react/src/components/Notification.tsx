@@ -1,7 +1,8 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { dropDownVariant } from "../Variants/nav";
 import { useAppSelector } from "../customHooks/reduxTypes";
 import NotificationChild from "./NotificationChild";
+import { opacityVariant } from "../Variants/options";
 
 const Notification = () => {
   const { notificationArr } = useAppSelector((state) => state.notification);
@@ -15,22 +16,31 @@ const Notification = () => {
       exit="exit"
       animate="end"
     >
-      <>
+      <AnimatePresence mode="wait">
         {notificationArr.length > 0 ? (
-          <div className=" notification-parent">
+          <motion.div className=" notification-parent">
             <h4 className="heading">Notification</h4>
-            {notificationArr.map((e, index) => {
-              return (
-                <>
-                  <NotificationChild key={index} {...e} />
-                </>
-              );
-            })}
-          </div>
+
+            <AnimatePresence mode="wait">
+              {notificationArr.map((e) => {
+                return <NotificationChild key={e._id} {...e} />;
+              })}
+            </AnimatePresence>
+          </motion.div>
         ) : (
-          <span className="nodata">no reminders to show</span>
+          <motion.span
+            variants={opacityVariant}
+            initial="start"
+            animate="end"
+            exit="exit"
+            transition={{ duration: 0.8 }}
+            className="nodata"
+            key={"no-reminders"}
+          >
+            no reminders to show
+          </motion.span>
         )}
-      </>
+      </AnimatePresence>
     </motion.div>
   );
 };

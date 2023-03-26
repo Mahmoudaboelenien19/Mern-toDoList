@@ -258,6 +258,7 @@ userRoutes.route("/file/:id").get(async (req, res) => {
   const readstream = bucket.openDownloadStream(new ObjectId(imgId));
   readstream.pipe(res);
 });
+
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
 userRoutes.route("/user/:userid/todos").get(auth, getTodos);
@@ -267,11 +268,11 @@ userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(auth, clear);
 userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
 userRoutes
+  .route("/user/update/:userid")
+  .patch(upload.single("image"), auth, updateUser);
+userRoutes
   .route("/user/:userid/:notificationid")
   .delete(deleteNotification)
   .patch(isReadNotification);
-userRoutes
-  .route("/user/update/:userid")
-  .patch(upload.single("image"), updateUser);
 
 export default userRoutes;

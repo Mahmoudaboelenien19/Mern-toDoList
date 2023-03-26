@@ -15,6 +15,7 @@ interface isAuthContext {
   srcImg: any;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDataUpdated: React.Dispatch<React.SetStateAction<boolean>>;
+  isDataUpdated: boolean;
   userDetails: {
     phone: string;
     password: string;
@@ -41,12 +42,6 @@ const IsAuthProvider = ({ children }: Props) => {
     notification: [],
   });
 
-  interface notificationInterface {
-    isRead: boolean;
-    _id?: string;
-    notification: string;
-  }
-
   const getUserData = async (userId: string) => {
     if (userId) {
       return await axios.get(getUserRoute(userId!)).then(({ data }) => {
@@ -59,7 +54,6 @@ const IsAuthProvider = ({ children }: Props) => {
           email: data.user.email,
           username: data.user.username,
           image: data.user.image,
-          notification: data.user.notification,
         });
       });
     }
@@ -97,7 +91,14 @@ const IsAuthProvider = ({ children }: Props) => {
   }, [isDataUpdated]);
   return (
     <isAuthContext.Provider
-      value={{ setIsAuth, isAuth, userDetails, srcImg, setIsDataUpdated }}
+      value={{
+        setIsAuth,
+        isAuth,
+        userDetails,
+        srcImg,
+        setIsDataUpdated,
+        isDataUpdated,
+      }}
     >
       {children}
     </isAuthContext.Provider>

@@ -258,7 +258,7 @@ class User {
   }
 
   async markasReadNotification(userId: string, notificationId: string) {
-    console.log({ userId, notificationId });
+    // console.log({ userId, notificationId });
     if (ObjectId.isValid(userId)) {
       try {
         const db = await connectToMongo();

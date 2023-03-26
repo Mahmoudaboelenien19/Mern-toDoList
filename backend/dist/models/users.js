@@ -232,7 +232,7 @@ class User {
     }
     markasReadNotification(userId, notificationId) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log({ userId, notificationId });
+            // console.log({ userId, notificationId });
             if (mongodb_1.ObjectId.isValid(userId)) {
                 try {
                     const db = yield (0, database_js_1.connectToMongo)();

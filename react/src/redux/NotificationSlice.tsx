@@ -1,8 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { addNotificationRoute } from "../../routes";
-import { addTodo } from "./Taskslice";
+import { createSlice } from "@reduxjs/toolkit";
 
 interface notificationInterface {
   _id?: string;
@@ -28,9 +24,10 @@ const notificationSlice = createSlice({
       }
     },
     removeNotification(state, action) {
-      state.notificationArr = state.notificationArr.filter(
-        (e) => e._id !== action.payload
+      const index = state.notificationArr.findIndex(
+        (e) => e._id === action.payload
       );
+      state.notificationArr.splice(index, 1);
     },
 
     isReadNotification(state, action) {

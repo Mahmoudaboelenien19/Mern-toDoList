@@ -222,10 +222,10 @@ userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(auth_1.auth, clear);
 userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
 userRoutes
+    .route("/user/update/:userid")
+    .patch(upload_js_1.default.single("image"), auth_1.auth, updateUser);
+userRoutes
     .route("/user/:userid/:notificationid")
     .delete(deleteNotification)
     .patch(isReadNotification);
-userRoutes
-    .route("/user/update/:userid")
-    .patch(upload_js_1.default.single("image"), updateUser);
 exports.default = userRoutes;

@@ -167,6 +167,13 @@ span.nav-icon {
   height: 200px;
   overflow: auto;
   padding: 10px 5px;
+  .nodata {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
   .notification-parent {
     @extend %centered;
     flex-direction: column;
@@ -180,7 +187,7 @@ span.nav-icon {
       height: 35px;
       width: 100%;
       padding: 0 5px;
-      color: white;
+      // color: white;
       font-size: 14px;
       display: flex;
       justify-content: space-evenly;
@@ -199,6 +206,7 @@ span.nav-icon {
         font-size: 10px;
         color: var(--border);
         margin-left: 10px;
+        text-shadow: 0.5px 0.7px 0px black;
       }
       .content {
         color: darkblue;
@@ -216,6 +224,7 @@ span.nav-icon {
         background: transparent;
         font-size: 12px;
         color: var(--delete);
+        font-weight: 900;
       }
     }
   }

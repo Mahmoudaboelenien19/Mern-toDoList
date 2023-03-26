@@ -71,7 +71,7 @@
         text-transform: capitalize;
       }
       .value {
-        width: 200px;
+        width: 250px;
         font-weight: 500;
         color: grey;
         margin-right: 8px;
@@ -130,20 +130,6 @@ input[type="file"] {
     }
   }
 }
-
-// .skelton {
-//   animation: skelton 1s linear infinite alternate;
-//   position: relative;
-//   z-index: 500;
-// }
-// @keyframes skelton {
-//   0% {
-//     background-color: rgba(255, 255, 255, 0.05);
-//   }
-//   100% {
-//     background-color: rgba(255, 255, 255, 0.2);
-//   }
-// }
 
 .skeleton {
   background: #e5e5e577;
