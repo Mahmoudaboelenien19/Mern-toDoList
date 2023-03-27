@@ -10,16 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongodb_1 = require("mongodb");
-const database_1 = require("./../database");
+const database_js_1 = require("./../database.js");
 class Todos {
     create(todo, userId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (mongodb_1.ObjectId.isValid(userId)) {
                 try {
-                    const db = yield (0, database_1.connectToMongo)();
-                    const collection = db.collection("todos");
+                    const collection = database_js_1.db.collection("todos");
                     const result = yield collection.insertOne(Object.assign(Object.assign({}, todo), { userId: new mongodb_1.ObjectId(userId) }));
-                    (0, database_1.closeMongoConnection)();
                     return result;
                 }
                 catch (err) {
@@ -35,14 +33,11 @@ class Todos {
         return __awaiter(this, void 0, void 0, function* () {
             if (mongodb_1.ObjectId.isValid(todoId)) {
                 try {
-                    const db = yield (0, database_1.connectToMongo)();
-                    const collection = db.collection("todos");
+                    const collection = database_js_1.db.collection("todos");
                     const result = yield collection.findOneAndDelete({
                         _id: new mongodb_1.ObjectId(todoId),
                     });
-                    setTimeout(() => {
-                        (0, database_1.closeMongoConnection)();
-                    }, 1000);
+                    setTimeout(() => { }, 1000);
                     return result;
                 }
                 catch (err) {
@@ -58,10 +53,8 @@ class Todos {
         return __awaiter(this, void 0, void 0, function* () {
             if (mongodb_1.ObjectId.isValid(todoId)) {
                 try {
-                    const db = yield (0, database_1.connectToMongo)();
-                    const collection = db.collection("todos");
+                    const collection = database_js_1.db.collection("todos");
                     const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(todoId) }, { $set: todo }, { returnDocument: "after" });
-                    (0, database_1.closeMongoConnection)();
                     return result;
                 }
                 catch (err) {
@@ -77,12 +70,10 @@ class Todos {
         return __awaiter(this, void 0, void 0, function* () {
             if (mongodb_1.ObjectId.isValid(todoId)) {
                 try {
-                    const db = yield (0, database_1.connectToMongo)();
-                    const collection = db.collection("todos");
+                    const collection = database_js_1.db.collection("todos");
                     const result = yield collection.findOne({
                         _id: new mongodb_1.ObjectId(todoId),
                     });
-                    (0, database_1.closeMongoConnection)();
                     return result;
                 }
                 catch (err) {

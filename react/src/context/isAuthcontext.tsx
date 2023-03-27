@@ -24,6 +24,7 @@ interface isAuthContext {
     email: string;
     username: string;
     image: { metadata: Record<string, any> };
+    count: number;
   };
 }
 
@@ -40,6 +41,7 @@ const IsAuthProvider = ({ children }: Props) => {
     username: "",
     image: {} as { metadata: Record<string, any> },
     notification: [],
+    count: 0,
   });
 
   const getUserData = async (userId: string) => {
@@ -54,6 +56,7 @@ const IsAuthProvider = ({ children }: Props) => {
           email: data.user.email,
           username: data.user.username,
           image: data.user.image,
+          count: data.user.count,
         });
       });
     }

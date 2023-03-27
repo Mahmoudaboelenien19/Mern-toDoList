@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getGridFSBucket = exports.closeMongoConnection = exports.connectToMongo = void 0;
+exports.getGridFSBucket = exports.closeMongoConnection = exports.connectToMongo = exports.db = void 0;
 const mongodb_1 = require("mongodb");
 const config_js_1 = require("./config.js");
 const client = new mongodb_1.MongoClient(config_js_1.MongoDB_URL);
@@ -17,8 +17,8 @@ const connectToMongo = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield client.connect();
         console.log("connected to mongodb");
-        const db = client.db("todo");
-        return db;
+        exports.db = client.db("todo");
+        return exports.db;
     }
     catch (err) {
         throw new Error("failed to connect to db ");

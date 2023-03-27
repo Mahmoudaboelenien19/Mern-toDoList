@@ -16,13 +16,14 @@ const Notification = () => {
       exit="exit"
       animate="end"
     >
+      <h4 className="heading">Notification</h4>
+
       <AnimatePresence mode="wait">
         {notificationArr.length > 0 ? (
           <motion.div className=" notification-parent">
-            <h4 className="heading">Notification</h4>
-
-            <AnimatePresence mode="wait">
-              {notificationArr.map((e) => {
+            <AnimatePresence>
+              {notificationArr.map((e, index) => {
+                console.log({ [index]: e._id });
                 return <NotificationChild key={e._id} {...e} />;
               })}
             </AnimatePresence>

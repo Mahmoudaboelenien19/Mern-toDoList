@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface notificationInterface {
+export interface notificationInterface {
   _id?: string;
   state: string;
   time: string;
   isRead: boolean;
   content: string;
+  count: number;
 }
 
 const initialState = {

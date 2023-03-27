@@ -5,7 +5,7 @@ import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "../config.js";
 import upload from "../middleware/upload.js";
-import { connectToMongo, getGridFSBucket } from "../database.js";
+import { getGridFSBucket } from "../database.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -213,8 +213,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
       });
       // res.json({ success: true });
     }
-    console.log(158);
-    console.log("update");
+
     const result = await userModel.update(update, req.params.userid);
     if (result !== "wrong id") {
       res.status(200).json({
@@ -245,8 +244,6 @@ const logOut = (req: Request, res: Response) => {
 
 const userRoutes = Router();
 userRoutes.route("/file/:id").get(async (req, res) => {
-  const db = await connectToMongo();
-
   const bucket = await getGridFSBucket();
   const imgId = req.params.id;
   console.log({ imgId });

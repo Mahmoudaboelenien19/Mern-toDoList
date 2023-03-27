@@ -169,8 +169,6 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             });
             // res.json({ success: true });
         }
-        console.log(158);
-        console.log("update");
         const result = yield users_js_1.default.update(update, req.params.userid);
         if (result !== "wrong id") {
             res.status(200).json({
@@ -202,7 +200,6 @@ const logOut = (req, res) => {
 };
 const userRoutes = (0, express_1.Router)();
 userRoutes.route("/file/:id").get((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const db = yield (0, database_js_1.connectToMongo)();
     const bucket = yield (0, database_js_1.getGridFSBucket)();
     const imgId = req.params.id;
     console.log({ imgId });

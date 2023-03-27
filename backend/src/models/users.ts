@@ -1,6 +1,6 @@
 import { Error } from "./../interfaces/errorInterface";
 import { NextFunction } from "express";
-import { closeMongoConnection, connectToMongo } from "./../database.js";
+import { db } from "./../database.js";
 import bcrypt from "bcrypt";
 import { BCRYPT_PASS, REFRESH_TOKEN_SECRET, SALT } from "../config.js";
 import { ObjectId } from "mongodb";
@@ -12,6 +12,7 @@ interface notificationInterface {
   time: string;
   isRead: boolean;
   content: string;
+  count: number;
 }
 export interface UserInterface {
   username?: string;
@@ -35,14 +36,14 @@ class User {
   }
 
   static async checkEmail(email: string) {
-    const db = await connectToMongo();
+    // const db = await connectToMongo();
 
     return await db.collection("users").findOne({ email });
   }
 
   async createUser(userData: UserInterface) {
     if (!(await User.checkEmail(userData.email as string))) {
-      const db = await connectToMongo();
+      // const db = await connectToMongo();
 
       const collection = db.collection("users");
       const password = await User.hashPass(userData.password as string);
@@ -59,7 +60,6 @@ class User {
   }
 
   async authenticate(user: UserData, next: NextFunction) {
-    const db = await connectToMongo();
     const result = await db.collection("users").findOne({ email: user.email });
     console.log({ result });
     if (result) {
@@ -68,18 +68,13 @@ class User {
         result.password
       );
       if (check) {
-        // closeMongoConnection();
         return { ...user, id: result._id };
       } else {
-        closeMongoConnection();
-
         const err: Error = new Error("Wrong password");
         err.status = 401;
         throw err;
       }
     } else {
-      closeMongoConnection();
-
       const err: Error = new Error("this user isn't regesitered ..!");
       err.status = 404;
       throw err;
@@ -87,36 +82,28 @@ class User {
   }
 
   async getAllToDos(userId: ObjectId) {
-    const db = await connectToMongo();
     const collection = db.collection("todos");
     const res = await collection
       .find({ userId: new ObjectId(userId) })
       .toArray();
-    // closeMongoConnection();
     return res;
   }
 
   async clear(userId: ObjectId) {
-    const db = await connectToMongo();
     const collection = db.collection("todos");
     const res = await collection.deleteMany({ userId: new ObjectId(userId) });
-    // closeMongoConnection();
     return res;
   }
 
   async getUser(userId: ObjectId, next: NextFunction) {
     try {
-      const db = await connectToMongo();
       const collection = db.collection("users");
       console.log({ userId });
       const res = await collection.findOne({ _id: new ObjectId(userId) });
       console.log("get 1");
-      // closeMongoConnection();
       return res;
     } catch (err) {
       console.log("get 2");
-
-      // closeMongoConnection();
       const error: Error = new Error("this is wring id");
       error.status = 404;
       throw error;
@@ -140,7 +127,7 @@ class User {
   async update(obj: UserInterface, userId: string) {
     if (ObjectId.isValid(userId)) {
       try {
-        const db = await connectToMongo();
+        // const db = await connectToMongo();
         const collection = db.collection("users");
         if (obj.image && obj.image.fileId) {
           const filesCollection = db.collection("fs.files");
@@ -171,11 +158,14 @@ class User {
 
   async addNotification(
     userId: string,
-    { state, time, content }: { state: string; time: string; content: string }
+    {
+      state,
+      time,
+      content,
+      count,
+    }: { count: number; state: string; time: string; content: string }
   ) {
     if (ObjectId.isValid(userId)) {
-      console.log("id valid");
-
       try {
         const notificationObj: notificationInterface = {
           state,
@@ -183,8 +173,8 @@ class User {
           content,
           _id: new ObjectId(),
           isRead: false,
+          count: count || 0,
         };
-        const db = await connectToMongo();
         const collection = db.collection("users");
         const result = await collection.findOneAndUpdate(
           { _id: new ObjectId(userId) },
@@ -192,11 +182,11 @@ class User {
             $push: {
               notification: notificationObj,
             } as any,
+            $inc: { count: +1 },
           },
           { returnDocument: "after" }
         );
 
-        // closeMongoConnection();
         return result;
       } catch (err) {
         throw new Error("can't update this user");
@@ -210,7 +200,7 @@ class User {
   async getNotification(userId: string) {
     if (ObjectId.isValid(userId)) {
       try {
-        const db = await connectToMongo();
+        // const db = await connectToMongo();
         const collection = db.collection("users");
         const result = await collection
           .find(
@@ -235,7 +225,7 @@ class User {
         const notificationObj = {
           _id: new ObjectId(notificationId),
         };
-        const db = await connectToMongo();
+        // const db = await connectToMongo();
         const collection = db.collection("users");
         const result = await collection.findOneAndUpdate(
           { _id: new ObjectId(userId) },
@@ -247,7 +237,6 @@ class User {
           { returnDocument: "after" }
         );
 
-        // closeMongoConnection();
         return result;
       } catch (err) {
         throw new Error("can't update this user");
@@ -261,7 +250,7 @@ class User {
     // console.log({ userId, notificationId });
     if (ObjectId.isValid(userId)) {
       try {
-        const db = await connectToMongo();
+        // const db = await connectToMongo();
         const collection = db.collection("users");
         const result = await collection.findOneAndUpdate(
           {

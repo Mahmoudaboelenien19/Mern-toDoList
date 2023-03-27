@@ -37,7 +37,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      height: 50px;
+      height: 60px;
       .hr {
         display: inline-block;
         width: 100%;
@@ -121,6 +121,7 @@ input[type="file"] {
   background: var(--border);
   width: fit-content;
   padding: 4px;
+  white-space: nowrap;
 }
 @media screen and (max-width: 800px) {
   .img-container {
@@ -154,4 +155,6 @@ input[type="file"] {
   padding: 0 5px;
   color: black !important ;
   letter-spacing: 1px;
+  position: relative;
+  top: -5px;
 }

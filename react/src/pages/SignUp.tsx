@@ -13,7 +13,6 @@ import {
   btnFormAnimation,
   formTitle,
   formVariants,
-  // inputParentAnimation,
   linkFormAnimation,
 } from "../Variants/form";
 import SignUpInput from "../components/SIngUpInp";
@@ -58,6 +57,7 @@ const SignUp = () => {
   });
 
   const methods = useForm({ resolver: yupResolver(schema) });
+
   const {
     register,
     handleSubmit,

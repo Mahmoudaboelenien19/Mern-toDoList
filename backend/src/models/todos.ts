@@ -1,20 +1,18 @@
 import { NextFunction } from "express";
 import { ObjectId } from "mongodb";
 import { TodosInterface } from "../interfaces/todoInterface";
-import { connectToMongo, closeMongoConnection } from "./../database";
+import { db } from "./../database.js";
 
 class Todos {
   async create(todo: TodosInterface, userId: ObjectId) {
     if (ObjectId.isValid(userId)) {
       try {
-        const db = await connectToMongo();
         const collection = db.collection("todos");
         const result = await collection.insertOne({
           ...todo,
           userId: new ObjectId(userId),
         });
 
-        closeMongoConnection();
         return result;
       } catch (err) {
         throw new Error("can't create this todo");
@@ -27,14 +25,11 @@ class Todos {
   async delete(todoId: string) {
     if (ObjectId.isValid(todoId)) {
       try {
-        const db = await connectToMongo();
         const collection = db.collection("todos");
         const result = await collection.findOneAndDelete({
           _id: new ObjectId(todoId),
         });
-        setTimeout(() => {
-          closeMongoConnection();
-        }, 1000);
+        setTimeout(() => {}, 1000);
         return result;
       } catch (err) {
         throw new Error("can't create this todo");
@@ -47,7 +42,6 @@ class Todos {
   async update(todo: TodosInterface, todoId: string) {
     if (ObjectId.isValid(todoId)) {
       try {
-        const db = await connectToMongo();
         const collection = db.collection("todos");
         const result = await collection.findOneAndUpdate(
           { _id: new ObjectId(todoId) },
@@ -55,7 +49,6 @@ class Todos {
           { returnDocument: "after" }
         );
 
-        closeMongoConnection();
         return result;
       } catch (err) {
         throw new Error("can't update this todo");
@@ -68,13 +61,11 @@ class Todos {
   async getOne(todoId: ObjectId) {
     if (ObjectId.isValid(todoId)) {
       try {
-        const db = await connectToMongo();
         const collection = db.collection("todos");
         const result = await collection.findOne({
           _id: new ObjectId(todoId),
         });
 
-        closeMongoConnection();
         return result;
       } catch (err) {
         throw new Error("can't get this todo");

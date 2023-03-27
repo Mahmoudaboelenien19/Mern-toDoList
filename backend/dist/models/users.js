@@ -25,15 +25,15 @@ class User {
     }
     static checkEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const db = yield (0, database_js_1.connectToMongo)();
-            return yield db.collection("users").findOne({ email });
+            // const db = await connectToMongo();
+            return yield database_js_1.db.collection("users").findOne({ email });
         });
     }
     createUser(userData) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!(yield User.checkEmail(userData.email))) {
-                const db = yield (0, database_js_1.connectToMongo)();
-                const collection = db.collection("users");
+                // const db = await connectToMongo();
+                const collection = database_js_1.db.collection("users");
                 const password = yield User.hashPass(userData.password);
                 const res = yield collection.insertOne(Object.assign(Object.assign({}, userData), { password }));
                 // closeMongoConnection();
@@ -46,24 +46,20 @@ class User {
     }
     authenticate(user, next) {
         return __awaiter(this, void 0, void 0, function* () {
-            const db = yield (0, database_js_1.connectToMongo)();
-            const result = yield db.collection("users").findOne({ email: user.email });
+            const result = yield database_js_1.db.collection("users").findOne({ email: user.email });
             console.log({ result });
             if (result) {
                 const check = yield bcrypt_1.default.compare(user.password + config_js_1.BCRYPT_PASS, result.password);
                 if (check) {
-                    // closeMongoConnection();
                     return Object.assign(Object.assign({}, user), { id: result._id });
                 }
                 else {
-                    (0, database_js_1.closeMongoConnection)();
                     const err = new Error("Wrong password");
                     err.status = 401;
                     throw err;
                 }
             }
             else {
-                (0, database_js_1.closeMongoConnection)();
                 const err = new Error("this user isn't regesitered ..!");
                 err.status = 404;
                 throw err;
@@ -72,38 +68,31 @@ class User {
     }
     getAllToDos(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const db = yield (0, database_js_1.connectToMongo)();
-            const collection = db.collection("todos");
+            const collection = database_js_1.db.collection("todos");
             const res = yield collection
                 .find({ userId: new mongodb_1.ObjectId(userId) })
                 .toArray();
-            // closeMongoConnection();
             return res;
         });
     }
     clear(userId) {
         return __awaiter(this, void 0, void 0, function* () {
-            const db = yield (0, database_js_1.connectToMongo)();
-            const collection = db.collection("todos");
+            const collection = database_js_1.db.collection("todos");
             const res = yield collection.deleteMany({ userId: new mongodb_1.ObjectId(userId) });
-            // closeMongoConnection();
             return res;
         });
     }
     getUser(userId, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const db = yield (0, database_js_1.connectToMongo)();
-                const collection = db.collection("users");
+                const collection = database_js_1.db.collection("users");
                 console.log({ userId });
                 const res = yield collection.findOne({ _id: new mongodb_1.ObjectId(userId) });
                 console.log("get 1");
-                // closeMongoConnection();
                 return res;
             }
             catch (err) {
                 console.log("get 2");
-                // closeMongoConnection();
                 const error = new Error("this is wring id");
                 error.status = 404;
                 throw error;
@@ -127,10 +116,10 @@ class User {
         return __awaiter(this, void 0, void 0, function* () {
             if (mongodb_1.ObjectId.isValid(userId)) {
                 try {
-                    const db = yield (0, database_js_1.connectToMongo)();
-                    const collection = db.collection("users");
+                    // const db = await connectToMongo();
+                    const collection = database_js_1.db.collection("users");
                     if (obj.image && obj.image.fileId) {
-                        const filesCollection = db.collection("fs.files");
+                        const filesCollection = database_js_1.db.collection("fs.files");
                         const file = yield filesCollection.findOne({
                             _id: new mongodb_1.ObjectId(obj.image.fileId),
                         });
@@ -151,10 +140,9 @@ class User {
             }
         });
     }
-    addNotification(userId, { state, time, content }) {
+    addNotification(userId, { state, time, content, count, }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (mongodb_1.ObjectId.isValid(userId)) {
-                console.log("id valid");
                 try {
                     const notificationObj = {
                         state,
@@ -162,15 +150,15 @@ class User {
                         content,
                         _id: new mongodb_1.ObjectId(),
                         isRead: false,
+                        count: count || 0,
                     };
-                    const db = yield (0, database_js_1.connectToMongo)();
-                    const collection = db.collection("users");
+                    const collection = database_js_1.db.collection("users");
                     const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, {
                         $push: {
                             notification: notificationObj,
                         },
+                        $inc: { count: +1 },
                     }, { returnDocument: "after" });
-                    // closeMongoConnection();
                     return result;
                 }
                 catch (err) {
@@ -187,8 +175,8 @@ class User {
         return __awaiter(this, void 0, void 0, function* () {
             if (mongodb_1.ObjectId.isValid(userId)) {
                 try {
-                    const db = yield (0, database_js_1.connectToMongo)();
-                    const collection = db.collection("users");
+                    // const db = await connectToMongo();
+                    const collection = database_js_1.db.collection("users");
                     const result = yield collection
                         .find({ _id: new mongodb_1.ObjectId(userId) }, { projection: { notification: 1 } })
                         .toArray();
@@ -211,14 +199,13 @@ class User {
                     const notificationObj = {
                         _id: new mongodb_1.ObjectId(notificationId),
                     };
-                    const db = yield (0, database_js_1.connectToMongo)();
-                    const collection = db.collection("users");
+                    // const db = await connectToMongo();
+                    const collection = database_js_1.db.collection("users");
                     const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, {
                         $pull: {
                             notification: notificationObj,
                         },
                     }, { returnDocument: "after" });
-                    // closeMongoConnection();
                     return result;
                 }
                 catch (err) {
@@ -235,8 +222,8 @@ class User {
             // console.log({ userId, notificationId });
             if (mongodb_1.ObjectId.isValid(userId)) {
                 try {
-                    const db = yield (0, database_js_1.connectToMongo)();
-                    const collection = db.collection("users");
+                    // const db = await connectToMongo();
+                    const collection = database_js_1.db.collection("users");
                     const result = yield collection.findOneAndUpdate({
                         _id: new mongodb_1.ObjectId(userId),
                         "notification._id": new mongodb_1.ObjectId(notificationId),

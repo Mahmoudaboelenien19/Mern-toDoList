@@ -1,3 +1,4 @@
+import { connectToMongo } from "./database";
 import { errorMiddleware } from "./middleware/errors.js";
 import express from "express";
 import { PORT } from "./config.js";
@@ -6,7 +7,9 @@ import todoRoutes from "./routes/todosRoutes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+connectToMongo();
 const app = express();
+
 app.use(cookieParser());
 app.use(
   cors({

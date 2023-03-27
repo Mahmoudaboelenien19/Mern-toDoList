@@ -6,8 +6,7 @@ import {
   isReadNotification,
   removeNotification,
 } from "../redux/NotificationSlice";
-import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { motion } from "framer-motion";
 interface Props {
   state: string;
   time: string;
@@ -32,7 +31,11 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
 
   const notivariant = {
     start: { opacity: 0 },
-    end: { opacity: 1, transition: { duration: 0.4 } },
+    end: {
+      opacity: 1,
+
+      transition: { delay: 0.1, duration: 0.4 },
+    },
     exit: { opacity: 0, x: 10, transition: { duration: 0.4 } },
   };
 
@@ -40,10 +43,9 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
     <motion.div
       className={`${isRead ? "is-read" : ""} notificattion-child`}
       variants={notivariant}
-      exit="exit"
-      animate="end"
       initial="start"
-      key={content}
+      animate="end"
+      exit="exit"
     >
       <>
         <small>
@@ -84,8 +86,9 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
       <button
         className="btn del"
         onClick={() => {
-          dispatch(removeNotification(_id));
           removeNotificationFromDB();
+
+          dispatch(removeNotification(_id));
         }}
       >
         x

@@ -18,7 +18,7 @@ const Nav: React.FC = () => {
   const {
     isAuth,
     setIsAuth,
-    userDetails: { username },
+    userDetails: { username, count },
     srcImg,
   } = authData;
 
@@ -203,16 +203,19 @@ const Nav: React.FC = () => {
           )}
 
           <span
+            className="notification-parent"
             onClick={() => {
               setIsNotificationClicked(!isNotificationClicked);
               setShowDropDown(false);
             }}
           >
-            <IoNotifications size={20} color={"gray"} />
+            <IoNotifications size={30} color={"gray"} />
+            <span className="notification-counter">{count}</span>
           </span>
           <AnimatePresence mode="wait">
             {isNotificationClicked && (
               <>
+                {" "}
                 <Notification />
               </>
             )}
