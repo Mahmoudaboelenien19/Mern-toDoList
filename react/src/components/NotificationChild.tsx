@@ -7,6 +7,7 @@ import {
   removeNotification,
 } from "../redux/NotificationSlice";
 import { motion } from "framer-motion";
+import { linkHover } from "../Variants/globalVariants";
 interface Props {
   state: string;
   time: string;
@@ -72,7 +73,8 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
         <span className="time">{time} </span>
 
         {!isRead && (
-          <button
+          <motion.button
+            whileHover={linkHover}
             className="btn read"
             onClick={() => {
               dispatch(isReadNotification(_id!));
@@ -80,10 +82,10 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
             }}
           >
             mark as read
-          </button>
+          </motion.button>
         )}
       </small>
-      <button
+      <motion.button
         className="btn del"
         onClick={() => {
           removeNotificationFromDB();
@@ -92,7 +94,7 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
         }}
       >
         x
-      </button>
+      </motion.button>
     </motion.div>
   );
 };

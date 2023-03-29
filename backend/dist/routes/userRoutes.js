@@ -119,6 +119,11 @@ const addNotificationRouteFn = (req, res, next) => __awaiter(void 0, void 0, voi
     const result = yield users_js_1.default.addNotification(userId, req.body);
     res.json({ result, msg: "noti added" });
 });
+const resetNotificationcounter = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userid;
+    const result = yield users_js_1.default.resetNotification(userId);
+    res.json({ result, msg: "reseted" });
+});
 const deleteNotification = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.userid;
     const notificationId = req.params.notificationid;
@@ -129,6 +134,11 @@ const isReadNotification = (req, res, next) => __awaiter(void 0, void 0, void 0,
     const userId = req.params.userid;
     const notificationId = req.params.notificationid;
     const result = yield users_js_1.default.markasReadNotification(userId, notificationId);
+    res.json({ result });
+});
+const markAllNotificationsAsRead = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userid;
+    const result = yield users_js_1.default.markALlNotificationsAsRead(userId);
     res.json({ result });
 });
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -218,6 +228,10 @@ userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(auth_1.auth, clear);
 userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
+userRoutes.route("/user/notifications/:userid").patch(resetNotificationcounter);
+userRoutes
+    .route("/user/markallnotifications/:userid")
+    .patch(markAllNotificationsAsRead);
 userRoutes
     .route("/user/update/:userid")
     .patch(upload_js_1.default.single("image"), auth_1.auth, updateUser);

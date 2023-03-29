@@ -24,6 +24,12 @@ export const updateUserRoute = (userId: string) =>
 export const addNotificationRoute = (userId: string) =>
   `http://localhost:3000/user/${userId}/addnotification`;
 
+export const resetNotificationRoute = (userId: string) =>
+  `http://localhost:3000/user/notifications/${userId}`;
+
+export const markALlNotificationsRoute = (userId: string) =>
+  `http://localhost:3000/user/markallnotifications/${userId}`;
+
 export const deleteNotificationRoute = (
   userId: string,
   notificationId: string

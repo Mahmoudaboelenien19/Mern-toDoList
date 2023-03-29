@@ -219,6 +219,24 @@ class User {
     }
   }
 
+  async resetNotification(userId: string) {
+    if (ObjectId.isValid(userId)) {
+      try {
+        const collection = db.collection("users");
+        const result = await collection.updateOne(
+          { _id: new ObjectId(userId) },
+          { $set: { count: 0 } }
+        );
+
+        return result;
+      } catch (err) {
+        throw new Error("can't update this user");
+      }
+    } else {
+      return "wrong id";
+    }
+  }
+
   async deleteNotification(userId: string, notificationId: string) {
     if (ObjectId.isValid(userId)) {
       try {
@@ -235,6 +253,28 @@ class User {
             } as any,
           },
           { returnDocument: "after" }
+        );
+
+        return result;
+      } catch (err) {
+        throw new Error("can't update this user");
+      }
+    } else {
+      return "wrong id";
+    }
+  }
+
+  async markALlNotificationsAsRead(userId: string) {
+    if (ObjectId.isValid(userId)) {
+      try {
+        const collection = db.collection("users");
+        const result = await collection.findOneAndUpdate(
+          { _id: new ObjectId(userId) },
+          {
+            $set: {
+              "notification.$[].isRead": true,
+            } as any,
+          }
         );
 
         return result;

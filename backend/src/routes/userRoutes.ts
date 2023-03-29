@@ -147,6 +147,17 @@ const addNotificationRouteFn = async (
   res.json({ result, msg: "noti added" });
 };
 
+const resetNotificationcounter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.params.userid;
+
+  const result = await userModel.resetNotification(userId);
+  res.json({ result, msg: "reseted" });
+};
+
 const deleteNotification = async (
   req: Request,
   res: Response,
@@ -168,6 +179,17 @@ const isReadNotification = async (
   const notificationId = req.params.notificationid;
 
   const result = await userModel.markasReadNotification(userId, notificationId);
+  res.json({ result });
+};
+
+const markAllNotificationsAsRead = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.params.userid;
+
+  const result = await userModel.markALlNotificationsAsRead(userId);
   res.json({ result });
 };
 
@@ -264,6 +286,10 @@ userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
 userRoutes.route("/user/:userid/cleartodos").delete(auth, clear);
 userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
+userRoutes.route("/user/notifications/:userid").patch(resetNotificationcounter);
+userRoutes
+  .route("/user/markallnotifications/:userid")
+  .patch(markAllNotificationsAsRead);
 userRoutes
   .route("/user/update/:userid")
   .patch(upload.single("image"), auth, updateUser);

@@ -7,9 +7,19 @@ interface Props {
   index: number;
   setFaqIndex: React.Dispatch<React.SetStateAction<number>>;
   faqIndex: number;
+  id: number;
 }
 
-const OneFaq = ({ question, answer, index, faqIndex, setFaqIndex }: Props) => {
+const OneFaq = ({
+  id,
+  question,
+  answer,
+  index,
+  faqIndex,
+  setFaqIndex,
+}: Props) => {
+  const clrs = ["darkblue", " darkred", "blueviolet", "green", "orange"];
+
   const faqVariant = {
     start: {
       height: 0,
@@ -20,10 +30,10 @@ const OneFaq = ({ question, answer, index, faqIndex, setFaqIndex }: Props) => {
 
       height: "fit-content",
       transition: {
-        delay: 0.6,
+        // delay: 0.6,
         duration: 0.5,
         opacity: {
-          delay: 1.1,
+          // delay: 1.1,
           duration: 0.2,
         },
       },
@@ -32,7 +42,7 @@ const OneFaq = ({ question, answer, index, faqIndex, setFaqIndex }: Props) => {
       opacity: 0,
       height: 0,
       transition: {
-        height: { delay: 0.4, duration: 0.2 },
+        height: { duration: 0.4 },
         opacity: { delay: 0, duration: 0.3 },
       },
     },
@@ -64,6 +74,9 @@ const OneFaq = ({ question, answer, index, faqIndex, setFaqIndex }: Props) => {
             exit="exit"
             key={question}
             className="answer"
+            style={{
+              background: `linear-gradient(210deg,grey,${clrs[id - 1]})`,
+            }}
           >
             {answer}
           </motion.p>

@@ -3,7 +3,10 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { getUserRoute } from "../../routes";
 import { useAppDispatch } from "../customHooks/reduxTypes";
-import { addtoNotificationArr } from "../redux/NotificationSlice";
+import {
+  addtoNotificationArr,
+  notificationCounter,
+} from "../redux/NotificationSlice";
 
 export const isAuthContext = createContext({} as isAuthContext);
 
@@ -47,7 +50,8 @@ const IsAuthProvider = ({ children }: Props) => {
   const getUserData = async (userId: string) => {
     if (userId) {
       return await axios.get(getUserRoute(userId!)).then(({ data }) => {
-        dispatch(addtoNotificationArr(data.user.notification.reverse()));
+        dispatch(addtoNotificationArr(data.user.notification?.reverse()));
+        dispatch(notificationCounter(data.user.count));
         setUserDetails({
           ...userDetails,
           phone: data.user.phone,
@@ -80,6 +84,7 @@ const IsAuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const user = Cookies.get("user-id");
+    console.log({ user });
     if (user) {
       setIsAuth(true);
       getUserData(user);

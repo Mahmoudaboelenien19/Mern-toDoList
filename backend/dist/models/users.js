@@ -192,6 +192,23 @@ class User {
             }
         });
     }
+    resetNotification(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (mongodb_1.ObjectId.isValid(userId)) {
+                try {
+                    const collection = database_js_1.db.collection("users");
+                    const result = yield collection.updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $set: { count: 0 } });
+                    return result;
+                }
+                catch (err) {
+                    throw new Error("can't update this user");
+                }
+            }
+            else {
+                return "wrong id";
+            }
+        });
+    }
     deleteNotification(userId, notificationId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (mongodb_1.ObjectId.isValid(userId)) {
@@ -206,6 +223,27 @@ class User {
                             notification: notificationObj,
                         },
                     }, { returnDocument: "after" });
+                    return result;
+                }
+                catch (err) {
+                    throw new Error("can't update this user");
+                }
+            }
+            else {
+                return "wrong id";
+            }
+        });
+    }
+    markALlNotificationsAsRead(userId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (mongodb_1.ObjectId.isValid(userId)) {
+                try {
+                    const collection = database_js_1.db.collection("users");
+                    const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, {
+                        $set: {
+                            "notification.$[].isRead": true,
+                        },
+                    });
                     return result;
                 }
                 catch (err) {

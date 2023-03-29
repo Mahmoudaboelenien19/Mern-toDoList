@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { IoNotifications } from "react-icons/io5";
 import NavRoutes from "../widget/routes";
 import { AnimatePresence, motion } from "framer-motion";
-import { logOutRoute } from "../../routes";
+import { logOutRoute, resetNotificationRoute } from "../../routes";
 import { isAuthContext } from "../context/isAuthcontext";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -12,13 +12,19 @@ import { GiExitDoor } from "react-icons/gi";
 import { dropDownVariant } from "../Variants/nav";
 import { FaQuestionCircle } from "react-icons/fa";
 import Notification from "./Notification";
+import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
+import { notificationCounterReset } from "../redux/NotificationSlice";
+import { opacityVariant } from "../Variants/options";
 
 const Nav: React.FC = () => {
+  const { counter } = useAppSelector((state) => state.notification);
+  const dispatch = useAppDispatch();
+
   const authData = useContext(isAuthContext);
   const {
     isAuth,
     setIsAuth,
-    userDetails: { username, count },
+    userDetails: { username },
     srcImg,
   } = authData;
 
@@ -28,6 +34,13 @@ const Nav: React.FC = () => {
       { refToken: Cookies.get("refresh-token") },
       { withCredentials: true }
     );
+
+  const resetNotification = async () => {
+    const userId = Cookies.get("user-id");
+    await fetch(resetNotificationRoute(userId as string), {
+      method: "PATCH",
+    });
+  };
 
   //todo when click outside not work
   const [showDropDown, setShowDropDown] = useState(false);
@@ -51,7 +64,7 @@ const Nav: React.FC = () => {
   // }, [isImageClicked]);
 
   const [isNotificationClicked, setIsNotificationClicked] = useState(false);
-  console.log({ isNotificationClicked });
+
   return (
     <>
       <motion.nav
@@ -207,11 +220,28 @@ const Nav: React.FC = () => {
             onClick={() => {
               setIsNotificationClicked(!isNotificationClicked);
               setShowDropDown(false);
+              dispatch(notificationCounterReset());
+              resetNotification();
             }}
           >
-            <IoNotifications size={30} color={"gray"} />
-            <span className="notification-counter">{count}</span>
+            <IoNotifications size={27} color={"gray"} />
+
+            <AnimatePresence>
+              {counter && (
+                <motion.span
+                  variants={opacityVariant}
+                  initial="start"
+                  animate="end"
+                  exit="exit"
+                  transition={{ duration: 0.2 }}
+                  className="notification-counter"
+                >
+                  {counter}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </span>
+
           <AnimatePresence mode="wait">
             {isNotificationClicked && (
               <>
