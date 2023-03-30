@@ -1,11 +1,10 @@
-import { useContext, useLayoutEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { authenticateRoute } from "../../routes.js";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useAppDispatch } from "../customHooks/reduxTypes.js";
 import {
   btnFormAnimation,
   formTitle,
@@ -23,8 +22,8 @@ const Login = () => {
   const authData = useContext(isAuthContext);
   const { setIsAuth } = authData;
 
-  useLayoutEffect(() => {
-    document.title = "Listify | Log In";
+  useEffect(() => {
+    document.title = "Log In";
   }, []);
   interface userInerface {
     email: string;

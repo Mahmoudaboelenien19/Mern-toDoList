@@ -1,11 +1,14 @@
+import { upload } from "./../middleware/storage";
 import { auth } from "./../middleware/auth";
-import userModel, { UserData, UserInterface } from "./../models/users.js";
+import userModel, {
+  imgInterface,
+  UserData,
+  UserInterface,
+} from "./../models/users.js";
 import { NextFunction, Request, Response, Router } from "express";
 import { ObjectId } from "mongodb";
 import jwt from "jsonwebtoken";
 import { ACCESS_TOKEN_SECRET, REFRESH_TOKEN_SECRET } from "../config.js";
-import upload from "../middleware/upload.js";
-import { getGridFSBucket } from "../database.js";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -15,8 +18,9 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
       password: req.body.password,
       country: req.body.country,
       phone: req.body.phone,
-      image: req.body.image || {
-        fileId: new ObjectId("6416feef33f9fb8e8c6585cc"),
+      image: {
+        imageName: "",
+        imagePath: "",
       },
       gender: req.body.gender,
       notification: [],
@@ -195,9 +199,7 @@ const markAllNotificationsAsRead = async (
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("updated");
-    console.log(req.body);
-    const { username, password, image, phone } = req.body;
+    const { username, password, phone } = req.body;
     let update = {} as UserInterface;
     if (username) {
       update.username = username;
@@ -208,32 +210,6 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     }
     if (phone) {
       update.phone = phone;
-    }
-    console.log(req.body.image);
-    if (req.file) {
-      console.log("file");
-      const { file } = req;
-      console.log(file);
-      const metadata = { filename: file.originalname };
-      const bucket: any = await getGridFSBucket();
-      const writestream = bucket.openUploadStreamWithId(
-        file.filename,
-        file.originalname,
-        { metadata }
-      );
-      writestream.write(file.buffer);
-      writestream.end();
-      await new Promise<void>((resolve, reject) => {
-        writestream.once("finish", async (data: any) => {
-          console.log("finsih");
-          update.image = {
-            fileId: data._id,
-            filename: data.filename,
-          };
-          resolve();
-        });
-      });
-      // res.json({ success: true });
     }
 
     const result = await userModel.update(update, req.params.userid);
@@ -264,23 +240,27 @@ const logOut = (req: Request, res: Response) => {
   }
 };
 
+const updateImageRouteFn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.params.userid;
+  const imageObj = {
+    imageName: req.file?.originalname,
+    imagePath: req.file?.path,
+  };
+  const result = await userModel.updatImage(userId, imageObj as imgInterface);
+  res.json({ result });
+};
+
 const userRoutes = Router();
-userRoutes.route("/file/:id").get(async (req, res) => {
-  const bucket = await getGridFSBucket();
-  const imgId = req.params.id;
-  console.log({ imgId });
-
-  const file = await bucket.find({ _id: new ObjectId(imgId) }).toArray();
-  if (!file) {
-    return res.status(404).json({ message: "File not found" });
-  }
-  const readstream = bucket.openDownloadStream(new ObjectId(imgId));
-  readstream.pipe(res);
-});
-
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
 userRoutes.route("/user/:userid/todos").get(auth, getTodos);
+userRoutes
+  .route("/user/updateimage/:userid")
+  .patch(auth, upload.single("image"), updateImageRouteFn);
 userRoutes.route("/user/:userid").get(getUser);
 userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
@@ -290,9 +270,7 @@ userRoutes.route("/user/notifications/:userid").patch(resetNotificationcounter);
 userRoutes
   .route("/user/markallnotifications/:userid")
   .patch(markAllNotificationsAsRead);
-userRoutes
-  .route("/user/update/:userid")
-  .patch(upload.single("image"), auth, updateUser);
+userRoutes.route("/user/update/:userid").patch(auth, updateUser);
 userRoutes
   .route("/user/:userid/:notificationid")
   .delete(deleteNotification)

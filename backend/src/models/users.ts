@@ -14,6 +14,11 @@ interface notificationInterface {
   content: string;
   count: number;
 }
+
+export interface imgInterface {
+  imageName: string;
+  imagePath: string;
+}
 export interface UserInterface {
   username?: string;
   password?: string;
@@ -21,7 +26,7 @@ export interface UserInterface {
   email?: string;
   phone?: string;
   gender?: string;
-  image?: any;
+  image?: imgInterface;
   notification?: notificationInterface[];
 }
 
@@ -43,8 +48,6 @@ class User {
 
   async createUser(userData: UserInterface) {
     if (!(await User.checkEmail(userData.email as string))) {
-      // const db = await connectToMongo();
-
       const collection = db.collection("users");
       const password = await User.hashPass(userData.password as string);
 
@@ -52,7 +55,6 @@ class User {
         ...userData,
         password,
       });
-      // closeMongoConnection();
       return res;
     } else {
       throw new Error("user is already exist");
@@ -129,16 +131,6 @@ class User {
       try {
         // const db = await connectToMongo();
         const collection = db.collection("users");
-        if (obj.image && obj.image.fileId) {
-          const filesCollection = db.collection("fs.files");
-          const file = await filesCollection.findOne({
-            _id: new ObjectId(obj.image.fileId),
-          });
-
-          console.log({ file });
-          // Add the file data to the user update
-          // obj.image.data = file;
-        }
 
         const result = await collection.findOneAndUpdate(
           { _id: new ObjectId(userId) },
@@ -287,10 +279,8 @@ class User {
   }
 
   async markasReadNotification(userId: string, notificationId: string) {
-    // console.log({ userId, notificationId });
     if (ObjectId.isValid(userId)) {
       try {
-        // const db = await connectToMongo();
         const collection = db.collection("users");
         const result = await collection.findOneAndUpdate(
           {
@@ -313,6 +303,17 @@ class User {
       }
     } else {
       return "wrong id";
+    }
+  }
+
+  async updatImage(userId: string, imgObj: imgInterface) {
+    try {
+      const result = await db
+        .collection("users")
+        .updateOne({ _id: new ObjectId(userId) }, { $set: { image: imgObj } });
+      return result;
+    } catch (err) {
+      throw new Error("can't update this user");
     }
   }
 }

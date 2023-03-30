@@ -32,11 +32,9 @@ class User {
     createUser(userData) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!(yield User.checkEmail(userData.email))) {
-                // const db = await connectToMongo();
                 const collection = database_js_1.db.collection("users");
                 const password = yield User.hashPass(userData.password);
                 const res = yield collection.insertOne(Object.assign(Object.assign({}, userData), { password }));
-                // closeMongoConnection();
                 return res;
             }
             else {
@@ -118,15 +116,6 @@ class User {
                 try {
                     // const db = await connectToMongo();
                     const collection = database_js_1.db.collection("users");
-                    if (obj.image && obj.image.fileId) {
-                        const filesCollection = database_js_1.db.collection("fs.files");
-                        const file = yield filesCollection.findOne({
-                            _id: new mongodb_1.ObjectId(obj.image.fileId),
-                        });
-                        console.log({ file });
-                        // Add the file data to the user update
-                        // obj.image.data = file;
-                    }
                     const result = yield collection.findOneAndUpdate({ _id: new mongodb_1.ObjectId(userId) }, { $set: obj }, { returnDocument: "after" });
                     // closeMongoConnection();
                     return result;
@@ -257,10 +246,8 @@ class User {
     }
     markasReadNotification(userId, notificationId) {
         return __awaiter(this, void 0, void 0, function* () {
-            // console.log({ userId, notificationId });
             if (mongodb_1.ObjectId.isValid(userId)) {
                 try {
-                    // const db = await connectToMongo();
                     const collection = database_js_1.db.collection("users");
                     const result = yield collection.findOneAndUpdate({
                         _id: new mongodb_1.ObjectId(userId),
@@ -279,6 +266,19 @@ class User {
             }
             else {
                 return "wrong id";
+            }
+        });
+    }
+    updatImage(userId, imgObj) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield database_js_1.db
+                    .collection("users")
+                    .updateOne({ _id: new mongodb_1.ObjectId(userId) }, { $set: { image: imgObj } });
+                return result;
+            }
+            catch (err) {
+                throw new Error("can't update this user");
             }
         });
     }

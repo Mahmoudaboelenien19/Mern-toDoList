@@ -146,7 +146,7 @@ const Form: React.FC = () => {
         />
         <motion.div
           style={{
-            background: `linear-gradient(135deg,${bg},var(--secondary))`,
+            background: `linear-gradient(135deg,${bg},var(--link-hover))`,
           }}
           custom={{ isFocus, bg }}
           variants={inpVariant}

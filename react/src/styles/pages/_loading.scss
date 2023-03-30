@@ -6,32 +6,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  span {
-    color: var(--border);
-    font-size: 30px;
-    letter-spacing: 1px;
-    display: inline-block;
-    text-transform: capitalize;
-    animation: loading-animate 2s infinite;
-  }
-  @keyframes loading-animate {
-    0% {
-      color: var(--border);
-      transform: translateY(0);
-      margin-left: 0;
-    }
-
-    25% {
-      color: green;
-      transform: translateY(-15px);
-      margin-left: 10px;
-      text-shadow: 0 15px 5px grey;
-    }
-
-    100% {
-      color: var(--border);
-      transform: translateY(0);
-      margin-left: 0;
-    }
-  }
+  // background: #121111;
 }

@@ -22,7 +22,7 @@ const Tasks = () => {
 
   useEffect(() => {
     disptch(getAllTodos());
-    document.title = `Listify`;
+    document.title = `Home`;
   }, []);
 
   useEffect(() => {

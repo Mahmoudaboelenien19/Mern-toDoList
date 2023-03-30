@@ -8,6 +8,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 connectToMongo();
+
 const app = express();
 
 app.use(cookieParser());
@@ -17,6 +18,7 @@ app.use(
     origin: "http://localhost:5173",
   })
 );
+
 app.use(express.json());
 
 app.use("/", userRoutes);

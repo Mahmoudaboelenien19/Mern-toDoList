@@ -12,14 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const storage_1 = require("./../middleware/storage");
 const auth_1 = require("./../middleware/auth");
 const users_js_1 = __importDefault(require("./../models/users.js"));
 const express_1 = require("express");
-const mongodb_1 = require("mongodb");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_js_1 = require("../config.js");
-const upload_js_1 = __importDefault(require("../middleware/upload.js"));
-const database_js_1 = require("../database.js");
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const newUser = {
@@ -28,8 +26,9 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             password: req.body.password,
             country: req.body.country,
             phone: req.body.phone,
-            image: req.body.image || {
-                fileId: new mongodb_1.ObjectId("6416feef33f9fb8e8c6585cc"),
+            image: {
+                imageName: "",
+                imagePath: "",
             },
             gender: req.body.gender,
             notification: [],
@@ -143,9 +142,7 @@ const markAllNotificationsAsRead = (req, res, next) => __awaiter(void 0, void 0,
 });
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("updated");
-        console.log(req.body);
-        const { username, password, image, phone } = req.body;
+        const { username, password, phone } = req.body;
         let update = {};
         if (username) {
             update.username = username;
@@ -156,28 +153,6 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         }
         if (phone) {
             update.phone = phone;
-        }
-        console.log(req.body.image);
-        if (req.file) {
-            console.log("file");
-            const { file } = req;
-            console.log(file);
-            const metadata = { filename: file.originalname };
-            const bucket = yield (0, database_js_1.getGridFSBucket)();
-            const writestream = bucket.openUploadStreamWithId(file.filename, file.originalname, { metadata });
-            writestream.write(file.buffer);
-            writestream.end();
-            yield new Promise((resolve, reject) => {
-                writestream.once("finish", (data) => __awaiter(void 0, void 0, void 0, function* () {
-                    console.log("finsih");
-                    update.image = {
-                        fileId: data._id,
-                        filename: data.filename,
-                    };
-                    resolve();
-                }));
-            });
-            // res.json({ success: true });
         }
         const result = yield users_js_1.default.update(update, req.params.userid);
         if (result !== "wrong id") {
@@ -208,21 +183,23 @@ const logOut = (req, res) => {
         res.status(404).json({ status: 404, message: "wrong refresh-token token" });
     }
 };
+const updateImageRouteFn = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    const userId = req.params.userid;
+    const imageObj = {
+        imageName: (_a = req.file) === null || _a === void 0 ? void 0 : _a.originalname,
+        imagePath: (_b = req.file) === null || _b === void 0 ? void 0 : _b.path,
+    };
+    const result = yield users_js_1.default.updatImage(userId, imageObj);
+    res.json({ result });
+});
 const userRoutes = (0, express_1.Router)();
-userRoutes.route("/file/:id").get((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const bucket = yield (0, database_js_1.getGridFSBucket)();
-    const imgId = req.params.id;
-    console.log({ imgId });
-    const file = yield bucket.find({ _id: new mongodb_1.ObjectId(imgId) }).toArray();
-    if (!file) {
-        return res.status(404).json({ message: "File not found" });
-    }
-    const readstream = bucket.openDownloadStream(new mongodb_1.ObjectId(imgId));
-    readstream.pipe(res);
-}));
 userRoutes.route("/user").post(createUser);
 userRoutes.route("/user/authenticate").post(authenticate);
 userRoutes.route("/user/:userid/todos").get(auth_1.auth, getTodos);
+userRoutes
+    .route("/user/updateimage/:userid")
+    .patch(auth_1.auth, storage_1.upload.single("image"), updateImageRouteFn);
 userRoutes.route("/user/:userid").get(getUser);
 userRoutes.route("/user/logout").post(logOut);
 userRoutes.route("/user/auth/refresh").post(getNewRefToken);
@@ -232,9 +209,7 @@ userRoutes.route("/user/notifications/:userid").patch(resetNotificationcounter);
 userRoutes
     .route("/user/markallnotifications/:userid")
     .patch(markAllNotificationsAsRead);
-userRoutes
-    .route("/user/update/:userid")
-    .patch(upload_js_1.default.single("image"), auth_1.auth, updateUser);
+userRoutes.route("/user/update/:userid").patch(auth_1.auth, updateUser);
 userRoutes
     .route("/user/:userid/:notificationid")
     .delete(deleteNotification)

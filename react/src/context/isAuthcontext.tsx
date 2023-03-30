@@ -13,9 +13,14 @@ export const isAuthContext = createContext({} as isAuthContext);
 interface Props {
   children: React.ReactNode;
 }
+
+interface imageInterface {
+  imageName: string;
+  imagePath: string;
+}
+
 interface isAuthContext {
   isAuth: boolean;
-  srcImg: any;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDataUpdated: React.Dispatch<React.SetStateAction<boolean>>;
   isDataUpdated: boolean;
@@ -26,7 +31,7 @@ interface isAuthContext {
     gender: string;
     email: string;
     username: string;
-    image: { metadata: Record<string, any> };
+    image: imageInterface;
     count: number;
   };
 }
@@ -42,7 +47,7 @@ const IsAuthProvider = ({ children }: Props) => {
     gender: "",
     email: "",
     username: "",
-    image: {} as { metadata: Record<string, any> },
+    image: {} as imageInterface,
     notification: [],
     count: 0,
   });
@@ -65,22 +70,6 @@ const IsAuthProvider = ({ children }: Props) => {
       });
     }
   };
-  console.log({ isAuth });
-
-  const [srcImg, setImg] = useState<File | undefined>();
-  useEffect(() => {
-    if ((userDetails.image as any)?.fileId) {
-      const imgId = (userDetails.image as any).fileId;
-      console.log({ imgId });
-      fetch(`http://localhost:3000/file/${imgId}`)
-        .then((response) => response.blob())
-        .then((data) => {
-          if (data) {
-            setImg(URL.createObjectURL(data as any) as any);
-          }
-        });
-    }
-  }, [userDetails.image]);
 
   useEffect(() => {
     const user = Cookies.get("user-id");
@@ -103,7 +92,6 @@ const IsAuthProvider = ({ children }: Props) => {
         setIsAuth,
         isAuth,
         userDetails,
-        srcImg,
         setIsDataUpdated,
         isDataUpdated,
       }}

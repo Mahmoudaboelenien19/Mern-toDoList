@@ -6,6 +6,7 @@
 }
 body {
   overflow-x: hidden;
+  background: #0f0f0f;
 }
 
 *::-webkit-scrollbar-track {
@@ -29,6 +30,7 @@ body {
   border-radius: 4px;
   color: white;
   text-transform: capitalize;
+  font-size: 1rem;
 }
 
 .cancel {
@@ -41,4 +43,22 @@ body {
 
 .remind {
   background: var(--unchecked);
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 800px) and (max-width: 1000px) {
+  :root {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 1000px) {
+  :root {
+    font-size: 14px;
+  }
 }

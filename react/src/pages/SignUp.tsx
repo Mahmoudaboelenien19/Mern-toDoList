@@ -76,8 +76,8 @@ const SignUp = () => {
       .catch((err) => err.response.data);
   };
 
-  useLayoutEffect(() => {
-    document.title = "Listify | Sign Up";
+  useEffect(() => {
+    document.title = "Sign Up";
   }, []);
 
   return (

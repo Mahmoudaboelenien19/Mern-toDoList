@@ -90,11 +90,11 @@ export const hidePasswordVariant = {
 export const placeholderVariant = {
   start: (bool: boolean) => ({
     scale: bool ? 1 : 0.8,
-    color: bool ? "rgb(0,0,0)" : "var(--border)",
+    color: bool ? "var(--placeholder)" : "var(--border)",
   }),
   end: (bool: boolean) => ({
     scale: bool ? 0.8 : 1,
-    color: bool ? "var(--border)" : "rgb(0,0,0)",
+    color: bool ? "var(--border)" : "var(--placeholder)",
     transition: { delay: 0.2, duration: 0.4 },
     originX: 0,
   }),
@@ -105,11 +105,11 @@ export const formPlaceholderVariant = {
   ...placeholderVariant,
   start: (bool: boolean) => ({
     scale: 0.8,
-    color: bool ? "rgb(0,0,0)" : "var(--border)",
+    color: bool ? "#fff" : "var(--border)",
   }),
   end: (bool: boolean) => ({
     scale: bool ? 0.8 : 1,
-    color: bool ? "var(--border)" : "rgb(0,0,0)",
+    color: bool ? "var(--border)" : "#fff",
     originX: 0,
     transition: { duration: 0.4, delay: 1, when: "beforeChildren" },
   }),

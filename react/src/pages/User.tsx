@@ -4,7 +4,7 @@ import { opacityVariant } from "../Variants/options";
 import { btnHover, linkHover } from "../Variants/globalVariants";
 import { isAuthContext } from "../context/isAuthcontext";
 import axios from "axios";
-import { updateUserRoute } from "../../routes";
+import { updateUserImageRoute, updateUserRoute } from "../../routes";
 import Cookies from "js-cookie";
 import AvatarEditor from "react-avatar-editor";
 import { avatarVariant, overleyVariant } from "../Variants/user";
@@ -19,7 +19,6 @@ const User: React.FC = () => {
   const authData = useContext(isAuthContext);
   const {
     userDetails: { username, country, email, gender, phone },
-    srcImg,
   } = authData;
 
   const [profile, setProfile] = useState<File | undefined>();
@@ -70,12 +69,14 @@ const User: React.FC = () => {
     const canvas = editorRef.current.getImageScaledToCanvas();
     const dataURL = canvas.toDataURL("image/jpeg");
     const blob = await fetch(dataURL).then((res) => res.blob());
-
-    // Create a new File object from Blob
-    const file = new File([blob], "cropped-image.jpg", { type: "image/jpeg" });
+    const file = new File(
+      [blob],
+      `${Date.now()}-${Math.random().toString(16)}-${newImg!.name}`,
+      { type: "image/jpeg" }
+    );
     const formData = new FormData();
     formData.append("image", file as any);
-    return await axios.patch(updateUserRoute(userId as string), formData, {
+    return await axios.patch(updateUserImageRoute(userId as string), formData, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
   };
@@ -111,14 +112,11 @@ const User: React.FC = () => {
     setFileKey((prev) => prev + 1);
   };
 
-  useEffect(() => {
-    setProfile(srcImg);
-  }, [srcImg]);
   return (
     <div id="user-data">
       <div className="img-container">
         <img
-          className={!srcImg ? "skeleton" : ""}
+          // className={!srcImg ? "skeleton" : ""}
           id="profile"
           src={profile as any}
         />

@@ -123,14 +123,6 @@ input[type="file"] {
   padding: 4px;
   white-space: nowrap;
 }
-@media screen and (max-width: 800px) {
-  .img-container {
-    img#profile {
-      width: 150px;
-      height: 150px;
-    }
-  }
-}
 
 .skeleton {
   background: #e5e5e577;
@@ -157,4 +149,22 @@ input[type="file"] {
   letter-spacing: 1px;
   position: relative;
   top: -5px;
+}
+
+@media (max-width: 800px) {
+  #user-data {
+    width: 100%;
+
+    .img-container {
+      img#profile {
+        width: 120px;
+        height: 120px;
+      }
+    }
+    .userDetails .detail-parent {
+      .value {
+        width: 35vw;
+      }
+    }
+  }
 }

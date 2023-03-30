@@ -21,6 +21,9 @@ export const getUserRoute = (userId: string) =>
 export const updateUserRoute = (userId: string) =>
   `http://localhost:3000/user/update/${userId}`;
 
+export const updateUserImageRoute = (userId: string) =>
+  `http://localhost:3000/user/updateimage/${userId}`;
+
 export const addNotificationRoute = (userId: string) =>
   `http://localhost:3000/user/${userId}/addnotification`;
 
