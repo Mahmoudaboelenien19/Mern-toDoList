@@ -5,10 +5,11 @@
 .tasks-cont {
   margin: 50px auto;
   width: 60%;
-  height: fit-content;
-  max-height: 300px;
+  // height: fit-content;
+  // max-height: 300px;
   background: var(--task-cont);
   border-radius: 5px;
+  padding-bottom: 10px;
 
   #options {
     @extend %centered;
@@ -45,12 +46,9 @@
         transition: 0.3s;
         opacity: 0.4;
         padding: 0 5px;
-        transition: 0.3;
+        transition: 0.3s;
         &.active {
-          // opacity: 1 !important;
-        }
-        &:hover {
-          opacity: 0.7 !important;
+          opacity: 1 !important;
         }
 
         &:before {
@@ -96,7 +94,9 @@
     flex-direction: column;
     gap: 5px;
     padding: 10px;
-    overflow: hidden;
+    overflow: auto;
+    height: fit-content;
+    max-height: 250px;
     .task {
       position: relative;
       padding: 0 5px;
@@ -105,7 +105,6 @@
       margin: auto;
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-
       grid-template-areas:
         "content content content btns"
         "time time time btns";

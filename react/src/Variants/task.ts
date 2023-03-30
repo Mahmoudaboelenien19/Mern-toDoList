@@ -1,10 +1,10 @@
 export const tasksParentVariant = {
   start: {
     opacity: 0,
-    overflow: "hidden",
+    // overflow: "hidden",
   },
   end: {
-    overflow: "auto",
+    // overflow: "auto",
     opacity: 1,
     transition: {
       duration: 1,
@@ -14,7 +14,7 @@ export const tasksParentVariant = {
     },
   },
   exit: {
-    overflow: "hidden",
+    // overflow: "hidden",
     opacity: 0,
     transition: {
       delay: 0.1,

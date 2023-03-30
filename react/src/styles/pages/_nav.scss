@@ -113,7 +113,7 @@ ul {
   left: 0px;
   height: fit-content;
   width: 200px;
-  z-index: 100;
+  z-index: 1000;
   transform: translateX(calc(-50% + 15px));
   color: #000;
   background: var(--main);

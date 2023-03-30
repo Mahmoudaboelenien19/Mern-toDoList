@@ -1,14 +1,8 @@
-interface optionsVariantInterface {
-  index: number;
-  option: string;
-  newOption: string;
-  isOptionClicked: boolean;
-}
-
 export const optionVariant = {
   start: {
     opacity: 0,
   },
+
   end: {
     opacity: 0.4,
   },

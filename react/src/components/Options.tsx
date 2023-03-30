@@ -66,8 +66,7 @@ const Options = ({ option, setOption }: OptionsProps) => {
           return (
             <motion.span
               className={option === newOption ? "active" : ""}
-              key={index}
-              transition={{ duration: 0.2 }}
+              key={newOption}
               variants={optionVariant}
               onClick={() => {
                 handleCLick();

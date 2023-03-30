@@ -19,6 +19,7 @@ const Tasks = () => {
   const [option, setOption] = useState("all");
 
   const optionsArr = ["completed", "pending", "updated"];
+
   useEffect(() => {
     disptch(getAllTodos());
     document.title = `Listify`;
@@ -65,8 +66,7 @@ const Tasks = () => {
                       key={index}
                       initial={{
                         opacity: 0,
-                        height:
-                          `calc(${taskContHeightRef.current}px - 50px )` || 100,
+                        height: `calc(${taskContHeightRef.current}px - 50px - 10px)`,
                       }}
                       animate={{
                         opacity: 1,
