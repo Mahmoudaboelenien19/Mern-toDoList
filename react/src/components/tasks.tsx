@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Options from "./Options";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
@@ -37,11 +37,13 @@ const Tasks = () => {
     }
   }, [isChanged, option]);
 
-  const taskCont = useRef<HTMLDivElement>(null!);
-  const taskContHeightRef = useRef<number>(0);
+  const taskCont = useRef<HTMLDivElement | null>(null);
+  const taskContHeightRef = useRef<number | null>();
 
   useEffect(() => {
-    taskContHeightRef.current = taskCont.current?.offsetHeight;
+    if (taskContHeightRef.current) {
+      taskContHeightRef.current = taskCont.current?.offsetHeight;
+    }
   }, [option]);
   return (
     <AnimatePresence mode="wait">

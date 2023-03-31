@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { getUserRoute } from "../../routes";
@@ -54,20 +54,22 @@ const IsAuthProvider = ({ children }: Props) => {
 
   const getUserData = async (userId: string) => {
     if (userId) {
-      return await axios.get(getUserRoute(userId!)).then(({ data }) => {
-        dispatch(addtoNotificationArr(data.user.notification?.reverse()));
-        dispatch(notificationCounter(data.user.count));
-        setUserDetails({
-          ...userDetails,
-          phone: data.user.phone,
-          country: data.user.country,
-          gender: data.user.gender,
-          email: data.user.email,
-          username: data.user.username,
-          image: data.user.image,
-          count: data.user.count,
+      return await axios
+        .get(getUserRoute(userId as string))
+        .then(({ data }) => {
+          dispatch(addtoNotificationArr(data.user.notification?.reverse()));
+          dispatch(notificationCounter(data.user.count));
+          setUserDetails({
+            ...userDetails,
+            phone: data.user.phone,
+            country: data.user.country,
+            gender: data.user.gender,
+            email: data.user.email,
+            username: data.user.username,
+            image: data.user.image,
+            count: data.user.count,
+          });
         });
-      });
     }
   };
 

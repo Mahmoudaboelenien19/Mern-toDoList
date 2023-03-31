@@ -53,7 +53,7 @@ const Task: React.FC<Prop> = ({
   /*   this is to make the width of checked line not get the new width  when it exits
 when i update 
 */
-  const contentRef = useRef<HTMLElement>(null!);
+  const contentRef = useRef<HTMLElement | null>(null);
   const [lineWidth, setLineWidth] = useState(contentRef?.current?.offsetWidth);
   const focus = useContext(inpContext);
   const {
@@ -275,7 +275,7 @@ when i update
                 onClick={() => {
                   setIsInpFocus(true);
                   setUpdatedValue(content);
-                  setUpdatedTaskId(_id!);
+                  setUpdatedTaskId(_id as string);
                   setMode("update");
                   setShowUpdateLoading(true);
                 }}
@@ -286,7 +286,11 @@ when i update
               whileHover={taskbtnHover}
               onClick={async () => {
                 dispatch(
-                  checkTodo({ id: _id!, isChecked: !isCompleted, content })
+                  checkTodo({
+                    id: _id as string,
+                    isChecked: !isCompleted,
+                    content,
+                  })
                 );
 
                 const addedNotificationObj = {
@@ -318,7 +322,7 @@ when i update
                       value: { content },
                     },
                   },
-                } = await dispatch(deleteTodo(_id!));
+                } = await dispatch(deleteTodo(_id as string));
 
                 const addedNotificationObj = {
                   isRead: false,

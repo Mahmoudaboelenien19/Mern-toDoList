@@ -1,5 +1,5 @@
-import { AnimatePresence, motion, useAnimation } from "framer-motion";
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 
 interface Props {
   question?: string;

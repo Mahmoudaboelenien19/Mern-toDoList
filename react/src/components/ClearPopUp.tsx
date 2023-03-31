@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { clearAllTodos } from "../redux/Taskslice";
 import { useAppDispatch } from "../customHooks/reduxTypes";
-import { useContext } from "react";
+import React, { useContext } from "react";
 import { ClearContext } from "../App";
 import { overleyVariant } from "../Variants/user";
 import { popVariant } from "../Variants/globalVariants";

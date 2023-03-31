@@ -25,7 +25,9 @@ const Form: React.FC = () => {
   const { addNotificationtoDB } = useNotification();
 
   const watchedVal = watch("todo");
+
   const OnSubmit = async (data: FieldValues) => {
+    console.log(data);
     setShowToast(true);
     if (watchedVal?.trim().length === 0) {
       toast.error("insert a todo to add");

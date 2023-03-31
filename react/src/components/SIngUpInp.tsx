@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsFillEyeFill } from "react-icons/bs";
 import { FaTimes } from "react-icons/fa";
 import useInp from "../customHooks/useInp";

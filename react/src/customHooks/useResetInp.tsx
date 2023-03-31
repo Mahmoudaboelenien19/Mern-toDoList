@@ -14,8 +14,11 @@ const useReset = () => {
 
   const handleIsResetCLicked = () => setIsResetSpanCLicked(true);
 
-  const handleReset = (ref: MutableRefObject<HTMLInputElement>) =>
-    (ref.current.value = "");
+  const handleReset = (ref: MutableRefObject<HTMLInputElement | null>) => {
+    if (ref?.current) {
+      ref.current.value = "";
+    }
+  };
 
   return [
     showResetSpan,

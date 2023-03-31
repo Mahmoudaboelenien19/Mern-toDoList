@@ -1,3 +1,4 @@
+import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { deleteNotificationRoute } from "../../routes";
@@ -20,13 +21,13 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
 
   const removeNotificationFromDB = async () => {
     const userId = Cookies.get("user-id");
-    const url = deleteNotificationRoute(userId as string, _id!);
+    const url = deleteNotificationRoute(userId as string, _id as string);
     return await axios.delete(url);
   };
 
   const readNotificationFromDB = async () => {
     const userId = Cookies.get("user-id");
-    const url = deleteNotificationRoute(userId as string, _id!);
+    const url = deleteNotificationRoute(userId as string, _id as string);
     return await axios.patch(url);
   };
 
@@ -77,7 +78,7 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
             whileHover={linkHover}
             className="btn read"
             onClick={() => {
-              dispatch(isReadNotification(_id!));
+              dispatch(isReadNotification(_id as string));
               readNotificationFromDB();
             }}
           >

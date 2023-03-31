@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const Loading = () => {
   useEffect(() => {

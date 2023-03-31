@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { linkHover } from "../Variants/globalVariants";
 import Cookies from "js-cookie";
@@ -7,7 +7,6 @@ import { updateUserRoute } from "../../routes";
 import { isAuthContext } from "../context/isAuthcontext";
 import { opacityVariant } from "../Variants/options";
 import { generateNewToken } from "../redux/Taskslice";
-import { useForm } from "react-hook-form";
 
 interface Props {
   span: string;
@@ -25,7 +24,7 @@ const UpdateUser = ({ span, value }: Props) => {
   const { setIsDataUpdated, isDataUpdated } = useContext(isAuthContext);
   const [updateCLicked, setUpdateCLicked] = useState(false);
 
-  const inpRef = useRef<HTMLInputElement>(null!);
+  const inpRef = useRef<HTMLInputElement | null>(null);
 
   const updatedata = async (obj: updateFnInterface) => {
     const userId = Cookies.get("user-id");
@@ -94,7 +93,7 @@ const UpdateUser = ({ span, value }: Props) => {
           onClick={() => {
             setUpdateCLicked(true);
             if (updateCLicked) {
-              const updatedData = { [span]: inpRef.current.value };
+              const updatedData = { [span]: inpRef.current?.value };
               updatedata(updatedData);
               setUpdateCLicked(false);
               setIsDataUpdated(true);

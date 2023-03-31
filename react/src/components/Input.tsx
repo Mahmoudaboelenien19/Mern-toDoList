@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BsFillEyeFill } from "react-icons/bs";
 import { FaTimes } from "react-icons/fa";
 import useInp from "../customHooks/useInp";
@@ -26,7 +26,7 @@ const alreadyRegisteredEmail =
   new URLSearchParams(location.search).get("email") || "";
 
 const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
-  const inpRef = useRef<HTMLInputElement>(null!);
+  const inpRef = useRef<HTMLInputElement>(null);
   const [isInpAnimateCompleted, setIsInpAnimateCompleted] = useState(false);
   const [isXSpanAnimateCompleted, setXSpannpAnimateCompleted] = useState(false);
   const [showPass, handleShowPass] = usePassword();
@@ -50,13 +50,14 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
       setTimeout(() => {
         handleOnFocus();
         setTimeout(() => {
-          inpRef.current.value = alreadyRegisteredEmail;
+          if (inpRef?.current) {
+            inpRef.current.value = alreadyRegisteredEmail;
+          }
           setShowResetPass(true);
         }, 1000);
       }, 2000);
     }
   }, []);
-  console.log({ alreadyRegisteredEmail });
   const [inpVal, setInpVal] = useState(alreadyRegisteredEmail);
 
   useEffect(() => {
@@ -111,6 +112,7 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
               onAnimationComplete={() => setXSpannpAnimateCompleted(false)}
               onClick={() => {
                 handlePassReset(inpRef);
+
                 handleUnfocus();
                 setShowResetPass(false);
                 handleIsResetCLicked();

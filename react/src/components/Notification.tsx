@@ -7,7 +7,7 @@ import { linkHover } from "../Variants/globalVariants";
 import Cookies from "js-cookie";
 import { markALlNotificationsRoute } from "../../routes";
 import { markALlRead, notificationInterface } from "../redux/NotificationSlice";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const Notification = () => {
   const { notificationArr } = useAppSelector((state) => state.notification);
@@ -30,12 +30,14 @@ const Notification = () => {
   //   }
   // }, [notificationArr, showALl]);
 
-  const [dataShown, setdataShown] = useState([]);
+  const [dataShown, setdataShown] = useState<notificationInterface[]>(
+    [] as notificationInterface[]
+  );
   useEffect(() => {
     if (showALl) {
-      setdataShown(notificationArr as any);
+      setdataShown(notificationArr as notificationInterface[]);
     } else {
-      setdataShown(notificationArr.filter((e) => !e.isRead) as any);
+      setdataShown(notificationArr.filter((e) => !e.isRead));
     }
   }, [notificationArr, showALl]);
   console.log(dataShown);
@@ -94,7 +96,7 @@ const Notification = () => {
         {dataShown.length > 0 ? (
           <motion.div className=" notification-parent">
             <AnimatePresence>
-              {dataShown.map((e: notificationInterface, index) => {
+              {dataShown.map((e: notificationInterface) => {
                 return <NotificationChild key={e._id} {...e} />;
               })}
             </AnimatePresence>

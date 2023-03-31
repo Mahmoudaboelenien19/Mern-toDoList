@@ -22,7 +22,7 @@ const Reminder = ({ setShowReminder, reminderIndex }: Props) => {
   const { tasks } = useAppSelector((state) => state.tasks);
   const dispatch = useAppDispatch();
 
-  const DateRef = useRef<HTMLInputElement>(null!);
+  const DateRef = useRef<HTMLInputElement | null>(null);
   return (
     <motion.div
       variants={overleyVariant}
@@ -43,12 +43,14 @@ const Reminder = ({ setShowReminder, reminderIndex }: Props) => {
           <motion.button
             onClick={async () => {
               handleCloseReminder();
-              dispatch(
-                addReminder({
-                  ...tasks[reminderIndex],
-                  remind: DateRef.current.value,
-                })
-              );
+              if (DateRef?.current) {
+                dispatch(
+                  addReminder({
+                    ...tasks[reminderIndex],
+                    remind: DateRef.current?.value,
+                  })
+                );
+              }
 
               const addedNotificationObj = {
                 isRead: false,

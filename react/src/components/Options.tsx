@@ -62,7 +62,7 @@ const Options = ({ option, setOption }: OptionsProps) => {
       {/* hr */}
 
       <div id="task-state">
-        {optionsArr?.map(({ newOption, handleCLick, handleLength }, index) => {
+        {optionsArr?.map(({ newOption, handleCLick, handleLength }) => {
           return (
             <motion.span
               className={option === newOption ? "active" : ""}

@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { opacityVariant } from "../Variants/options";
-import { btnHover, linkHover } from "../Variants/globalVariants";
+import { btnHover } from "../Variants/globalVariants";
 import { isAuthContext } from "../context/isAuthcontext";
 import axios from "axios";
-import { updateUserImageRoute, updateUserRoute } from "../../routes";
+import { updateUserImageRoute } from "../../routes";
 import Cookies from "js-cookie";
 import AvatarEditor from "react-avatar-editor";
 import { avatarVariant, overleyVariant } from "../Variants/user";
@@ -21,7 +21,7 @@ const User: React.FC = () => {
     userDetails: { username, country, email, gender, phone },
   } = authData;
 
-  const [profile, setProfile] = useState<File | undefined>();
+  const [profile, setProfile] = useState<string>("");
   const [newImg, setnewImg] = useState<File | undefined>();
 
   //this for if user cancelled and then chose same image the on change fn works
@@ -83,7 +83,7 @@ const User: React.FC = () => {
 
   const [edit, setEdit] = useState(false);
   const [position, setPosition] = useState({ x: 0.5, y: 0.5 });
-  const editorRef = useRef<AvatarEditor>(null!);
+  const editorRef = useRef<AvatarEditor | null>(null);
 
   interface positionInterface {
     x: number;
@@ -99,7 +99,7 @@ const User: React.FC = () => {
       const croppedImage = canvas.toDataURL();
       setEdit(false);
       handleUpdateImage();
-      setProfile(croppedImage as any);
+      setProfile(croppedImage as string);
     }
   }
 
@@ -118,7 +118,7 @@ const User: React.FC = () => {
         <img
           // className={!srcImg ? "skeleton" : ""}
           id="profile"
-          src={profile as any}
+          src={profile as string}
         />
         <form id="form-file" action="/upload">
           <motion.label whileHover={btnHover} htmlFor="file" id="file-label">
