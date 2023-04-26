@@ -2,6 +2,9 @@
 @import "./../globals/variables";
 
 nav {
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: space-between;
   padding: 0 40px;
@@ -9,6 +12,7 @@ nav {
   height: 50px;
   // background: var(--secondary);
   background: rgb(23, 23, 23);
+  z-index: 100;
 
   a {
     text-decoration: none;
@@ -40,13 +44,6 @@ nav {
   #user {
     color: var(--main);
   }
-}
-
-.nav-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 0.2 solid white;
 }
 
 ul {

@@ -22,14 +22,6 @@ const Notification = () => {
 
   const [showALl, setShowAll] = useState(true);
 
-  // const dataShown = useMemo(() => {
-  //   if (showALl) {
-  //     return notificationArr;
-  //   } else {
-  //     return notificationArr.filter((e) => !e.isRead);
-  //   }
-  // }, [notificationArr, showALl]);
-
   const [dataShown, setdataShown] = useState<notificationInterface[]>(
     [] as notificationInterface[]
   );

@@ -42,7 +42,7 @@ const Login = () => {
   };
 
   return (
-    <motion.div variants={routeExitVariant} exit="exit">
+    <motion.div variants={routeExitVariant} exit="exit" className="form-cont">
       <motion.form
         variants={formVariants}
         initial="start"

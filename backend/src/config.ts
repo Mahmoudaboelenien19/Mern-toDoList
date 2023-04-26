@@ -8,6 +8,9 @@ const {
   BCRYPT_PASS,
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET,
+  Cloud_name,
+  Api_key,
+  Api_secret,
 } = process.env;
 
 export {
@@ -17,4 +20,7 @@ export {
   BCRYPT_PASS,
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET,
+  Cloud_name,
+  Api_key,
+  Api_secret,
 };

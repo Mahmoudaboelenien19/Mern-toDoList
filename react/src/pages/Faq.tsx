@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OneFaq from "./OneFaq";
 
 const faqArr = [
@@ -41,6 +41,10 @@ const faqArr = [
 
 const Faq = () => {
   const [faqIndex, setFaqIndex] = useState(-1);
+
+  useEffect(() => {
+    document.title = "FAQ";
+  }, []);
   return (
     <div className="faq-container">
       {faqArr.map(

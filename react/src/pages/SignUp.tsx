@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm, FormProvider } from "react-hook-form";
 import { FieldValues } from "react-hook-form/dist/types";
@@ -36,7 +36,7 @@ const SignUp = () => {
       .then(({ data }) => setCountries(data))
       .catch((err) => err.message);
   }, []);
-
+  console.log(countries);
   const schema = yup.object().shape({
     username: yup.string().min(6).max(12).required(),
     email: yup.string().email().required("insert a vaild email"),
@@ -126,36 +126,36 @@ const SignUp = () => {
             transition={{ delay: 0.5, duration: 0.2 }}
           >
             <label htmlFor="gender">Gender</label>
-            <div className="radios">
-              <div className="label">
-                <input
-                  type="radio"
-                  {...register("gender")}
-                  id="male"
-                  value={"male"}
-                  checked
-                />
-                <label htmlFor="male">Male</label>
-              </div>
-              <div className="label">
-                <input
-                  type="radio"
-                  {...register("gender")}
-                  id="female"
-                  value={"female"}
-                />
-                <label htmlFor="female">Female</label>
-              </div>
+            {/* <div className="radios"> */}
+            <div className="label">
+              <input
+                type="radio"
+                {...register("gender")}
+                id="male"
+                value={"male"}
+                checked
+              />
+              <label htmlFor="male">Male</label>
             </div>
+            <div className="label">
+              <input
+                type="radio"
+                {...register("gender")}
+                id="female"
+                value={"female"}
+              />
+              <label htmlFor="female">Female</label>
+            </div>
+            {/* </div> */}
           </motion.div>
 
           <motion.div
             variants={opacityVariant}
             transition={{ delay: 0.5, duration: 0.2 }}
-            className="inp"
+            id="inp"
           >
             <motion.select id="select" {...register("country")}>
-              {countries.map((e, i) => {
+              {countries.map((e) => {
                 return (
                   <>
                     <option key={Math.random()} value={e.name.common}>
@@ -178,7 +178,7 @@ const SignUp = () => {
             variants={btnFormAnimation}
             whileHover={btnHover}
             id="log-btn"
-            className="btn"
+            className="btn sign-up"
             onClick={async () => {
               const data = getValues();
               if (isValid) {

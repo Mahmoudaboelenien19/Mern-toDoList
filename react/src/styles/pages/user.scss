@@ -4,30 +4,23 @@
 
 #user-data {
   display: grid;
-  // height: calc(100vh - 50px);
   grid-template-columns: repeat(3, 1fr);
   width: 90%;
   margin: 0 auto;
-  grid-template: "img details details" calc(100vh - 50px);
+  grid-template: "img details details" calc(100vh);
+
   .img-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 5px;
-    padding: 50px 0;
+    padding: 70px 0;
     grid-area: img;
     // background: #868b8e;
     background: var(--link-hover);
-
-    img {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      border: 1px solid grey;
-    }
   }
   .userDetails {
-    padding: 50px 20px;
+    padding: 70px 20px;
     grid-area: details;
     // background: #eeede7;
     background: #d6cec0;
@@ -154,12 +147,13 @@ input[type="file"] {
 @media (max-width: 800px) {
   #user-data {
     width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+
+    grid-template:
+      "img " calc(55vh)
+      "details " calc(100vh);
 
     .img-container {
-      img#profile {
-        width: 120px;
-        height: 120px;
-      }
     }
     .userDetails .detail-parent {
       .value {

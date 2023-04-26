@@ -137,9 +137,10 @@ const SignUpInput = ({ isPassword, placeholder, err }: InputInterface) => {
       <AnimatePresence>
         {err && (
           <motion.small
-            exit={{ opacity: 0, transition: { duration: 0.5 } }}
-            initial={{ y: 20 }}
-            animate={{ y: 0 }}
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
             className="err"
           >
             {err}

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { linkHover } from "../Variants/globalVariants";
+import { linkHover } from "../../Variants/globalVariants";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { updateUserRoute } from "../../routes";
-import { isAuthContext } from "../context/isAuthcontext";
-import { opacityVariant } from "../Variants/options";
-import { generateNewToken } from "../redux/Taskslice";
+import { updateUserRoute } from "../../../routes";
+import { isAuthContext } from "../../context/isAuthcontext";
+import { opacityVariant } from "../../Variants/options";
+import { generateNewToken } from "../../redux/Taskslice";
 
 interface Props {
   span: string;

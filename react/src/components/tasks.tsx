@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Options from "./Options";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { getAllTodos } from "../redux/Taskslice";
-
+import useMeasure from "react-use-measure";
 import Task from "./Task";
 import {
   noDataContVariant,
@@ -13,6 +13,8 @@ import {
 import { opacityVariant } from "../Variants/options";
 
 const Tasks = () => {
+  const [contRef, { height: contHeight }] = useMeasure();
+
   const { tasks, isChanged } = useAppSelector((state) => state.tasks);
   const disptch = useAppDispatch();
   const [dataShown, setDataShown] = useState(tasks);
@@ -37,19 +39,12 @@ const Tasks = () => {
     }
   }, [isChanged, option]);
 
-  const taskCont = useRef<HTMLDivElement | null>(null);
-  const taskContHeightRef = useRef<number | null>();
-
-  useEffect(() => {
-    if (taskContHeightRef.current) {
-      taskContHeightRef.current = taskCont.current?.offsetHeight;
-    }
-  }, [option]);
   return (
     <AnimatePresence mode="wait">
       {tasks.length > 0 ? (
         <motion.div
-          ref={taskCont}
+          // ref={taskCont}
+          ref={contRef}
           key="task-container"
           className="tasks-cont"
           variants={tasksParentVariant}
@@ -68,7 +63,7 @@ const Tasks = () => {
                       key={index}
                       initial={{
                         opacity: 0,
-                        height: `calc(${taskContHeightRef.current}px - 50px - 10px)`,
+                        height: `calc(${contHeight}px - 60px)`,
                       }}
                       animate={{
                         opacity: 1,

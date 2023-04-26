@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
-import User from "../pages/User";
+import User from "../pages/user/User";
 import Home from "../pages/Home";
 import Login from "../pages/login";
 import SignUp from "../pages/SignUp";

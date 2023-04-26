@@ -35,16 +35,15 @@ interface inpVariantInterface {
 
 export const inpVariant = {
   start: ({ isFocus }: inpVariantInterface) => ({
-    height: isFocus ? 3 : 40,
+    height: isFocus ? 3 : 30,
     initial: false,
   }),
   end: ({
     isFocus,
     isResetSpanCLicked,
     isXSpanAnimateCompleted,
-    bg,
   }: inpVariantInterface) => ({
-    height: isFocus ? 40 : 3,
+    height: isFocus ? 30 : 3,
     transition: {
       duration: 0.4,
       delay: isResetSpanCLicked || isXSpanAnimateCompleted ? 2 : 0.4,
@@ -98,7 +97,6 @@ export const placeholderVariant = {
     transition: { delay: 0.2, duration: 0.4 },
     originX: 0,
   }),
-  // exit: { opacity: 0, transition: { delay: 0.4, duration: 0.2 } },
 };
 
 export const formPlaceholderVariant = {

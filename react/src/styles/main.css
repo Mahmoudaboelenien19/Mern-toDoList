@@ -5,13 +5,71 @@
   font-family: "PT Sans", sans-serif;
 }
 
-.tasks-cont #tasks #btns button, .tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, nav #login-state, nav #links, nav {
+body {
+  overflow-x: hidden;
+  background: #0f0f0f;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--secondary);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.btn {
+  border: 0;
+  outline: 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 5px;
+  text-transform: capitalize;
+  border-radius: 4px;
+  color: white;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.cancel {
+  background: var(--border);
+}
+
+.clear {
+  background: var(--delete);
+}
+
+.remind {
+  background: var(--unchecked);
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 10px;
+  }
+}
+@media (min-width: 800px) and (max-width: 1000px) {
+  :root {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    font-size: 14px;
+  }
+}
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, .notification-parent .notification-counter, #login-state {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.tasks-cont #tasks #btns button, .tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, nav #login-state, nav #links, nav {
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, .notification-parent .notification-counter, #login-state {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,76 +81,249 @@
   --border: #587bc6c6;
   --link-hover: rgb(158, 158, 158);
   --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
 }
 
 nav {
+  display: flex;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 40px;
   width: 100%;
   height: 50px;
-  background: var(--secondary);
+  background: rgb(23, 23, 23);
 }
 nav a {
   text-decoration: none;
+  color: black;
 }
 nav #logo {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 100%;
   width: 40%;
 }
 nav #logo a {
-  letter-spacing: 1px;
-  font-size: 20px;
-  font-weight: bold;
-  color: var(--border);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1px;
 }
-nav #logo a .o-span {
-  color: var(--main);
-}
-nav #links {
-  justify-content: flex-end;
-  width: 30%;
-  gap: 20px;
-}
-nav #links a {
-  letter-spacing: 1px;
+
+#login-state {
   position: relative;
-  text-transform: capitalize;
-  transition: 0.3s;
-  color: var(--main);
-  opacity: 0.4;
-}
-nav #links a:before {
-  content: "";
-  position: absolute;
-  top: 140%;
-  left: 0;
-  height: 3px;
-  width: 0;
-  background: var(--border);
-  transition: 0.4s;
-}
-nav #links a:hover:before, nav #links a.active:before {
-  width: 100%;
-}
-nav #links a.active, nav #links a:hover {
-  transform: scale(1.05);
-}
-nav #links a:hover {
-  transform: scale(1.05);
-  opacity: 0.7;
-}
-nav #links a.active {
-  opacity: 1;
-}
-nav #login-state {
-  width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
   gap: 10px;
 }
-nav #login-state #user {
+#login-state #user {
   color: var(--main);
 }
 
+.nav-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 0.2 solid white;
+}
+
+ul {
+  list-style: none;
+}
+
+.dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 45px;
+  left: 0px;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 200px;
+  z-index: 1000;
+  transform: translateX(calc(-50% + 15px));
+  color: #000;
+  background: var(--main);
+  padding: 0 10px;
+  box-shadow: 2px 2px 20px grey;
+  border-radius: 5px;
+}
+.dropdown li {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 10px;
+  gap: 20px;
+  position: relative;
+  height: 50px;
+  border-bottom: 0.2px solid black;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.dropdown li:not(:first-child):hover {
+  background: var(--created);
+  color: white;
+}
+.dropdown li:not(:first-child):hover a {
+  color: white;
+}
+.dropdown li:first-child {
+  height: 60px;
+}
+.dropdown li:last-child {
+  border-bottom: 0.2px solid transparent;
+}
+
+span.nav-icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: rgb(174, 170, 170);
+}
+
+.notification {
+  width: 250px;
+  height: 200px;
+  overflow-x: hidden;
+  padding: 0;
+  padding-top: 10px;
+  left: -40px;
+}
+.notification .header {
+  height: 20px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+}
+.notification .header button {
+  color: black;
+  font-size: 0.6rem;
+  padding: 4px;
+}
+.notification h4 {
+  margin: 0 auto;
+  color: black;
+  font-size: 1rem;
+}
+.notification h4:before {
+  top: 95%;
+  height: 3px;
+}
+.notification .nodata {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.notification .notification-parent {
+  display: flex;
+  padding: 2px 0;
+  overflow: auto;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  gap: 5px;
+  width: 100%;
+  height: 100%;
+}
+.notification .notification-parent .notificattion-child {
+  position: relative;
+  background: darkgrey;
+  height: 35px;
+  width: 95%;
+  padding: 4px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+.notification .notification-parent .notificattion-child.is-read {
+  background: #dcdada;
+}
+.notification .notification-parent .notificattion-child.is-read > * {
+  color: black;
+}
+.notification .notification-parent .notificattion-child.is-read > * .content {
+  color: darkblue;
+}
+.notification .notification-parent .notificattion-child .btn.read {
+  background: transparent;
+  font-size: 10px;
+  color: var(--border);
+  margin-left: 20px;
+  text-shadow: 0.5px 0.7px 0px black;
+}
+.notification .notification-parent .notificattion-child .content {
+  color: darkblue;
+  margin-left: 3px;
+  font-size: 12px;
+}
+.notification .notification-parent .notificattion-child .time {
+  font-size: 10px;
+}
+.notification .notification-parent .notificattion-child .del {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 4px;
+  background: transparent;
+  font-size: 12px;
+  color: var(--delete);
+  font-weight: 900;
+}
+
+.login-link {
+  color: white;
+}
+
+.notification-parent {
+  position: relative;
+  display: inline-block;
+}
+.notification-parent .notification-counter {
+  background: var(--delete);
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 1.2rem;
+  width: 1.2rem;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+@media (max-width: 800px) {
+  .notification .header button {
+    font-size: 0.8rem;
+  }
+  .notification h4 {
+    margin: 0 auto;
+    color: black;
+    font-size: 1rem;
+  }
+  .notification h4:before {
+    top: 100%;
+    height: 3px;
+    width: 40%;
+    left: 30%;
+  }
+}
 * {
   margin: 0;
   padding: 0;
@@ -100,12 +331,80 @@ nav #login-state #user {
   font-family: "PT Sans", sans-serif;
 }
 
+body {
+  overflow-x: hidden;
+  background: #0f0f0f;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--secondary);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.btn {
+  border: 0;
+  outline: 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 5px;
+  text-transform: capitalize;
+  border-radius: 4px;
+  color: white;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.cancel {
+  background: var(--border);
+}
+
+.clear {
+  background: var(--delete);
+}
+
+.remind {
+  background: var(--unchecked);
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 10px;
+  }
+}
+@media (min-width: 800px) and (max-width: 1000px) {
+  :root {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    font-size: 14px;
+  }
+}
 :root {
   --main: rgb(241, 236, 236);
   --secondary: rgb(22, 21, 21);
   --border: #587bc6c6;
   --link-hover: rgb(158, 158, 158);
   --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
 }
 
 :root {
@@ -114,6 +413,16 @@ nav #login-state #user {
   --border: #587bc6c6;
   --link-hover: rgb(158, 158, 158);
   --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
 }
 
 form {
@@ -129,23 +438,50 @@ form #inp {
 }
 form #inp .mock-inp {
   width: 100%;
-  height: 3px;
   position: absolute;
   bottom: 0;
   left: 0;
-  background: linear-gradient(135deg, var(--border), var(--secondary));
   transition: 0.3s;
+  background: linear-gradient(135deg, var(--border), var(--link-hover));
 }
-form #inp #placeholder {
-  position: absolute;
+form #inp .mock-inp .placeholder {
+  display: inline-block;
+  position: relative;
+  top: -20px;
   left: 10px;
-  transition: 0.3s;
-  color: var(--secondary);
+  font-size: 0.8rem;
+}
+form #inp .mock-inp .reset {
+  position: absolute;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 100%;
+  top: 0;
+  left: 100%;
+  font-size: 20px;
+  background: var(--delete);
+  color: white;
+  cursor: pointer;
+}
+form #inp .mock-inp .eye {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  display: inline-flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  color: var(--main);
+  font-size: 18px;
+  z-index: 5;
+  cursor: pointer;
 }
 form #inp input {
-  font-size: 20px;
+  font-size: 1rem;
   position: absolute;
-  width: 100%;
+  width: 80%;
   min-height: 100%;
   left: 0;
   bottom: 0;
@@ -156,24 +492,96 @@ form #inp input {
   padding: 0 5px;
   z-index: 2;
 }
-form #inp input:valid ~ .mock-inp, form #inp input:focus ~ .mock-inp {
-  height: 40px;
-}
 form button {
   height: 100%;
   background: var(--border);
   padding: 0 5px;
 }
 
-input:valid ~ #placeholder,
-input:focus ~ #placeholder {
+.err {
+  color: var(--delete);
   position: absolute;
-  font-size: 12px;
-  color: var(--border) !important;
-  transform: translateY(-30px);
+  top: 120%;
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  text-shadow: 0.2px 1px 0.5px rgba(0, 0, 0, 0.2);
+  font-size: 0.8rem;
+  letter-spacing: 0.05rem;
 }
 
-.tasks-cont #tasks #btns button, .tasks-cont #tasks #btns, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, nav, nav #links, nav #login-state, form {
+.heading {
+  text-transform: capitalize;
+  position: relative;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 4px;
+  letter-spacing: 1px;
+  font-size: 1.2rem;
+  color: var(--placeholder);
+}
+.heading:before {
+  content: "";
+  position: absolute;
+  top: 110%;
+  left: 20%;
+  width: 60%;
+  background: var(--border);
+  height: 4px;
+  border-radius: 40px;
+}
+
+#radio {
+  align-self: start;
+  margin: -30px 20px;
+  width: 50%;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10px;
+  color: var(--placeholder);
+}
+#radio div.label {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--placeholder);
+}
+
+input[type=radio] {
+  accent-color: rgb(195, 195, 82);
+  width: 15px;
+  height: 15px;
+}
+
+select {
+  outline: 0;
+  border: 0;
+  background: linear-gradient(135deg, var(--border), var(--secondary));
+  height: 30px;
+  color: var(--main);
+  padding: 5px;
+  width: 100%;
+  margin: 0 auto;
+  align-self: center;
+  font-size: 0.8rem;
+}
+select option {
+  background: var(--secondary);
+}
+
+.sign-up {
+  margin-top: 10px !important;
+}
+
+@media (max-width: 800px) {
+  form {
+    width: 70vw;
+  }
+  form #inp .mock-inp .placeholder {
+    top: -16px;
+  }
+}
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, #login-state, .notification-parent .notification-counter, form {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -185,6 +593,16 @@ input:focus ~ #placeholder {
   --border: #587bc6c6;
   --link-hover: rgb(158, 158, 158);
   --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
 }
 
 * {
@@ -194,22 +612,80 @@ input:focus ~ #placeholder {
   font-family: "PT Sans", sans-serif;
 }
 
+body {
+  overflow-x: hidden;
+  background: #0f0f0f;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--secondary);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.btn {
+  border: 0;
+  outline: 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 5px;
+  text-transform: capitalize;
+  border-radius: 4px;
+  color: white;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.cancel {
+  background: var(--border);
+}
+
+.clear {
+  background: var(--delete);
+}
+
+.remind {
+  background: var(--unchecked);
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 10px;
+  }
+}
+@media (min-width: 800px) and (max-width: 1000px) {
+  :root {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    font-size: 14px;
+  }
+}
 .tasks-cont {
   margin: 50px auto;
   width: 60%;
-  background: grey;
+  background: var(--task-cont);
+  border-radius: 5px;
+  padding-bottom: 10px;
 }
 .tasks-cont #options {
   position: relative;
-  justify-content: space-between;
   padding: 10px 20px;
+  height: 50px;
 }
-.tasks-cont #options::before {
-  content: "";
+.tasks-cont #options .hr {
   position: absolute;
-  top: 95%;
+  top: 100%;
   left: 10%;
-  width: 80%;
   height: 1.5px;
   background: #000;
   opacity: 0.3;
@@ -217,15 +693,12 @@ input:focus ~ #placeholder {
 .tasks-cont #options #clear {
   background-color: var(--delete);
   padding: 6px;
-  outline: 0;
-  border: 0;
-  border-radius: 2px;
   gap: 4px;
   color: white;
+  white-space: nowrap;
 }
 .tasks-cont #options #task-state {
-  width: 70%;
-  justify-content: space-between;
+  width: 100%;
   gap: 20px;
 }
 .tasks-cont #options #task-state span {
@@ -235,46 +708,81 @@ input:focus ~ #placeholder {
   transition: 0.3s;
   opacity: 0.4;
   padding: 0 5px;
+  transition: 0.3s;
+}
+.tasks-cont #options #task-state span.active {
+  opacity: 1 !important;
 }
 .tasks-cont #options #task-state span:before {
   content: "";
   transition: 1s;
   position: absolute;
   top: 120%;
-  height: 2px;
+  height: 3px;
   width: 0;
-  left: 0;
-  background: var(--border);
+  background: var(--created);
+  right: 50%;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
-.tasks-cont #options #task-state span.active, .tasks-cont #options #task-state span:hover {
-  opacity: 1;
-  transform: scale(1.04);
+.tasks-cont #options #task-state span:after {
+  content: "";
+  transition: 1s;
+  position: absolute;
+  top: 120%;
+  height: 3px;
+  width: 0;
+  left: 50%;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  background: var(--created);
 }
-.tasks-cont #options #task-state span.active:before, .tasks-cont #options #task-state span:hover:before {
-  width: 100%;
+.tasks-cont #options #task-state span.active:before, .tasks-cont #options #task-state span.active:after, .tasks-cont #options #task-state span:hover:before, .tasks-cont #options #task-state span:hover:after {
+  width: 50%;
 }
 .tasks-cont #tasks {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   gap: 5px;
   padding: 10px;
+  overflow: auto;
+  height: -moz-fit-content;
+  height: fit-content;
+  max-height: 250px;
 }
 .tasks-cont #tasks .task {
+  position: relative;
   padding: 0 5px;
   width: 90%;
   height: 40px;
-  margin: 0 auto;
+  margin: auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template: "content content content btns" 25px "time time time btns" 15px;
+  grid-template-areas: "content content content btns" "time time time btns";
   background: var(--secondary);
   color: var(--main);
-  border-left: 2px solid var(--main);
+}
+.tasks-cont #tasks .task .custom-border {
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  right: 100%;
+  height: 100%;
 }
 .tasks-cont #tasks #content {
   grid-area: content;
+}
+.tasks-cont #tasks #content .text {
+  position: relative;
+  padding: 0 4px;
+}
+.tasks-cont #tasks #content .text span.check-task {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 4px;
+  background: var(--delete);
 }
 .tasks-cont #tasks #time-cont {
   grid-area: time;
@@ -282,23 +790,737 @@ input:focus ~ #placeholder {
 }
 .tasks-cont #tasks #btns {
   grid-area: btns;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   gap: 5px;
+  height: 40px;
 }
 .tasks-cont #tasks #btns button {
-  padding: 1px;
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  box-shadow: 0.5px 0.5px 0 grey;
 }
 .tasks-cont #tasks #btns button:nth-child(1) {
-  background: rgb(22, 113, 22);
+  background: var(--unchecked);
   color: var(--main);
   font-size: 18px;
 }
 .tasks-cont #tasks #btns button:nth-child(2) {
-  background: rgb(18, 18, 140);
+  background: var(--update);
   color: var(--main);
   font-size: 18px;
 }
 .tasks-cont #tasks #btns button:nth-child(3) {
+  background: darkblue;
+  color: var(--main);
+  font-size: 18px;
+}
+.tasks-cont #tasks #btns button:nth-child(4) {
   background: var(--delete);
   color: var(--main);
   font-size: 18px;
+}
+
+.no-data {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  height: 100px;
+  background: var(--task-cont);
+  color: white;
+  font-size: 14px;
+  margin: 0 auto;
+  border-radius: 5px;
+  text-transform: lowercase;
+}
+
+@media (max-width: 600px) {
+  .tasks-cont,
+  .no-data {
+    width: 90vw;
+  }
+}
+@media (min-width: 600px) and (max-width: 800px) {
+  .tasks-cont,
+  .no-data {
+    width: 70vw;
+  }
+}
+.update-loading {
+  position: absolute;
+  right: 4px;
+}
+.update-loading span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0 1.5px;
+  background: var(--main);
+  opacity: 0.6;
+  animation: update-loading 0.4s infinite ease-in;
+}
+.update-loading span:nth-child(1) {
+  animation-delay: calc(1 * 0.15s);
+}
+@keyframes update-loading {
+  50% {
+    transform: translate(0, 8px);
+  }
+}
+.update-loading span:nth-child(2) {
+  animation-delay: calc(2 * 0.15s);
+}
+@keyframes update-loading {
+  50% {
+    transform: translate(0, 8px);
+  }
+}
+
+.bell {
+  margin-left: 10px;
+}
+.bell small {
+  margin-left: 4px;
+  font-size: 10px;
+}
+
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, #login-state, .notification-parent .notification-counter, form, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
+}
+
+#log-in-form {
+  background: rgba(121, 118, 118, 0.512);
+  flex-direction: column;
+  height: -moz-max-content;
+  height: max-content;
+  padding: 30px;
+  width: 32vw;
+  gap: 50px;
+}
+#log-in-form #log-btn {
+  margin-top: -20px;
+  color: white;
+}
+
+.link {
+  text-decoration: none;
+  color: var(--border);
+  margin-top: -20px;
+}
+
+@media (max-width: 600px) {
+  #log-in-form {
+    width: 60vw;
+  }
+}
+@media (min-width: 600px) and (max-width: 800px) {
+  #log-in-form {
+    width: 50vw;
+  }
+}
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #login-state, .notification-parent .notification-counter, form, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button, #log-in-form, #log-in-form #log-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
+}
+
+#overley {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#overley section#clr-pop {
+  position: fixed;
+  z-index: 2;
+  width: 400px;
+  height: 200px;
+  border-radius: 4px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  top: 50%;
+  left: 50%;
+}
+#overley section#clr-pop .btn-x {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-evenly;
+  width: 80%;
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
+}
+
+#loading-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "PT Sans", sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+  background: #0f0f0f;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--secondary);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.btn {
+  border: 0;
+  outline: 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 5px;
+  text-transform: capitalize;
+  border-radius: 4px;
+  color: white;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.cancel {
+  background: var(--border);
+}
+
+.clear {
+  background: var(--delete);
+}
+
+.remind {
+  background: var(--unchecked);
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 10px;
+  }
+}
+@media (min-width: 800px) and (max-width: 1000px) {
+  :root {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    font-size: 14px;
+  }
+}
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
+}
+
+#user-data {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 90%;
+  margin: 0 auto;
+  grid-template: "img details details" calc(100vh - 50px);
+}
+#user-data .img-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 50px 0;
+  grid-area: img;
+  background: var(--link-hover);
+}
+#user-data .img-container img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 1px solid grey;
+}
+#user-data .userDetails {
+  padding: 50px 20px;
+  grid-area: details;
+  background: #d6cec0;
+}
+#user-data .userDetails .parent {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 60px;
+}
+#user-data .userDetails .parent .hr {
+  display: inline-block;
+  width: 100%;
+  height: 0.5px;
+  background: grey;
+  opacity: 0.5;
+}
+#user-data .userDetails .parent .detail-parent {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  height: 100%;
+}
+#user-data .userDetails .parent button.btn {
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  color: var(--border);
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 2px;
+}
+#user-data .userDetails .parent .span {
+  display: inline-block;
+  text-align: start;
+}
+#user-data .userDetails .parent .detail {
+  width: 100px;
+  padding-left: 5px;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+#user-data .userDetails .parent .value {
+  width: 250px;
+  font-weight: 500;
+  color: grey;
+  margin-right: 8px;
+}
+
+#avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: 500px;
+  background: rgb(234, 225, 225);
+}
+#avatar .save {
+  background: var(--created);
+}
+#avatar .cancel {
+  background: var(--link-hover);
+}
+
+.zoom-cont {
+  width: 60%;
+  margin: 20px auto;
+}
+.zoom-cont input[type=range] {
+  accent-color: var(--created);
+  margin-left: 5px;
+  width: calc(100% - 40px);
+}
+
+form#form-file {
+  width: 80%;
+  margin: 10px;
+}
+
+input[type=file] {
+  display: none;
+}
+
+#file-label {
+  color: white;
+  background: var(--border);
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 4px;
+  white-space: nowrap;
+}
+
+.skeleton {
+  background: rgba(229, 229, 229, 0.4666666667);
+  animation: skeleton 2s linear infinite alternate;
+}
+
+@keyframes skeleton {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+.update-inp {
+  background: #d6cec0;
+  border: 0;
+  border-bottom: 2px solid var(--link-hover);
+  outline: 0;
+  height: 30px;
+  padding: 0 5px;
+  color: black !important;
+  letter-spacing: 1px;
+  position: relative;
+  top: -5px;
+}
+
+@media (max-width: 800px) {
+  #user-data {
+    width: 100%;
+  }
+  #user-data .img-container img#profile {
+    width: 120px;
+    height: 120px;
+  }
+  #user-data .userDetails .detail-parent .value {
+    width: 35vw;
+  }
+}
+.faq-container .faq .question, .faq-container .faq, #login-state, .notification-parent .notification-counter, form, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button, #log-in-form, #log-in-form #log-btn, .zoom-cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "PT Sans", sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+  background: #0f0f0f;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--secondary);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.btn {
+  border: 0;
+  outline: 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 5px;
+  text-transform: capitalize;
+  border-radius: 4px;
+  color: white;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.cancel {
+  background: var(--border);
+}
+
+.clear {
+  background: var(--delete);
+}
+
+.remind {
+  background: var(--unchecked);
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 10px;
+  }
+}
+@media (min-width: 800px) and (max-width: 1000px) {
+  :root {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    font-size: 14px;
+  }
+}
+.faq-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 600px;
+  width: 80vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: auto;
+}
+.faq-container .faq {
+  border-radius: 4px;
+  flex-direction: column;
+  background: rgb(67, 63, 63);
+  color: white;
+  text-shadow: 0.5px 0.5px 0.75px black;
+  letter-spacing: 0.8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.faq-container .faq .question {
+  justify-content: flex-start;
+  padding-left: 15px;
+  width: 100%;
+  height: 40px;
+}
+.faq-container .faq .answer {
+  padding-left: 15px;
+  padding: 10px;
+  text-align: justify;
+  background: grey;
+  width: 100%;
+  height: 100%;
+}
+.faq-container .faq .answer::first-letter {
+  padding-left: 40px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "PT Sans", sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+  background: #0f0f0f;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--secondary);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.btn {
+  border: 0;
+  outline: 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 5px;
+  text-transform: capitalize;
+  border-radius: 4px;
+  color: white;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.cancel {
+  background: var(--border);
+}
+
+.clear {
+  background: var(--delete);
+}
+
+.remind {
+  background: var(--unchecked);
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 10px;
+  }
+}
+@media (min-width: 800px) and (max-width: 1000px) {
+  :root {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    font-size: 14px;
+  }
+}
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
+}
+
+section#reminder {
+  width: 400px;
+  height: 200px;
+  background: white;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+section#reminder input {
+  width: 90%;
+  margin: 0 auto;
+  height: 40px;
+  background: var(--link-hover);
+  color: white;
+  border: 0;
+  outline: 0;
+  padding: 10px;
 }/*# sourceMappingURL=main.css.map */

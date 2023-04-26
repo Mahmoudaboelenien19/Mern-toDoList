@@ -1,0 +1,128 @@
+.faq-container .faq .question, .faq-container .faq {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:root {
+  --main: rgb(241, 236, 236);
+  --secondary: rgb(22, 21, 21);
+  --border: #587bc6c6;
+  --link-hover: rgb(158, 158, 158);
+  --delete: rgb(120, 12, 12);
+  --deleted: rgb(120, 12, 12);
+  --update: rgb(22, 113, 22);
+  --updated: rgb(22, 113, 22);
+  --task-cont: rgb(86, 83, 83);
+  --created: rgb(0, 191, 128);
+  --checked: rgb(173, 27, 27);
+  --unchecked: rgb(159, 159, 27);
+  --bell: rgb(203, 203, 32);
+  --overley: rgba(228, 225, 225, 0.2);
+  --placeholder: rgb(228, 225, 225);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "PT Sans", sans-serif;
+}
+
+body {
+  overflow-x: hidden;
+  background: #0f0f0f;
+}
+
+*::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px var(--secondary);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+.btn {
+  border: 0;
+  outline: 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 5px;
+  text-transform: capitalize;
+  border-radius: 4px;
+  color: white;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.cancel {
+  background: var(--border);
+}
+
+.clear {
+  background: var(--delete);
+}
+
+.remind {
+  background: var(--unchecked);
+}
+
+@media (max-width: 800px) {
+  :root {
+    font-size: 10px;
+  }
+}
+@media (min-width: 800px) and (max-width: 1000px) {
+  :root {
+    font-size: 12px;
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    font-size: 14px;
+  }
+}
+.faq-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-width: 600px;
+  width: 80vw;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: auto;
+}
+.faq-container .faq {
+  border-radius: 4px;
+  flex-direction: column;
+  background: rgb(67, 63, 63);
+  color: white;
+  text-shadow: 0.5px 0.5px 0.75px black;
+  letter-spacing: 0.8px;
+  overflow: hidden;
+  cursor: pointer;
+}
+.faq-container .faq .question {
+  justify-content: flex-start;
+  padding-left: 15px;
+  width: 100%;
+  height: 40px;
+}
+.faq-container .faq .answer {
+  padding-left: 15px;
+  padding: 10px;
+  text-align: justify;
+  background: grey;
+  width: 100%;
+  height: 100%;
+}
+.faq-container .faq .answer::first-letter {
+  padding-left: 40px;
+}/*# sourceMappingURL=faq.css.map */

@@ -24,6 +24,9 @@ interface isAuthContext {
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDataUpdated: React.Dispatch<React.SetStateAction<boolean>>;
   isDataUpdated: boolean;
+  userId: string;
+  profile: string;
+  setProfile: React.Dispatch<React.SetStateAction<string>>;
   userDetails: {
     phone: string;
     password: string;
@@ -39,6 +42,8 @@ interface isAuthContext {
 const IsAuthProvider = ({ children }: Props) => {
   const dispatch = useAppDispatch();
   const [isAuth, setIsAuth] = useState(false);
+  const [profile, setProfile] = useState("");
+  const [userId, setUserId] = useState("");
   const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [userDetails, setUserDetails] = useState({
     phone: "",
@@ -59,6 +64,7 @@ const IsAuthProvider = ({ children }: Props) => {
         .then(({ data }) => {
           dispatch(addtoNotificationArr(data.user.notification?.reverse()));
           dispatch(notificationCounter(data.user.count));
+          setProfile(data.user.image.imagePath);
           setUserDetails({
             ...userDetails,
             phone: data.user.phone,
@@ -75,9 +81,10 @@ const IsAuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const user = Cookies.get("user-id");
-    console.log({ user });
     if (user) {
+      console.log(user);
       setIsAuth(true);
+      setUserId(user);
       getUserData(user);
     } else {
       setIsAuth(false);
@@ -96,6 +103,9 @@ const IsAuthProvider = ({ children }: Props) => {
         userDetails,
         setIsDataUpdated,
         isDataUpdated,
+        userId,
+        profile,
+        setProfile,
       }}
     >
       {children}

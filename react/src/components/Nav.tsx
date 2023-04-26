@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
-import React, { useContext, useRef, useState } from "react";
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { IoNotifications } from "react-icons/io5";
 import NavRoutes from "../widget/routes";
 import { AnimatePresence, motion } from "framer-motion";
@@ -15,6 +21,8 @@ import Notification from "./Notification";
 import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
 import { notificationCounterReset } from "../redux/NotificationSlice";
 import { opacityVariant } from "../Variants/options";
+import useClickOutside from "../customHooks/useClickOutside";
+import ProfileImg from "./ProfileImg";
 
 const Nav: React.FC = () => {
   const { counter } = useAppSelector((state) => state.notification);
@@ -24,10 +32,11 @@ const Nav: React.FC = () => {
   const {
     isAuth,
     setIsAuth,
-    userDetails: { username, image },
+    userDetails: {
+      username,
+      image: { imagePath },
+    },
   } = authData;
-
-  console.log(image);
 
   const handleLogOut = async () =>
     await axios.post(
@@ -43,29 +52,31 @@ const Nav: React.FC = () => {
     });
   };
 
-  //todo when click outside not work
   const [showDropDown, setShowDropDown] = useState(false);
-  const [isImageClicked, setisImageClicked] = useState(false);
-
-  const dropDownRef = useRef<HTMLUListElement>(null);
-  const navImageRef = useRef<HTMLImageElement>(null);
-
-  // const closeDropDown = (e: any) => {
-  //   if (
-  //     dropDownRef.current &&
-  //     isImageClicked &&
-  //     !dropDownRef.current.contains(e.target)
-  //   ) {
-  //     setShowDropDown(false);
-  //     setisImageClicked(false);
-  //   }
-  // };
-  // useEffect(() => {
-  // document.addEventListener("click", closeDropDown);
-  // return () => document.removeEventListener("click", closeDropDown);
-  // }, [isImageClicked]);
-
   const [isNotificationClicked, setIsNotificationClicked] = useState(false);
+
+  const imgFn = () => {
+    if (!showDropDown) {
+      setShowDropDown(true);
+    }
+  };
+
+  const dropRef = useClickOutside<HTMLUListElement>(() => {
+    setShowDropDown(false);
+  });
+
+  const NOTIFICATIONRef = useClickOutside<HTMLDivElement>(() => {
+    setIsNotificationClicked(false);
+  });
+
+  const notificationFN = () => {
+    if (!isNotificationClicked) {
+      setIsNotificationClicked(true);
+      dispatch(notificationCounterReset());
+      resetNotification();
+    }
+  };
+  console.log({ showDropDown });
 
   return (
     <>
@@ -97,25 +108,21 @@ const Nav: React.FC = () => {
         <div id="login-state">
           {isAuth ? (
             <>
-              {true ? (
+              {!imagePath ? (
                 <div className="skeleton nav-img"> </div>
               ) : (
-                <img
-                  ref={navImageRef}
-                  className="nav-img"
-                  // src={}
-                  title={`${username}s profile`}
-                  onClick={() => {
-                    setisImageClicked(true);
-                    setShowDropDown(!showDropDown);
-                    setIsNotificationClicked(false);
-                  }}
-                />
+                <>
+                  <ProfileImg
+                    height={30}
+                    title={`${username}s profile`}
+                    fn={imgFn}
+                  />
+                </>
               )}
               <AnimatePresence mode="wait">
-                {showDropDown && isImageClicked && (
+                {showDropDown && (
                   <motion.ul
-                    ref={dropDownRef}
+                    ref={dropRef}
                     key={"dropdown"}
                     className="dropdown"
                     variants={dropDownVariant}
@@ -124,11 +131,7 @@ const Nav: React.FC = () => {
                     animate="end"
                   >
                     <li className="user-data">
-                      <img
-                      // className={`${!srcImg ? "skeleton" : ""}nav-img`}
-                      // src={srcImg && srcImg}
-                      // alt="user"
-                      />
+                      <ProfileImg height={30} />
                       <span>{username}</span>
                     </li>
 
@@ -159,7 +162,7 @@ const Nav: React.FC = () => {
                       </Link>
                     </li>
                   </motion.ul>
-                )}{" "}
+                )}
               </AnimatePresence>
             </>
           ) : (
@@ -170,39 +173,33 @@ const Nav: React.FC = () => {
             </>
           )}
 
-          <span
-            className="notification-parent"
-            onClick={() => {
-              setIsNotificationClicked(!isNotificationClicked);
-              setShowDropDown(false);
-              dispatch(notificationCounterReset());
-              resetNotification();
-            }}
-          >
-            <IoNotifications size={"2rem"} color={"white"} />
+          {isAuth && (
+            <span className="notification-parent" onClick={notificationFN}>
+              <IoNotifications size={"2rem"} color={"white"} />
 
-            <AnimatePresence>
-              {counter && (
-                <motion.span
-                  variants={opacityVariant}
-                  initial="start"
-                  animate="end"
-                  exit="exit"
-                  transition={{ duration: 0.2 }}
-                  className="notification-counter"
-                >
-                  {counter}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </span>
+              <AnimatePresence>
+                {counter && (
+                  <motion.span
+                    variants={opacityVariant}
+                    initial="start"
+                    animate="end"
+                    exit="exit"
+                    transition={{ duration: 0.2 }}
+                    className="notification-counter"
+                  >
+                    {counter}
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </span>
+          )}
 
           <AnimatePresence mode="wait">
             {isNotificationClicked && (
-              <>
+              <div ref={NOTIFICATIONRef}>
                 {" "}
                 <Notification />
-              </>
+              </div>
             )}
           </AnimatePresence>
         </div>

@@ -7,8 +7,6 @@ import usePassword from "../customHooks/usePassword";
 import useReset from "../customHooks/useResetInp";
 import {
   hidePasswordVariant,
-  // inputParentAnimation,
-  // inputVariant,
   inpVariant,
   placeholderVariant,
   ResetSpanVariant,
@@ -27,6 +25,7 @@ const alreadyRegisteredEmail =
 
 const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
   const inpRef = useRef<HTMLInputElement>(null);
+
   const [isInpAnimateCompleted, setIsInpAnimateCompleted] = useState(false);
   const [isXSpanAnimateCompleted, setXSpannpAnimateCompleted] = useState(false);
   const [showPass, handleShowPass] = usePassword();
@@ -119,7 +118,7 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
               }}
             >
               <motion.span variants={xSpanVariant}>
-                <FaTimes style={{ marginTop: 3 }} />
+                <FaTimes />
               </motion.span>
             </motion.span>
           )}
@@ -146,7 +145,6 @@ const Input = ({ isPassword, placeholder, onChange }: InputInterface) => {
           custom={isFocus}
           className="placeholder"
         >
-          {" "}
           {placeholder}
         </motion.span>
       </motion.div>
