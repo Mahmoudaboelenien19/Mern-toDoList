@@ -54,6 +54,7 @@ const SignUpInput = ({ isPassword, placeholder, err }: InputInterface) => {
       setShowResetPassSpan(false);
     }
   }, [inpVal]);
+
   return (
     <motion.div
       id="inp"
@@ -78,7 +79,7 @@ const SignUpInput = ({ isPassword, placeholder, err }: InputInterface) => {
       />
 
       <motion.div
-        className="mock-inp"
+        className={`mock-inp`}
         custom={{ isFocus, isResetSpanCLicked, isXSpanAnimateCompleted }}
         variants={inpVariant}
         animate="end"

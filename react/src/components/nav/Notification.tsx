@@ -1,12 +1,15 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { dropDownVariant } from "../Variants/nav";
-import { useAppDispatch, useAppSelector } from "../customHooks/reduxTypes";
+import { dropDownVariant } from "../../Variants/nav";
+import { useAppDispatch, useAppSelector } from "../../customHooks/reduxTypes";
 import NotificationChild from "./NotificationChild";
-import { opacityVariant } from "../Variants/options";
-import { linkHover } from "../Variants/globalVariants";
+import { opacityVariant } from "../../Variants/options";
+import { linkHover } from "../../Variants/globalVariants";
 import Cookies from "js-cookie";
-import { markALlNotificationsRoute } from "../../routes";
-import { markALlRead, notificationInterface } from "../redux/NotificationSlice";
+import { markALlNotificationsRoute } from "../../../routes";
+import {
+  markALlRead,
+  notificationInterface,
+} from "../../redux/NotificationSlice";
 import React, { useEffect, useState } from "react";
 
 const Notification = () => {

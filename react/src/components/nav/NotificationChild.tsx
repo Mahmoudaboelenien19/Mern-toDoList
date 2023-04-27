@@ -1,14 +1,14 @@
 import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { deleteNotificationRoute } from "../../routes";
-import { useAppDispatch } from "../customHooks/reduxTypes";
+import { deleteNotificationRoute } from "../../../routes";
+import { useAppDispatch } from "../../customHooks/reduxTypes";
 import {
   isReadNotification,
   removeNotification,
-} from "../redux/NotificationSlice";
+} from "../../redux/NotificationSlice";
 import { motion } from "framer-motion";
-import { linkHover } from "../Variants/globalVariants";
+import { linkHover } from "../../Variants/globalVariants";
 interface Props {
   state: string;
   time: string;

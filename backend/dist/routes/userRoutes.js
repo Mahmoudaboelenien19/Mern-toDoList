@@ -147,10 +147,6 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (username) {
             update.username = username;
         }
-        if (password) {
-            update.password = password;
-            console.log(password);
-        }
         if (phone) {
             update.phone = phone;
         }
@@ -158,7 +154,7 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         if (result !== "wrong id") {
             res.status(200).json({
                 result,
-                message: "user updated successfully",
+                message: `user ${req.body.username ? "name" : "phone"} updated successfully`,
             });
         }
         else {

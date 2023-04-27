@@ -1,49 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { opacityVariant } from "../../Variants/options";
 import { btnHover } from "../../Variants/globalVariants";
-import { isAuthContext } from "../../context/isAuthcontext";
-import ProfileImg from "../../components/ProfileImg";
+import ProfileImg from "../../widget/ProfileImg";
 import Avatar from "./Avatar";
-import UpdateUser from "./UpdateUser";
+import UserInfo from "./UserInfo";
 
-const detailsVariant = {
-  start: {},
-  end: { transition: { staggerChildren: 0.1 } },
-};
 const User: React.FC = () => {
-  const authData = useContext(isAuthContext);
-  const {
-    userDetails: { username, country, email, gender, phone },
-  } = authData;
-
-  const userDataArr = [
-    {
-      span: "username",
-      value: username,
-    },
-    {
-      span: "email",
-      value: email,
-    },
-    {
-      span: "country",
-      value: country,
-    },
-    {
-      span: "password",
-      value: "************",
-    },
-    {
-      span: "phone",
-      value: phone,
-    },
-    {
-      span: "gender",
-      value: gender,
-    },
-  ];
-
   const [fileKey, setFileKey] = useState<number>(0);
   const [edit, setEdit] = useState(false);
   const [newImg, setnewImg] = useState<File | undefined>();
@@ -59,12 +21,6 @@ const User: React.FC = () => {
     setEdit(false);
     setFileKey((prev) => prev + 1);
   };
-
-  useEffect(() => {
-    if (username) {
-      document.title = `${username}'s profile`;
-    }
-  }, [username]);
 
   return (
     <div id="user-data">
@@ -96,25 +52,7 @@ const User: React.FC = () => {
           )}
         </AnimatePresence>
       </>
-
-      <motion.div
-        className="userDetails"
-        variants={detailsVariant}
-        initial="start"
-        animate="end"
-      >
-        {userDataArr.map((e, index) => {
-          return (
-            <motion.div
-              className="parent"
-              variants={opacityVariant}
-              key={e.span}
-            >
-              <UpdateUser key={index} {...e} />
-            </motion.div>
-          );
-        })}
-      </motion.div>
+      <UserInfo />
     </div>
   );
 };
