@@ -1,14 +1,14 @@
 import React from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { deleteNotificationRoute } from "../../../routes";
-import { useAppDispatch } from "../../customHooks/reduxTypes";
+import { deleteNotificationRoute } from "../../../../routes";
+import { useAppDispatch } from "../../../customHooks/reduxTypes";
 import {
   isReadNotification,
   removeNotification,
-} from "../../redux/NotificationSlice";
+} from "../../../redux/NotificationSlice";
 import { motion } from "framer-motion";
-import { linkHover } from "../../Variants/globalVariants";
+import { linkHover } from "../../../Variants/globalVariants";
 interface Props {
   state: string;
   time: string;
@@ -50,17 +50,19 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
       exit="exit"
     >
       <>
-        <small>
+        <small
+          style={{
+            marginLeft: 8,
+          }}
+        >
           <span>
             you
             <span
               style={{
-                color: state.startsWith("added")
+                color: state?.startsWith("added")
                   ? `var(--unchecked)`
                   : `var(--${state})`,
-                fontWeight: "900",
-                textShadow: ".5px .7px 0px black",
-                letterSpacing: 0.8,
+                textShadow: ".2px .1px .2px black",
               }}
             >
               {" "}
@@ -70,7 +72,7 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
           <small>{content}</small>
         </small>
       </>
-      <small>
+      <div className="time-par">
         <span className="time">{time} </span>
 
         {!isRead && (
@@ -85,7 +87,7 @@ const NotificationChild = ({ time, state, isRead, content, _id }: Props) => {
             mark as read
           </motion.button>
         )}
-      </small>
+      </div>
       <motion.button
         className="btn del"
         onClick={() => {

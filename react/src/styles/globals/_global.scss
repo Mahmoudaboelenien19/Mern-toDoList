@@ -40,10 +40,12 @@ body {
 
 .clear {
   background: var(--delete);
+  font-size: 0.5rem;
 }
 
 .remind {
   background: var(--unchecked);
+  font-size: 0.5rem;
 }
 
 @media (max-width: 800px) {
@@ -54,13 +56,13 @@ body {
 
 @media (min-width: 800px) and (max-width: 1000px) {
   :root {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 
 @media (min-width: 1000px) {
   :root {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 

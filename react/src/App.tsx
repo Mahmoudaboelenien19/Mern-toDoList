@@ -28,40 +28,38 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <IsAuthProvider>
       {isLoading ? (
         <Loading />
       ) : (
         <Router>
-          <IsAuthProvider>
-            <div className="App">
-              <ClearContext.Provider
-                value={{ showClearPopUp, setShowClearPopUp }}
-              >
-                <Nav />
-                <AnimatePresence>
-                  {showClearPopUp && <ClearPopUp />}
-                </AnimatePresence>
-              </ClearContext.Provider>
+          <div className="App">
+            <ClearContext.Provider
+              value={{ showClearPopUp, setShowClearPopUp }}
+            >
+              <Nav />
+              <AnimatePresence>
+                {showClearPopUp && <ClearPopUp />}
+              </AnimatePresence>
+            </ClearContext.Provider>
 
-              <ToastContainer
-                position="bottom-left"
-                autoClose={3000}
-                hideProgressBar
-                newestOnTop
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-                transition={Flip}
-              />
-            </div>
-          </IsAuthProvider>
+            <ToastContainer
+              position="bottom-left"
+              autoClose={3000}
+              hideProgressBar
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              transition={Flip}
+            />
+          </div>
         </Router>
       )}
-    </>
+    </IsAuthProvider>
   );
 };
 

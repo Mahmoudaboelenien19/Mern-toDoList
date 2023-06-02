@@ -3,11 +3,13 @@
 @import "./../globals/global";
 
 .tasks-cont {
-  width: 60%;
+  width: 80%;
   background: var(--task-cont);
   border-radius: 5px;
   padding-bottom: 10px;
   margin: 0 auto;
+  max-width: 500px;
+  overflow: hidden;
 
   #options {
     @extend %centered;
@@ -86,7 +88,13 @@
       }
     }
   }
-
+  .bell {
+    margin-left: 20px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 5px;
+  }
   #tasks {
     display: flex;
     flex-direction: column;
@@ -95,6 +103,7 @@
     overflow: auto;
     height: fit-content;
     max-height: 250px;
+    overflow-x: hidden;
     .task {
       position: relative;
       padding: 0 5px;
@@ -121,7 +130,7 @@
       grid-area: content;
       .text {
         position: relative;
-        padding: 0 4px;
+        padding: 0 3px;
 
         span.check-task {
           display: inline-block;
@@ -135,12 +144,11 @@
     }
     #time-cont {
       grid-area: time;
-      font-size: 10px;
+      font-size: 0.7rem;
     }
     #btns {
       grid-area: btns;
       display: flex;
-
       align-items: center;
       justify-content: flex-start;
       gap: 5px;
@@ -150,6 +158,7 @@
         width: 20px;
         height: 20px;
         padding: 2px;
+        align-items: center;
         box-shadow: 0.5px 0.5px 0 grey;
         $clrs: 1 var(--unchecked), 2 var(--update), 3 darkblue, 4 var(--delete);
         @each $i, $clr in $clrs {
@@ -163,6 +172,9 @@
     }
   }
 }
+.delete-svg {
+  @extend %centered;
+}
 .no-data {
   display: flex;
   justify-content: center;
@@ -174,53 +186,32 @@
   font-size: 14px;
   margin: 0 auto;
   border-radius: 5px;
-  text-transform: lowercase;
+  text-transform: capitalize;
 }
 
 @media (max-width: 600px) {
-  .tasks-cont,
-  .no-data {
-    width: 90vw;
-  }
-}
-
-@media (min-width: 600px) and (max-width: 800px) {
-  .tasks-cont,
-  .no-data {
-    width: 70vw;
-  }
-}
-
-.update-loading {
-  position: absolute;
-  right: 4px;
-
-  span {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin: 0 1.5px;
-    background: var(--main);
-    opacity: 0.6;
-    animation: update-loading 0.4s infinite ease-in;
-  }
-  @for $i from 1 to 3 {
-    span:nth-child(#{$i}) {
-      animation-delay: calc(#{$i} * 0.15s);
+  .tasks-cont {
+    width: 95vw;
+    margin-top: 20vh;
+    .no-data {
+      width: 90vw;
     }
-    @keyframes update-loading {
-      50% {
-        transform: translate(0, 8px);
+    #tasks {
+      #time-cont {
+        margin: 0;
+        font-size: 0.6rem;
+      }
+      .task {
+        width: 100%;
+      }
+      .bell {
+        margin-left: 5px;
+        gap: 3px;
+
+        small {
+          font-size: 7px;
+        }
       }
     }
-  }
-}
-
-.bell {
-  margin-left: 10px;
-  small {
-    margin-left: 4px;
-    font-size: 10px;
   }
 }

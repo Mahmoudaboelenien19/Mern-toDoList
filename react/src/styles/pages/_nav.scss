@@ -7,12 +7,11 @@ nav {
   left: 0;
   display: flex;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 20px;
   width: 100%;
   height: 50px;
-  // background: var(--secondary);
   background: rgb(23, 23, 23);
-  z-index: 100;
+  z-index: 4;
 
   a {
     text-decoration: none;
@@ -37,9 +36,10 @@ nav {
 }
 
 #login-state {
-  @extend %centered;
+  display: inline-flex;
+  align-items: center;
   position: relative;
-  width: fit-content;
+  width: 100px;
   gap: 10px;
   #user {
     color: var(--main);
@@ -58,7 +58,7 @@ ul {
   left: 0px;
   height: fit-content;
   width: 200px;
-  z-index: 1000;
+  z-index: 4;
   transform: translateX(calc(-50% + 15px));
   color: #000;
   background: var(--main);
@@ -119,14 +119,15 @@ span.nav-icon {
   width: 250px;
   height: 200px;
   overflow-x: hidden;
-  padding: 0;
   padding-top: 10px;
   left: -40px;
-  .header {
+  .notification-header {
     height: 20px;
     display: flex;
     justify-content: space-between;
-    padding: 0 15px;
+    padding: 0 20px;
+    margin-top: 15px;
+    height: 20px;
     button {
       color: black;
       font-size: 0.6rem;
@@ -136,9 +137,10 @@ span.nav-icon {
   h4 {
     margin: 0 auto;
     color: black;
+    font-weight: bold;
     font-size: 1rem;
     &:before {
-      top: 95%;
+      top: 90%;
       height: 3px;
     }
   }
@@ -148,11 +150,12 @@ span.nav-icon {
     align-items: center;
     width: 100%;
     height: 100%;
+    text-transform: capitalize;
+    font-weight: 700;
   }
   .notification-parent {
     display: flex;
-    padding: 2px 0;
-
+    padding: 3px 0;
     overflow: auto;
     flex-direction: column;
     align-items: center;
@@ -165,10 +168,11 @@ span.nav-icon {
       background: darkgrey;
       height: 35px;
       width: 95%;
-      padding: 4px;
-      font-size: 14px;
+      padding: 1px;
+      font-size: 1.2rem;
       display: flex;
-      justify-content: space-evenly;
+      font-weight: bold;
+      justify-content: space-between;
       flex-direction: column;
       &.is-read {
         background: #dcdada;
@@ -179,26 +183,36 @@ span.nav-icon {
           }
         }
       }
+      .time-par {
+        height: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
       .btn.read {
         background: transparent;
-        font-size: 10px;
+        font-size: 8px;
         color: var(--border);
-        margin-left: 20px;
-        text-shadow: 0.5px 0.7px 0px black;
+        text-shadow: 0.2px 0.6px 0.4px black;
+        letter-spacing: 0.7px;
+        text-transform: lowercase;
       }
       .content {
         color: darkblue;
         margin-left: 3px;
-        font-size: 12px;
+        font-size: 8px;
       }
       .time {
-        font-size: 10px;
+        font-size: 0.8rem;
+        align-self: flex-end;
+        margin-bottom: 5px;
+        margin-left: 4px;
+        opacity: 0.4;
       }
       .del {
         position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        right: 4px;
+        top: -5px;
+        right: 2px;
         background: transparent;
         font-size: 12px;
         color: var(--delete);
@@ -247,6 +261,36 @@ span.nav-icon {
         width: 40%;
         left: 30%;
       }
+    }
+  }
+}
+
+.close-drop {
+  position: absolute;
+  top: 50px;
+  right: -20px;
+  transform: translate(-50%, -50%);
+  z-index: 1000 !important;
+  color: var(--delete);
+  svg {
+    transform: scale(1.5);
+    path {
+      font-size: 40px !important;
+    }
+  }
+}
+
+@media (max-width: 500px) {
+  .notification {
+    position: fixed;
+    top: 50px;
+    left: initial;
+    right: 0 !important;
+    width: 100vw;
+    height: calc(100vh - 50px);
+    transform: initial !important;
+    border-radius: 0;
+    &.dropdown {
     }
   }
 }

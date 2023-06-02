@@ -13,8 +13,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     gap: 5px;
-    padding: 70px 0;
+    padding-top: 70px;
+    padding-bottom: 20px;
     grid-area: img;
     // background: #868b8e;
     background: var(--link-hover);
@@ -152,7 +154,7 @@ input[type="file"] {
     grid-template-columns: repeat(1, 1fr);
 
     grid-template:
-      "img " calc(55vh)
+      "img " auto
       "details " calc(100vh);
 
     .userDetails .detail-parent {

@@ -161,9 +161,21 @@ select {
   margin-top: 4px !important;
 }
 
-@media (max-width: 800px) {
+@media (min-width: 500px) and (max-width: 800px) {
   form {
     width: 70vw;
+    #inp .mock-inp {
+      .placeholder {
+        top: -16px;
+      }
+    }
+  }
+}
+
+@media (max-width: 499px) {
+  form {
+    width: 100vw;
+    margin-top: 15vh;
     #inp .mock-inp {
       .placeholder {
         top: -16px;

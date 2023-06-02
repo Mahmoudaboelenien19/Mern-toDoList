@@ -62,8 +62,10 @@ const IsAuthProvider = ({ children }: Props) => {
       return await axios
         .get(getUserRoute(userId as string))
         .then(({ data }) => {
-          dispatch(addtoNotificationArr(data.user.notification?.reverse()));
-          dispatch(notificationCounter(data.user.count));
+          if (data.user.notification?.length >= 1) {
+            dispatch(addtoNotificationArr(data.user.notification?.reverse()));
+            dispatch(notificationCounter(data.user.count));
+          }
           setProfile(data.user.image.imagePath);
           setUserDetails({
             ...userDetails,
@@ -82,7 +84,6 @@ const IsAuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const user = Cookies.get("user-id");
     if (user) {
-      console.log(user);
       setIsAuth(true);
       setUserId(user);
       getUserData(user);

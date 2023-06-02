@@ -7,11 +7,9 @@ import { updateUserRoute } from "../../../routes";
 import { isAuthContext } from "../../context/isAuthcontext";
 import { opacityVariant } from "../../Variants/options";
 import { generateNewToken } from "../../redux/Taskslice";
-import { FormProvider, useForm, FieldValues } from "react-hook-form";
+import { useForm, FieldValues } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Input from "../../components/Input";
-import SignUpInput from "../../components/SIngUpInp";
 import { toast } from "react-toastify";
 
 interface Props {
@@ -29,7 +27,6 @@ interface updateFnInterface {
 const UpdateUser = ({ span, value }: Props) => {
   const { setIsDataUpdated, isDataUpdated } = useContext(isAuthContext);
   const [updateCLicked, setUpdateCLicked] = useState(false);
-  // const inpRef = useRef<HTMLInputElement | null>(null);
 
   const updatedata = async (obj: updateFnInterface) => {
     const userId = Cookies.get("user-id");
@@ -52,6 +49,19 @@ const UpdateUser = ({ span, value }: Props) => {
         .max(16, "you can't exceed 16 number")
         .required("insert a phone number"),
     }),
+    //i write these unnessery valiations as i get errs in console
+    country: yup.object().shape({
+      country: yup.string().notRequired(),
+    }),
+    gender: yup.object().shape({
+      gender: yup.string().notRequired(),
+    }),
+    password: yup.object().shape({
+      password: yup.string().notRequired(),
+    }),
+    email: yup.object().shape({
+      email: yup.string().notRequired(),
+    }),
   };
 
   const {
@@ -59,7 +69,9 @@ const UpdateUser = ({ span, value }: Props) => {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm({ resolver: yupResolver(schema[span]) });
+  } = useForm({
+    resolver: yupResolver(schema[span]),
+  });
 
   const { [span]: inpSpanValue } = watch();
   const OnSubmit = async (data: FieldValues) => {
@@ -73,6 +85,11 @@ const UpdateUser = ({ span, value }: Props) => {
     if (!isDataUpdated) return;
     setIsDataUpdated(false);
   }, [isDataUpdated]);
+  const check =
+    span === "gender" ||
+    span === "country" ||
+    span === "email" ||
+    span === "password";
 
   return (
     <>
@@ -121,7 +138,6 @@ const UpdateUser = ({ span, value }: Props) => {
                   animate="end"
                   exit="exit"
                   transition={{ duration: 1 }}
-                  // ref={inpRef}
                   className="update-inp value "
                   type={`${span === "phone" ? "number" : "text"}`}
                   defaultValue={value}
@@ -131,24 +147,13 @@ const UpdateUser = ({ span, value }: Props) => {
           </AnimatePresence>
           {}
           <motion.button
-            whileHover={
-              span === "gender" || span === "country" || span === "email"
-                ? ""
-                : linkHover
-            }
+            whileHover={check ? "" : linkHover}
             className="btn"
             style={{
               marginRight: 10,
-              opacity:
-                span === "gender" || span === "country" || span === "email"
-                  ? 0.4
-                  : 1,
+              opacity: check ? 0.4 : 1,
             }}
-            disabled={
-              span === "gender" || span === "country" || span === "email"
-                ? true
-                : false
-            }
+            disabled={check ? true : false}
             onClick={() => {
               setUpdateCLicked(true);
               if (updateCLicked && isValid) {

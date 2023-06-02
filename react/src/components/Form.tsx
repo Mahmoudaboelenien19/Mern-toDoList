@@ -133,19 +133,21 @@ const Form: React.FC = () => {
         variants={opacityVariant}
         transition={{ delay: 0.5, duration: 0.2 }}
       >
-        <input
-          {...register("todo")}
-          type="text"
-          onFocus={() => {
-            setIsFocus(true);
-          }}
-          onBlur={() => {
-            if (watchedVal === "") {
-              setMode("create");
-              setIsFocus(false);
-            }
-          }}
-        />
+        <AnimatePresence initial={false}>
+          <input
+            {...register("todo")}
+            type="text"
+            onFocus={() => {
+              setIsFocus(true);
+            }}
+            onBlur={() => {
+              if (watchedVal === "") {
+                setMode("create");
+                setIsFocus(false);
+              }
+            }}
+          />
+        </AnimatePresence>
         <motion.div
           style={{
             background: `linear-gradient(135deg,${bg},var(--link-hover))`,

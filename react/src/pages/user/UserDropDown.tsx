@@ -1,6 +1,5 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import useClickOutside from "../../customHooks/useClickOutside";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaQuestionCircle } from "react-icons/fa";
 import { dropDownVariant } from "../../Variants/nav";
@@ -15,17 +14,19 @@ import UserDropDownLink from "./UserDropDownLink";
 
 interface Props {
   setShowDropDown: React.Dispatch<React.SetStateAction<boolean>>;
+  showDropDown: boolean;
 }
 
-const UserDropDown = ({ setShowDropDown }: Props) => {
+const UserDropDown = ({ setShowDropDown, showDropDown }: Props) => {
   const {
     setIsAuth,
     userDetails: { username },
   } = useContext(isAuthContext);
 
-  const dropRef = useClickOutside<HTMLUListElement>(() => {
-    setShowDropDown(false);
-  });
+  const dropRef = useClickOutside<HTMLUListElement>(
+    () => setShowDropDown(false),
+    showDropDown
+  );
 
   const handleLogOut = async () => {
     await axios.post(
