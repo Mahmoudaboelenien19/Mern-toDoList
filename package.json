@@ -1,1 +1,21 @@
-{}
+{
+  "name": "react-todolist",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "build": "cd backend && npm install && npx tsc && cd ../react && npm install &&npm run build ",
+    "start": "node backend/dist/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mahmoudaboelenien19/fullStack-typeScript-React-postgres-Scss-toDoList.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mahmoudaboelenien19/fullStack-typeScript-React-postgres-Scss-toDoList/issues"
+  },
+  "homepage": "https://github.com/Mahmoudaboelenien19/fullStack-typeScript-React-postgres-Scss-toDoList#readme",
+  "description": ""
+}

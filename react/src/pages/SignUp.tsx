@@ -42,12 +42,12 @@ const SignUp = () => {
     email: yup.string().email().required("insert a vaild email"),
     password: yup
       .string()
-      .min(6)
+      .min(8)
       .max(20)
       .required()
       .matches(
-        /\w+\d+[^a-zA-Z0-9]+/,
-        "password must contain at least 1 number,1 number and 1 character"
+        /^(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        "password must contain at least 1 number and 1 character"
       ),
     confirm: yup
       .string()
@@ -157,11 +157,9 @@ const SignUp = () => {
             <motion.select id="select" {...register("country")}>
               {countries.map((e) => {
                 return (
-                  <>
-                    <option key={Math.random()} value={e.name.common}>
-                      {e.name.common}
-                    </option>
-                  </>
+                  <option key={Math.random()} value={e.name.common}>
+                    {e.name.common}
+                  </option>
                 );
               })}
               <option selected> select your country</option>

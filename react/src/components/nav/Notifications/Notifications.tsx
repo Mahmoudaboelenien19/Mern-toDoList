@@ -16,7 +16,6 @@ import MobileCloseDropDown from "../../../widget/MobileCloseDropDown";
 
 const Notifications = () => {
   const { isAuth } = useContext(isAuthContext);
-
   const { counter } = useAppSelector((state) => state.notification);
   const dispatch = useAppDispatch();
   const [isNotificationClicked, setIsNotificationClicked] = useState(false);
@@ -68,7 +67,7 @@ const Notifications = () => {
 
       <AnimatePresence mode="wait">
         {isNotificationClicked && (
-          <div ref={NOTIFICATIONRef} style={{ position: "relative" }}>
+          <div ref={NOTIFICATIONRef}>
             <MobileCloseDropDown setter={setIsNotificationClicked} />
 
             <Notification />
