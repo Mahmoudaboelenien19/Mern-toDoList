@@ -37,7 +37,7 @@ const UserDropDown = ({ setShowDropDown, showDropDown }: Props) => {
     setIsAuth(false);
   };
   const userDropArr = [
-    { to: "/user", Icon: AiOutlineUser, link: "update your profile" },
+    { to: "/userProfile", Icon: AiOutlineUser, link: "update your profile" },
     { to: "/faq", Icon: FaQuestionCircle, link: "FAQ" },
     { to: "/login", Icon: GiExitDoor, link: "log out", fn: handleLogOut },
   ];

@@ -162,6 +162,7 @@ span.nav-icon {
     overflow-x: hidden;
     gap: 5px;
     width: 100%;
+
     height: 100%;
     .notificattion-child {
       position: relative;
@@ -227,6 +228,7 @@ span.nav-icon {
 }
 .notification-parent {
   display: inline-block;
+  position: relative;
 
   .notification-counter {
     @extend %centered;

@@ -46,6 +46,7 @@ body {
 
 .remind {
   background: var(--unchecked);
+  font-size: 0.8rem;
 }
 
 @media (max-width: 800px) {
@@ -55,21 +56,32 @@ body {
 }
 @media (min-width: 800px) and (max-width: 1000px) {
   :root {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 @media (min-width: 1000px) {
   :root {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
-.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, .notification-parent .notification-counter, #login-state {
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .form-cont, .delete-svg, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form #inp .mock-inp .reset span, form, .notification-parent .notification-counter {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form, .notification-parent .notification-counter, #login-state {
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .form-cont, .delete-svg, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, form #inp .mock-inp .reset span, form, .notification-parent .notification-counter {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,12 +106,16 @@ body {
 }
 
 nav {
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   justify-content: space-between;
-  padding: 0 40px;
+  padding: 0 20px;
   width: 100%;
   height: 50px;
   background: rgb(23, 23, 23);
+  z-index: 4;
 }
 nav a {
   text-decoration: none;
@@ -121,20 +137,14 @@ nav #logo a {
 }
 
 #login-state {
+  display: inline-flex;
+  align-items: center;
   position: relative;
-  width: -moz-fit-content;
-  width: fit-content;
+  width: 100px;
   gap: 10px;
 }
 #login-state #user {
   color: var(--main);
-}
-
-.nav-img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 0.2 solid white;
 }
 
 ul {
@@ -150,47 +160,55 @@ ul {
   height: -moz-fit-content;
   height: fit-content;
   width: 200px;
-  z-index: 1000;
+  z-index: 4;
   transform: translateX(calc(-50% + 15px));
   color: #000;
   background: var(--main);
-  padding: 0 10px;
   box-shadow: 2px 2px 20px grey;
   border-radius: 5px;
+}
+.dropdown ul {
+  display: flex;
+  align-items: center;
 }
 .dropdown li {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding-left: 10px;
-  gap: 20px;
   position: relative;
-  height: 50px;
-  border-bottom: 0.2px solid black;
+  height: 30px;
+  border-bottom: 0.1px solid rgba(26, 26, 26, 0.242);
   transition: 0.3s;
   cursor: pointer;
 }
+.dropdown li a {
+  padding-left: 10px;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
 .dropdown li:not(:first-child):hover {
   background: var(--created);
-  color: white;
 }
 .dropdown li:not(:first-child):hover a {
   color: white;
 }
 .dropdown li:first-child {
-  height: 60px;
+  height: 40px;
 }
 .dropdown li:last-child {
-  border-bottom: 0.2px solid transparent;
+  border-bottom: 0.1px solid transparent;
 }
 
 span.nav-icon {
   display: inline-flex;
   justify-content: center;
+  align-self: center;
   align-items: center;
   margin-right: 5px;
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: rgb(174, 170, 170);
 }
@@ -199,17 +217,18 @@ span.nav-icon {
   width: 250px;
   height: 200px;
   overflow-x: hidden;
-  padding: 0;
   padding-top: 10px;
   left: -40px;
 }
-.notification .header {
+.notification .notification-header {
   height: 20px;
   display: flex;
   justify-content: space-between;
-  padding: 0 15px;
+  padding: 0 20px;
+  margin-top: 15px;
+  height: 20px;
 }
-.notification .header button {
+.notification .notification-header button {
   color: black;
   font-size: 0.6rem;
   padding: 4px;
@@ -217,10 +236,11 @@ span.nav-icon {
 .notification h4 {
   margin: 0 auto;
   color: black;
+  font-weight: bold;
   font-size: 1rem;
 }
 .notification h4:before {
-  top: 95%;
+  top: 90%;
   height: 3px;
 }
 .notification .nodata {
@@ -229,10 +249,12 @@ span.nav-icon {
   align-items: center;
   width: 100%;
   height: 100%;
+  text-transform: capitalize;
+  font-weight: 700;
 }
 .notification .notification-parent {
   display: flex;
-  padding: 2px 0;
+  padding: 3px 0;
   overflow: auto;
   flex-direction: column;
   align-items: center;
@@ -246,10 +268,11 @@ span.nav-icon {
   background: darkgrey;
   height: 35px;
   width: 95%;
-  padding: 4px;
-  font-size: 14px;
+  padding: 1px;
+  font-size: 1.2rem;
   display: flex;
-  justify-content: space-evenly;
+  font-weight: bold;
+  justify-content: space-between;
   flex-direction: column;
 }
 .notification .notification-parent .notificattion-child.is-read {
@@ -261,26 +284,36 @@ span.nav-icon {
 .notification .notification-parent .notificattion-child.is-read > * .content {
   color: darkblue;
 }
+.notification .notification-parent .notificattion-child .time-par {
+  height: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
 .notification .notification-parent .notificattion-child .btn.read {
   background: transparent;
-  font-size: 10px;
+  font-size: 8px;
   color: var(--border);
-  margin-left: 20px;
-  text-shadow: 0.5px 0.7px 0px black;
+  text-shadow: 0.2px 0.6px 0.4px black;
+  letter-spacing: 0.7px;
+  text-transform: lowercase;
 }
 .notification .notification-parent .notificattion-child .content {
   color: darkblue;
   margin-left: 3px;
-  font-size: 12px;
+  font-size: 8px;
 }
 .notification .notification-parent .notificattion-child .time {
-  font-size: 10px;
+  font-size: 0.8rem;
+  align-self: flex-end;
+  margin-bottom: 5px;
+  margin-left: 4px;
+  opacity: 0.4;
 }
 .notification .notification-parent .notificattion-child .del {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 4px;
+  top: -5px;
+  right: 2px;
   background: transparent;
   font-size: 12px;
   color: var(--delete);
@@ -292,8 +325,8 @@ span.nav-icon {
 }
 
 .notification-parent {
-  position: relative;
   display: inline-block;
+  position: relative;
 }
 .notification-parent .notification-counter {
   background: var(--delete);
@@ -322,6 +355,33 @@ span.nav-icon {
     height: 3px;
     width: 40%;
     left: 30%;
+  }
+}
+.close-drop {
+  position: absolute;
+  top: 70px;
+  right: -20px;
+  transform: translate(-50%, -50%);
+  z-index: 1000 !important;
+  color: var(--delete);
+}
+.close-drop svg {
+  transform: scale(1.5);
+}
+.close-drop svg path {
+  font-size: 40px !important;
+}
+
+@media (max-width: 500px) {
+  .notification {
+    position: fixed;
+    top: 50px;
+    left: initial;
+    right: 0 !important;
+    width: 100vw;
+    height: calc(100vh - 50px);
+    transform: initial !important;
+    border-radius: 0;
   }
 }
 * {
@@ -372,6 +432,7 @@ body {
 
 .remind {
   background: var(--unchecked);
+  font-size: 0.8rem;
 }
 
 @media (max-width: 800px) {
@@ -381,14 +442,25 @@ body {
 }
 @media (min-width: 800px) and (max-width: 1000px) {
   :root {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 @media (min-width: 1000px) {
   :root {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 :root {
   --main: rgb(241, 236, 236);
   --secondary: rgb(22, 21, 21);
@@ -427,7 +499,9 @@ body {
 
 form {
   width: 70%;
-  margin: 50px auto;
+  margin: 0 auto;
+  margin-top: 70px;
+  margin-bottom: 40px;
   height: 40px;
   gap: 0;
 }
@@ -456,11 +530,10 @@ form #inp .mock-inp .reset {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  width: 30px;
   height: 100%;
   top: 0;
   left: 100%;
-  font-size: 20px;
+  font-size: 14px;
   background: var(--delete);
   color: white;
   cursor: pointer;
@@ -474,7 +547,7 @@ form #inp .mock-inp .eye {
   justify-content: center;
   align-items: center;
   color: var(--main);
-  font-size: 18px;
+  font-size: 14px;
   z-index: 5;
   cursor: pointer;
 }
@@ -501,7 +574,7 @@ form button {
 .err {
   color: var(--delete);
   position: absolute;
-  top: 120%;
+  top: 110%;
   display: inline-block;
   width: 100%;
   text-align: center;
@@ -518,7 +591,6 @@ form button {
   padding: 4px;
   letter-spacing: 1px;
   font-size: 1.2rem;
-  color: var(--placeholder);
 }
 .heading:before {
   content: "";
@@ -532,25 +604,24 @@ form button {
 }
 
 #radio {
-  align-self: start;
-  margin: -30px 20px;
-  width: 50%;
+  width: 80%;
   display: flex;
-  justify-content: space-evenly;
-  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 20px;
   color: var(--placeholder);
 }
 #radio div.label {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
+  align-items: center;
+  gap: 5px;
   color: var(--placeholder);
 }
 
 input[type=radio] {
-  accent-color: rgb(195, 195, 82);
-  width: 15px;
-  height: 15px;
+  accent-color: var(--border);
+  width: 10px;
+  height: 10px;
 }
 
 select {
@@ -570,10 +641,10 @@ select option {
 }
 
 .sign-up {
-  margin-top: 10px !important;
+  margin-top: 4px !important;
 }
 
-@media (max-width: 800px) {
+@media (min-width: 500px) and (max-width: 800px) {
   form {
     width: 70vw;
   }
@@ -581,7 +652,16 @@ select option {
     top: -16px;
   }
 }
-.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, #login-state, .notification-parent .notification-counter, form {
+@media (max-width: 499px) {
+  form {
+    width: 100vw;
+    margin-top: 15vh;
+  }
+  form #inp .mock-inp .placeholder {
+    top: -16px;
+  }
+}
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .form-cont, .delete-svg, .tasks-cont #tasks #btns button, .tasks-cont #options #task-state, .tasks-cont #options #clear, .tasks-cont #options, .notification-parent .notification-counter, form, form #inp .mock-inp .reset span {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -653,6 +733,7 @@ body {
 
 .remind {
   background: var(--unchecked);
+  font-size: 0.8rem;
 }
 
 @media (max-width: 800px) {
@@ -662,20 +743,33 @@ body {
 }
 @media (min-width: 800px) and (max-width: 1000px) {
   :root {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 @media (min-width: 1000px) {
   :root {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .tasks-cont {
-  margin: 50px auto;
-  width: 60%;
   background: var(--task-cont);
   border-radius: 5px;
   padding-bottom: 10px;
+  margin: 0 auto;
+  width: 80%;
+  max-width: 800px;
+  overflow: hidden;
 }
 .tasks-cont #options {
   position: relative;
@@ -740,6 +834,13 @@ body {
 .tasks-cont #options #task-state span.active:before, .tasks-cont #options #task-state span.active:after, .tasks-cont #options #task-state span:hover:before, .tasks-cont #options #task-state span:hover:after {
   width: 50%;
 }
+.tasks-cont .bell {
+  margin-left: 20px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 5px;
+}
 .tasks-cont #tasks {
   display: flex;
   flex-direction: column;
@@ -749,6 +850,7 @@ body {
   height: -moz-fit-content;
   height: fit-content;
   max-height: 250px;
+  overflow-x: hidden;
 }
 .tasks-cont #tasks .task {
   position: relative;
@@ -774,7 +876,7 @@ body {
 }
 .tasks-cont #tasks #content .text {
   position: relative;
-  padding: 0 4px;
+  padding: 0 3px;
 }
 .tasks-cont #tasks #content .text span.check-task {
   display: inline-block;
@@ -786,7 +888,7 @@ body {
 }
 .tasks-cont #tasks #time-cont {
   grid-area: time;
-  font-size: 10px;
+  font-size: 0.7rem;
 }
 .tasks-cont #tasks #btns {
   grid-area: btns;
@@ -800,6 +902,7 @@ body {
   width: 20px;
   height: 20px;
   padding: 2px;
+  align-items: center;
   box-shadow: 0.5px 0.5px 0 grey;
 }
 .tasks-cont #tasks #btns button:nth-child(1) {
@@ -827,68 +930,45 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60%;
+  width: 80%;
+  max-width: 800px;
   height: 100px;
   background: var(--task-cont);
   color: white;
   font-size: 14px;
   margin: 0 auto;
   border-radius: 5px;
-  text-transform: lowercase;
+  text-transform: capitalize;
 }
 
 @media (max-width: 600px) {
-  .tasks-cont,
-  .no-data {
-    width: 90vw;
+  .tasks-cont {
+    width: 95vw;
+    margin-top: 20vh;
+  }
+  .tasks-cont .no-data {
+    width: 95vw;
+  }
+  .tasks-cont #tasks #task-state {
+    font-size: 0.8rem;
+    gap: 10px;
+  }
+  .tasks-cont #tasks #time-cont {
+    margin: 0;
+    font-size: 0.6rem;
+  }
+  .tasks-cont #tasks .task {
+    width: 100%;
+  }
+  .tasks-cont #tasks .bell {
+    margin-left: 5px;
+    gap: 3px;
+  }
+  .tasks-cont #tasks .bell small {
+    font-size: 7px;
   }
 }
-@media (min-width: 600px) and (max-width: 800px) {
-  .tasks-cont,
-  .no-data {
-    width: 70vw;
-  }
-}
-.update-loading {
-  position: absolute;
-  right: 4px;
-}
-.update-loading span {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin: 0 1.5px;
-  background: var(--main);
-  opacity: 0.6;
-  animation: update-loading 0.4s infinite ease-in;
-}
-.update-loading span:nth-child(1) {
-  animation-delay: calc(1 * 0.15s);
-}
-@keyframes update-loading {
-  50% {
-    transform: translate(0, 8px);
-  }
-}
-.update-loading span:nth-child(2) {
-  animation-delay: calc(2 * 0.15s);
-}
-@keyframes update-loading {
-  50% {
-    transform: translate(0, 8px);
-  }
-}
-
-.bell {
-  margin-left: 10px;
-}
-.bell small {
-  margin-left: 4px;
-  font-size: 10px;
-}
-
-.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, #login-state, .notification-parent .notification-counter, form, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button {
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, #log-in-form #log-btn, #log-in-form, .form-cont, .notification-parent .notification-counter, form, form #inp .mock-inp .reset span, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button, .delete-svg {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -912,14 +992,21 @@ body {
   --placeholder: rgb(228, 225, 225);
 }
 
+.form-cont {
+  min-height: 100vh;
+  width: 100%;
+}
+
 #log-in-form {
   background: rgba(121, 118, 118, 0.512);
   flex-direction: column;
   height: -moz-max-content;
   height: max-content;
   padding: 30px;
-  width: 32vw;
-  gap: 50px;
+  width: 300px;
+  gap: 48px;
+  margin-top: 100px;
+  margin-bottom: 20px;
 }
 #log-in-form #log-btn {
   margin-top: -20px;
@@ -932,17 +1019,12 @@ body {
   margin-top: -20px;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 800px) {
   #log-in-form {
-    width: 60vw;
+    width: 300px;
   }
 }
-@media (min-width: 600px) and (max-width: 800px) {
-  #log-in-form {
-    width: 50vw;
-  }
-}
-.faq-container .faq .question, .faq-container .faq, .zoom-cont, #login-state, .notification-parent .notification-counter, form, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button, #log-in-form, #log-in-form #log-btn {
+.faq-container .faq .question, .faq-container .faq, .zoom-cont, .notification-parent .notification-counter, form, form #inp .mock-inp .reset span, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button, .delete-svg, .form-cont, #log-in-form, #log-in-form #log-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1080,6 +1162,7 @@ body {
 
 .remind {
   background: var(--unchecked);
+  font-size: 0.8rem;
 }
 
 @media (max-width: 800px) {
@@ -1089,14 +1172,25 @@ body {
 }
 @media (min-width: 800px) and (max-width: 1000px) {
   :root {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 @media (min-width: 1000px) {
   :root {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 :root {
   --main: rgb(241, 236, 236);
   --secondary: rgb(22, 21, 21);
@@ -1138,25 +1232,21 @@ body {
   grid-template-columns: repeat(3, 1fr);
   width: 90%;
   margin: 0 auto;
-  grid-template: "img details details" calc(100vh - 50px);
+  grid-template: "img details details" 100vh;
 }
 #user-data .img-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   gap: 5px;
-  padding: 50px 0;
+  padding-top: 70px;
+  padding-bottom: 20px;
   grid-area: img;
   background: var(--link-hover);
 }
-#user-data .img-container img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  border: 1px solid grey;
-}
 #user-data .userDetails {
-  padding: 50px 20px;
+  padding: 70px 10px;
   grid-area: details;
   background: #d6cec0;
 }
@@ -1164,14 +1254,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 60px;
-}
-#user-data .userDetails .parent .hr {
-  display: inline-block;
+  align-items: center;
+  height: 50px;
+  margin-bottom: 5px;
+  border-bottom: 0.25px rgba(0, 0, 0, 0.198) solid;
   width: 100%;
-  height: 0.5px;
-  background: grey;
-  opacity: 0.5;
 }
 #user-data .userDetails .parent .detail-parent {
   display: flex;
@@ -1179,6 +1266,11 @@ body {
   justify-content: flex-start;
   gap: 0;
   height: 100%;
+  width: 100%;
+  position: relative;
+}
+#user-data .userDetails .parent .detail-parent .err {
+  top: 90%;
 }
 #user-data .userDetails .parent button.btn {
   border: 0;
@@ -1200,7 +1292,7 @@ body {
   text-transform: capitalize;
 }
 #user-data .userDetails .parent .value {
-  width: 250px;
+  width: 230px;
   font-weight: 500;
   color: grey;
   margin-right: 8px;
@@ -1264,31 +1356,32 @@ input[type=file] {
   }
 }
 .update-inp {
-  background: #d6cec0;
   border: 0;
   border-bottom: 2px solid var(--link-hover);
   outline: 0;
-  height: 30px;
-  padding: 0 5px;
-  color: black !important;
+  height: 25px;
+  padding: 0;
+  margin: 0;
+  padding-left: 5px;
   letter-spacing: 1px;
-  position: relative;
-  top: -5px;
+  background: transparent;
+  margin-right: 8px;
 }
 
 @media (max-width: 800px) {
   #user-data {
     width: 100%;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template: "img " auto "details " 100vh;
   }
-  #user-data .img-container img#profile {
-    width: 120px;
-    height: 120px;
+  #user-data .userDetails .detail-parent {
+    width: 90vw;
   }
   #user-data .userDetails .detail-parent .value {
     width: 35vw;
   }
 }
-.faq-container .faq .question, .faq-container .faq, #login-state, .notification-parent .notification-counter, form, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button, #log-in-form, #log-in-form #log-btn, .zoom-cont {
+.faq-container .faq .question, .faq-container .faq, .notification-parent .notification-counter, form, form #inp .mock-inp .reset span, .tasks-cont #options, .tasks-cont #options #clear, .tasks-cont #options #task-state, .tasks-cont #tasks #btns button, .delete-svg, .form-cont, #log-in-form, #log-in-form #log-btn, .zoom-cont {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1360,6 +1453,7 @@ body {
 
 .remind {
   background: var(--unchecked);
+  font-size: 0.8rem;
 }
 
 @media (max-width: 800px) {
@@ -1369,20 +1463,31 @@ body {
 }
 @media (min-width: 800px) and (max-width: 1000px) {
   :root {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 @media (min-width: 1000px) {
   :root {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 .faq-container {
   display: flex;
   flex-direction: column;
   gap: 5px;
   max-width: 600px;
-  width: 80vw;
+  width: 90vw;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1465,6 +1570,7 @@ body {
 
 .remind {
   background: var(--unchecked);
+  font-size: 0.8rem;
 }
 
 @media (max-width: 800px) {
@@ -1474,14 +1580,25 @@ body {
 }
 @media (min-width: 800px) and (max-width: 1000px) {
   :root {
-    font-size: 12px;
+    font-size: 10px;
   }
 }
 @media (min-width: 1000px) {
   :root {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
 :root {
   --main: rgb(241, 236, 236);
   --secondary: rgb(22, 21, 21);
@@ -1513,6 +1630,7 @@ section#reminder {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+  font-size: 0.7rem;
 }
 section#reminder input {
   width: 90%;

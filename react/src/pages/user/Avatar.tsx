@@ -6,7 +6,6 @@ import { generateNewToken } from "../../redux/Taskslice";
 import axios from "axios";
 import { updateUserImageRoute } from "../../../routes";
 import AvatarEditor from "react-avatar-editor";
-import UpdateUser from "./UpdateUser";
 import { btnHover } from "../../Variants/globalVariants";
 import { isAuthContext } from "../../context/isAuthcontext";
 
@@ -36,7 +35,7 @@ const Avatar = ({ setEdit, handleCancel, newImg }: Props) => {
     const { accessToken } = await generateNewToken();
 
     // Convert data URL to Blob
-    const canvas = editorRef.current.getImageScaledToCanvas();
+    const canvas = editorRef.current!.getImageScaledToCanvas();
     const dataURL = canvas.toDataURL("image/jpeg");
     const blob = await fetch(dataURL).then((res) => res.blob());
     const file = new File(
@@ -45,7 +44,7 @@ const Avatar = ({ setEdit, handleCancel, newImg }: Props) => {
       { type: "image/jpeg" }
     );
     const formData = new FormData();
-    formData.append("image", file as any);
+    formData.append("image", file as File);
     return await axios.patch(updateUserImageRoute(userId as string), formData, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });

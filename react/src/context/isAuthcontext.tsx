@@ -1,12 +1,13 @@
 import React, { createContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { getUserRoute } from "../../routes";
 import { useAppDispatch } from "../customHooks/reduxTypes";
 import {
   addtoNotificationArr,
   notificationCounter,
 } from "../redux/NotificationSlice";
+import guestUser from "../assets/images/guest.png";
+import { getAllTodos } from "../redux/Taskslice";
 
 export const isAuthContext = createContext({} as isAuthContext);
 
@@ -22,8 +23,6 @@ interface imageInterface {
 interface isAuthContext {
   isAuth: boolean;
   setIsAuth: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsDataUpdated: React.Dispatch<React.SetStateAction<boolean>>;
-  isDataUpdated: boolean;
   userId: string;
   profile: string;
   setProfile: React.Dispatch<React.SetStateAction<string>>;
@@ -44,7 +43,6 @@ const IsAuthProvider = ({ children }: Props) => {
   const [isAuth, setIsAuth] = useState(false);
   const [profile, setProfile] = useState("");
   const [userId, setUserId] = useState("");
-  const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [userDetails, setUserDetails] = useState({
     phone: "",
     password: "",
@@ -58,26 +56,31 @@ const IsAuthProvider = ({ children }: Props) => {
   });
 
   const getUserData = async (userId: string) => {
+    console.log(userId);
     if (userId) {
+      dispatch(getAllTodos());
+
       return await axios
-        .get(getUserRoute(userId as string))
+        .get(`/api/user/getData/${userId}`)
         .then(({ data }) => {
-          if (data.user.notification?.length >= 1) {
+          console.log(data);
+          if (data.user?.notification?.length >= 1) {
             dispatch(addtoNotificationArr(data.user.notification?.reverse()));
             dispatch(notificationCounter(data.user.count));
           }
-          setProfile(data.user.image.imagePath);
+          setProfile(data.user?.image?.imagePath || guestUser);
           setUserDetails({
             ...userDetails,
-            phone: data.user.phone,
-            country: data.user.country,
-            gender: data.user.gender,
-            email: data.user.email,
-            username: data.user.username,
-            image: data.user.image,
-            count: data.user.count,
+            phone: data?.user?.phone,
+            country: data?.user?.country,
+            gender: data?.user?.gender,
+            email: data?.user?.email,
+            username: data?.user?.username,
+            image: data?.user?.image,
+            count: data?.user?.count,
           });
-        });
+        })
+        .catch((err) => console.log(err));
     }
   };
 
@@ -90,20 +93,15 @@ const IsAuthProvider = ({ children }: Props) => {
     } else {
       setIsAuth(false);
     }
-  }, [isAuth, isDataUpdated]);
+  }, [isAuth]);
 
-  useEffect(() => {
-    if (!isDataUpdated) return;
-    setIsDataUpdated(false);
-  }, [isDataUpdated]);
   return (
     <isAuthContext.Provider
       value={{
         setIsAuth,
         isAuth,
         userDetails,
-        setIsDataUpdated,
-        isDataUpdated,
+
         userId,
         profile,
         setProfile,

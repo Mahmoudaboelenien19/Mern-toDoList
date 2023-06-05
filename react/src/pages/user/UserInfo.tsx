@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { isAuthContext } from "../../context/isAuthcontext";
 import { motion } from "framer-motion";
 import { opacityVariant } from "../../Variants/options";
@@ -14,10 +14,14 @@ const UserInfo = () => {
     userDetails: { username, country, email, gender, phone },
   } = authData;
 
+  const [userData, setUserData] = useState({
+    phone,
+    username,
+  });
   const userDataArr = [
     {
       span: "username",
-      value: username,
+      value: userData.username,
     },
     {
       span: "email",
@@ -33,7 +37,7 @@ const UserInfo = () => {
     },
     {
       span: "phone",
-      value: phone,
+      value: userData.phone,
     },
     {
       span: "gender",
@@ -53,10 +57,14 @@ const UserInfo = () => {
       initial="start"
       animate="end"
     >
-      {userDataArr.map((e, index) => {
+      {userDataArr.map((ob, index) => {
         return (
-          <motion.div className="parent" variants={opacityVariant} key={e.span}>
-            <UpdateUser key={index} {...e} />
+          <motion.div
+            className="parent"
+            variants={opacityVariant}
+            key={ob.span}
+          >
+            <UpdateUser key={index} {...ob} setUserData={setUserData} />
           </motion.div>
         );
       })}

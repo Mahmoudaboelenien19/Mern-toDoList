@@ -71,7 +71,7 @@ const SignUp = () => {
   };
 
   const createUser = async (data: FieldValues) => {
-    return await Axios.post("http://localhost:3000/user", data)
+    return await Axios.post("/api//user", data)
       .then(({ data }) => data)
       .catch((err) => err.response.data);
   };

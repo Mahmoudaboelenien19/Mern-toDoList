@@ -83,7 +83,8 @@
   align-items: center;
   justify-content: center;
   width: 400px;
-  height: 500px;
+  height: 450px;
+  border-radius: 5px;
   // background: rgb(127, 127, 127);
   background: rgb(234, 225, 225);
   .save {
@@ -163,5 +164,24 @@ input[type="file"] {
         width: 35vw;
       }
     }
+  }
+}
+
+@media (max-width: 500px) {
+  #user-data .userDetails {
+    padding: 70px 0;
+    .detail {
+      width: 60px;
+    }
+    .value {
+      width: 180px;
+    }
+  }
+  #avatar {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
   }
 }

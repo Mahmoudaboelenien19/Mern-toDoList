@@ -16,14 +16,14 @@ const Tasks = () => {
   const [contRef, { height: contHeight }] = useMeasure();
 
   const { tasks, isChanged } = useAppSelector((state) => state.tasks);
-  const disptch = useAppDispatch();
+  // const disptch = useAppDispatch();
   const [dataShown, setDataShown] = useState(tasks);
   const [option, setOption] = useState("all");
 
   const optionsArr = ["completed", "pending", "updated"];
 
   useEffect(() => {
-    disptch(getAllTodos());
+    // disptch(getAllTodos());
     document.title = `Home`;
   }, []);
 

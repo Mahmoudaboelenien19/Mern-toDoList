@@ -12,7 +12,7 @@ const NavRoutes: FC = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location?.pathname}>
-        <Route path="/user" element={<User />} />
+        <Route path="/userProfile" element={<User />} />
         {/* <Route path="/setting" element={<Settings />} /> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />

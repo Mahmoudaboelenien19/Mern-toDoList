@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { linkHover } from "../../Variants/globalVariants";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { updateUserRoute } from "../../../routes";
-import { isAuthContext } from "../../context/isAuthcontext";
 import { opacityVariant } from "../../Variants/options";
 import { generateNewToken } from "../../redux/Taskslice";
 import { useForm, FieldValues } from "react-hook-form";
@@ -15,6 +14,12 @@ import { toast } from "react-toastify";
 interface Props {
   span: string;
   value: string;
+  setUserData: React.Dispatch<
+    React.SetStateAction<{
+      phone: string;
+      username: string;
+    }>
+  >;
 }
 
 interface updateFnInterface {
@@ -24,8 +29,7 @@ interface updateFnInterface {
   phone?: string;
 }
 
-const UpdateUser = ({ span, value }: Props) => {
-  const { setIsDataUpdated, isDataUpdated } = useContext(isAuthContext);
+const UpdateUser = ({ span, value, setUserData }: Props) => {
   const [updateCLicked, setUpdateCLicked] = useState(false);
 
   const updatedata = async (obj: updateFnInterface) => {
@@ -77,14 +81,11 @@ const UpdateUser = ({ span, value }: Props) => {
   const OnSubmit = async (data: FieldValues) => {
     if (inpSpanValue !== value) {
       const { data: msg } = await updatedata({ [span]: inpSpanValue });
+      setUserData((cur) => ({ ...cur, [span]: inpSpanValue }));
       toast.success(msg.message);
     }
   };
 
-  useEffect(() => {
-    if (!isDataUpdated) return;
-    setIsDataUpdated(false);
-  }, [isDataUpdated]);
   const check =
     span === "gender" ||
     span === "country" ||
@@ -160,7 +161,6 @@ const UpdateUser = ({ span, value }: Props) => {
                 const updatedData = { [span]: inpSpanValue };
                 updatedata(updatedData);
                 setUpdateCLicked(false);
-                setIsDataUpdated(true);
               }
             }}
           >

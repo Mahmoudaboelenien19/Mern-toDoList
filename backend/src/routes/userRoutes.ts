@@ -254,24 +254,24 @@ const updateImageRouteFn = async (
 };
 
 const userRoutes = Router();
-userRoutes.route("/user").post(createUser);
-userRoutes.route("/user/authenticate").post(authenticate);
-userRoutes.route("/user/:userid/todos").get(auth, getTodos);
+userRoutes.route("/").post(createUser);
+userRoutes.route("/getData/:userid").get(getUser);
+userRoutes.route("/authenticate").post(authenticate);
+userRoutes.route("/:userid/todos").get(auth, getTodos);
 userRoutes
-  .route("/user/updateimage/:userid")
+  .route("/updateimage/:userid")
   .patch(auth, upload.single("image"), updateImageRouteFn);
-userRoutes.route("/user/:userid").get(getUser);
-userRoutes.route("/user/logout").post(logOut);
-userRoutes.route("/user/auth/refresh").post(getNewRefToken);
-userRoutes.route("/user/:userid/cleartodos").delete(auth, clear);
-userRoutes.route("/user/:userid/addnotification").patch(addNotificationRouteFn);
-userRoutes.route("/user/notifications/:userid").patch(resetNotificationcounter);
+userRoutes.route("/logout").post(logOut);
+userRoutes.route("/auth/refresh").post(getNewRefToken);
+userRoutes.route("/:userid/cleartodos").delete(auth, clear);
+userRoutes.route("/:userid/addnotification").patch(addNotificationRouteFn);
+userRoutes.route("/notifications/:userid").patch(resetNotificationcounter);
 userRoutes
-  .route("/user/markallnotifications/:userid")
+  .route("/markallnotifications/:userid")
   .patch(markAllNotificationsAsRead);
-userRoutes.route("/user/update/:userid").patch(auth, updateUser);
+userRoutes.route("/update/:userid").patch(auth, updateUser);
 userRoutes
-  .route("/user/:userid/:notificationid")
+  .route("/:userid/:notificationid")
   .delete(deleteNotification)
   .patch(isReadNotification);
 
